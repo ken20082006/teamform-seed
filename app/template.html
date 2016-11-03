@@ -24,11 +24,11 @@
       
     <!-- Customized libraries shared by pages -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-	
+	<script src="js/global.js"></script>
 	
 	<!-- Customized CSS shared by pages -->
 	<link href="theme.css" rel="stylesheet" type="text/css">
-
+	
 
 <body>
 
@@ -92,24 +92,6 @@
         $("#wrapper").toggleClass("toggled");
     });
 	
-	var app = angular.module("teamforming", []); 
-	app.controller("wrapperCtrl", 
-		
-		function($scope) {
-		
-			$scope.button_text="<";
-			$scope.close_open_wrapper=function()
-			{
-				if($scope.button_text=="<")
-					$scope.button_text=">";
-				else
-					$scope.button_text="<";
-			
-			}
-			
-
-		}
-	);
     </script>
 	
 
