@@ -10,6 +10,15 @@
 
 /* Toggle Styles */
 
+
+.menu_toggle_button,.menu_toggle_button:focus
+{
+	background:#000;
+	color:#FFF;
+	border-radius: 0px 0px 4px 0px;
+}
+
+
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
