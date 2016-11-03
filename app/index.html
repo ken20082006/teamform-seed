@@ -16,18 +16,19 @@
 	  -->
 	        
       <script src="lib/jquery.min.js"></script>      
-      <script src="lib/bootstrap.min.js"></script>      
+      <script src="lib/bootstrap.min.js"></script>     
+      <script src="./js/jquery.sidebar.js"></script>
+    
       	  
-	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+	   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
+     <link href="css/style.css" rel="stylesheet">
 
       
       <!-- Customized libraries shared by pages -->
       <script src="js/site.js"></script>
-
-
-	  	  
+ 
    </head>
    <body>
    
@@ -37,7 +38,6 @@
    
    
       <div class="navbar-wrapper">
-	  
          <div class="container">
             <nav class="navbar navbar-static-top navbar-default">
                <div class="container">
@@ -88,13 +88,21 @@
             </nav>
          </div>
       </div>
+
+      <!-- toggle bar -->
+       <div class="sidebars">
+            <div class="sidebar left">Student A</div>
+       </div>
+
       <!-- A sample login page -->
       <div class="container" id="page_home">
          <div class="row">
             <div class="col-md-12">
                <div class="row">
                   <div class="col-md-12">
-                     
+                    <div>
+                       <a href="#" class="btn btn-primary" data-action="toggle" data-side="left"><span>Toggle Bar</span></a>
+                    </div>
                      <div class="text-center">
                         <h1>teamform</h1>
                         <p>A real-time online team forming app for any event</p>
@@ -220,8 +228,6 @@
              </div>
          </div>
 
-
-
          <!-- /END THE FEATURETTES -->
          <!-- FOOTER -->
          <hr>
@@ -235,6 +241,7 @@
 
       <!-- JavaScript of this page -->
       <script src="js/index.js"></script>
+    
 
 
    </body>
