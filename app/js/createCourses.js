@@ -1,28 +1,12 @@
 // inject firebase service
-var app = angular.module("teamforming", ["firebase"]); 
-app.controller("wrapperCtrl", 
-		
-		function($scope) {
-		
-			$scope.button_text="<";
-			$scope.close_open_wrapper=function()
-			{
-				if($scope.button_text=="<")
-					$scope.button_text=">";
-				else
-					$scope.button_text="<";
-			
-			}
-			
+var app = angular.module("createCoursesApp", ["firebase"]); 
 
-		}
-	);
-app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
+app.controller("createCoursesCtrl", function($scope, $firebaseArray) {
 
 		// sync with firebaseArray
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
-	
+		
 		var courses = firebase.database().ref("courses");
 		$scope.courses = $firebaseArray(courses);
 	
@@ -34,19 +18,13 @@ app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
 		
 		};
 		
-		$scope.coursesArray=[];
-		
-		function loadCreatedCourses(email){
-			var i=0;
-			courses.orderByChild("owner").equalTo(email).on("child_added", function(data){
-				
-				//$scope.coursesArray.push(JSON.stringify({"key":i,"data":data.val()}));
-				$scope.coursesArray.push({"key":i,"data":data.val()});
-				i++;
-			});
-
+		$scope.courseInfo=
+		{
+			title:"",
+			image:"",
+			owner:"",
+			message:""
 		}
-		
 		
 		function getUserInfo(email)
 		{	
@@ -59,11 +37,11 @@ app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
 				if($scope.accountInfo.role=="0")
 				{
 					alert("you are logined as studnet");
+					 window.location = "index.html";
 				}
 				else
 				{
 					alert("you are logined as teacher");
-					loadCreatedCourses($scope.accountInfo.email);
 					
 				}
 			});
@@ -72,7 +50,6 @@ app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
 	
 		function isLogined()
 		{
-			
 				firebase.auth().onAuthStateChanged(function(user) {
 				  if (user) 
 				  {
@@ -91,28 +68,20 @@ app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
 		
 		var init=function()
 		{
-			console.log("test");
 			isLogined();
 		};
 		init();
 		
 		
-		$scope.logout = function() {
-			firebase.auth().signOut().then(function() {
-			  console.log('Signed Out');
-			}, function(error) {
-			  console.error('Sign Out Error', error);
-			});
-			 isLogined();
+		$scope.createCourse = function() {
+	
+			$scope.courseInfo.owner=$scope.accountInfo.email;
+			console.log($scope.accountInfo.email);
+			console.log($scope.courseInfo);
+			$scope.courses.$add($scope.courseInfo);
+		
 		}
 		
-		
-		
-
-
-		
-
-
 
 	}
 );

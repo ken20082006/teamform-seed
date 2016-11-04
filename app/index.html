@@ -24,14 +24,35 @@
       
     <!-- Customized libraries shared by pages -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+	<!-- Firebase -->
+	<script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
+	<!-- AngularFire URL: https://github.com/firebase/angularfire -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyB6bC90FN323tYhfGdeesZodkj3jEymAMU",
+		authDomain: "comp3111teamform.firebaseapp.com",
+		databaseURL: "https://comp3111teamform.firebaseio.com",
+		storageBucket: "comp3111teamform.appspot.com",
+		messagingSenderId: "990477328608"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	
+	<!-- global function -->
+	<script src="js/global.js"></script>
+	
 	
 	
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/dash.css">
-
 <body>
+<div ng-controller="dashBoardCtrl">
 
+</div>
     <div id="wrapper">
 
         <!-- Sidebar -->
@@ -71,6 +92,7 @@
 		</div>
 
         <!-- Page Content -->
+		
 		<div class="row" style="margin: 20px;">
 			<div class="col-lg-3 col-md-6">
 				<div class="panel panel-primary">
@@ -162,10 +184,6 @@
 			</div>
 		</div>
 
-		
-		
-		
-       
         <!-- /#page-content-wrapper -->
 
     </div>
@@ -182,24 +200,6 @@
         $("#wrapper").toggleClass("toggled");
     });
 	
-	var app = angular.module("teamforming", []); 
-	app.controller("wrapperCtrl", 
-		
-		function($scope) {
-		
-			$scope.button_text="<";
-			$scope.close_open_wrapper=function()
-			{
-				if($scope.button_text=="<")
-					$scope.button_text=">";
-				else
-					$scope.button_text="<";
-			
-			}
-			
-
-		}
-	);
     </script>
 	
 
