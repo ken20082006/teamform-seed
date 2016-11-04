@@ -30,7 +30,9 @@
             </ul>
         </div>
 		<!-- menu toggle button -->
-		<a href="#menu-toggle" ng-click="close_open_wrapper()" class="menu_toggle_button btn" id="menu-toggle">{{button_text}}</a>
+		<a href="#menu-toggle" ng-click="close_open_wrapper()" class="menu_toggle_button btn" id="menu-toggle">
+            <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+        </a>
 		
 <script>
 $("#menu-toggle").click(function(e) {

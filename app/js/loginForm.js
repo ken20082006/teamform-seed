@@ -10,7 +10,7 @@ app.controller("loginCtrl", function($scope, $firebaseArray) {
 			  if (user) {
 				// User is signed in.
 			//	alert("login successed");
-				  window.location = "usr/index.html";
+				  window.location = "index.html";
 			  }
 			  else
 			  {
