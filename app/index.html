@@ -39,6 +39,14 @@
 		messagingSenderId: "990477328608"
 	  };
 	  firebase.initializeApp(config);
+	  
+	  $(document).ready(function(){
+			//$.get("navbar.html",function(response){
+			//$('#navBar').append(response);
+			//});
+			//$('#wrapper').('navbar.html');
+		});
+	  
 	</script>
 	
 	<!-- global function -->
@@ -56,42 +64,11 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-		<div ng-controller="wrapperCtrl">
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        Start Bootstrap
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Dashboard</a>
-                </li>
-                <li>
-                    <a href="#">Shortcuts</a>
-                </li>
-                <li>
-                    <a href="#">Overview</a>
-                </li>
-                <li>
-                    <a href="#">Events</a>
-                </li>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Services</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
-		<!-- menu toggle button -->
-		<a href="#menu-toggle" ng-click="close_open_wrapper()" class="menu_toggle_button btn" id="menu-toggle">{{button_text}}</a>
+		<div id="navBar" ng-controller="wrapperCtrl">
+		<div ng-include="'navbar.html'"></div>
 		</div>
-
         <!-- Page Content -->
+		
 		
 		<div class="row" style="margin: 20px;">
 			<div class="col-lg-3 col-md-6">
@@ -184,23 +161,21 @@
 			</div>
 		</div>
 
+		
+		
+       
         <!-- /#page-content-wrapper -->
 
     </div>
-    <!-- /#wrapper -->
+    
+	<!-- /#wrapper -->
 <!-- jQuery -->
     
 
 
 
     <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-	
-    </script>
+    
 	
 
 </body>
