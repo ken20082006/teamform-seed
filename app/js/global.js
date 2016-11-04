@@ -1,23 +1,40 @@
 // inject firebase service
 var app = angular.module("teamforming", ["firebase"]); 
+
+app.value('user', {
+    email: 'test'
+});
+
 app.controller("wrapperCtrl", 
 		
-		function($scope) {
+		function($scope,$rootScope,user) {
 		
 			$scope.button_text="<";
+			
+			$rootScope.$on("updataEmailCall", function(){
+			   $scope.updataEmail();
+			});
+			
 			$scope.close_open_wrapper=function()
 			{
 				if($scope.button_text=="<")
 					$scope.button_text=">";
 				else
 					$scope.button_text="<";
+				
+				console.log(user.email);
+			}
 			
+			$scope.updataEmail=function()
+			{
+				$scope.email=user.email;
+				
 			}
 			
 
 		}
 	);
-app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
+app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray) {
 
 		// sync with firebaseArray
 		var userAccount = firebase.database().ref("UserAccount");
@@ -55,14 +72,20 @@ app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
 				
 				$scope.accountInfo.role=data.val().role;
 				$scope.accountInfo.email=data.val().email;
+				
+				//set user email to global
+				user.email=data.val().email;
+				$rootScope.$emit("updataEmailCall", {});
+				
+				
 				console.log($scope.accountInfo);
 				if($scope.accountInfo.role=="0")
 				{
-					alert("you are logined as studnet");
+					console.log("you are logined as studnet");
 				}
 				else
 				{
-					alert("you are logined as teacher");
+					console.log("you are logined as teacher");
 					loadCreatedCourses($scope.accountInfo.email);
 					
 				}
