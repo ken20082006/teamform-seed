@@ -1,0 +1,56 @@
+<!DOCTYPE html> 
+<html ng-app="regApp"> 
+<head>
+<title>Reg Form</title>
+	<!-- Angular Library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+	<!-- Firebase -->
+	<script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
+
+	<!-- AngularFire URL: https://github.com/firebase/angularfire -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyB6bC90FN323tYhfGdeesZodkj3jEymAMU",
+		authDomain: "comp3111teamform.firebaseapp.com",
+		databaseURL: "https://comp3111teamform.firebaseio.com",
+		storageBucket: "comp3111teamform.appspot.com",
+		messagingSenderId: "990477328608"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+
+
+	
+</head>
+<body>
+
+	<div ng-controller="regCtrl" class="container">
+	<h2>Reg Form</h2>
+		<form name="form" >
+			<div >
+				<label>Email </label>
+				<input type="text" name="email" ng-model="input.email" required>
+			</div>
+
+			<div>
+				<label>Password:</label>
+				<input type="password" name="password" ng-model="input.password" required>
+			</div>
+			<input type="radio" name="role" id="professor" ng-click="chooseRole(0)"><label>Student</label>
+			<input type="radio" name="role" id="student" ng-click="chooseRole(1)"><label>Professor</label>
+			<br>
+			<input type="submit" name="submit" id="submit"  ng-click="createUser()">
+		</form>
+		
+	</div>
+
+
+	<script src="js/regForm.js"></script>
+
+</body>
+</html>
