@@ -1,0 +1,40 @@
+<head>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<script>
+    File.prototype.convertToBase64 = function(callback){
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                 callback(e.target.result)
+            };
+            reader.onerror = function(e) {
+                 callback(null);
+            };        
+            reader.readAsDataURL(this);
+    };
+
+    /*$("#asd").on('change',function(){
+	
+      var selectedFile = this.files[0];
+      selectedFile.convertToBase64(function(base64){
+           alert(base64);
+      }) 
+    });*/
+
+	$( document ).ready(function() {
+		$("#asd").on('change',function(){
+			
+			  var selectedFile = this.files[0];
+			  selectedFile.convertToBase64(function(base64){
+				   $("#lalala").val(base64);
+			  }) 
+			});
+});
+	
+</script>
+
+
+
+<input type="file" id="asd"/>
+
+<input type="text" id="lalala">

@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
-<html ng-app="regApp"> 
+<html ng-app="addStudentApp"> 
 <head>
-<title>Reg Form</title>
+<title>Add student</title>
 	<!-- Angular Library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
@@ -23,37 +23,35 @@
 	  firebase.initializeApp(config);
 	</script>
 
-
-
-	
 </head>
 <body>
 
-	<div ng-controller="regCtrl" class="container">
-	<h2>Reg Form</h2>
+	<div ng-controller="addStudentCtrl" class="container">
+	<h2>Add student</h2>
 		<form name="form" >
 			<div >
-				<label>Email </label>
-				<input type="text" name="email" ng-model="input.email" required>
+				<label>Course </label>
+				<select name="courseSelect" id="courseSelect" ng-model="courseSelect">
+				  <option ng-repeat="q in courseFB" value="{{q.title}}[{{q.$id}}]">{{q.title}}</option>
+				</select>
+				
 			</div>
 			<div >
-				<label>UserName </label>
-				<input type="text" name="userName" ng-model="input.userName" required>
+				<label>Student </label>
+				<select name="studentSelect" id="studentSelect" ng-model="studentSelect">
+				  <option ng-repeat="q in userFB" value="{{q.$id}}^{{q.email}}{{q.role}}">{{q.email}}[{{q.role}}]</option>
+				</select>
+				<span> 0 is student, no teacher should be added</span>
 			</div>
-			<div>
-				<label>Password:</label>
-				<input type="password" name="password" ng-model="password" required>
-			</div>
-			<input type="radio" name="role" id="professor" ng-click="chooseRole(0)"><label>Student</label>
-			<input type="radio" name="role" id="student" ng-click="chooseRole(1)"><label>Professor</label>
+
 			<br>
-			<input type="submit" name="submit" id="submit"  ng-click="createUser()">
+			<input type="submit" name="submit" id="submit"  ng-click="addStudent()">
 		</form>
-		
+		<div>no checking for if the student has been joined the class, please refer to the db</div>
 	</div>
 
 
-	<script src="js/regForm.js"></script>
+	<script src="js/addStudent.js"></script>
 
 </body>
 </html>
