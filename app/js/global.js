@@ -9,21 +9,11 @@ app.controller("wrapperCtrl",
 		
 		function($scope,$rootScope,user) {
 		
-			$scope.button_text="<";
-			
 			$rootScope.$on("updataEmailCall", function(){
 			   $scope.updataEmail();
 			});
 			
-			$scope.close_open_wrapper=function()
-			{
-				if($scope.button_text=="<")
-					$scope.button_text=">";
-				else
-					$scope.button_text="<";
-				
-				console.log(user.email);
-			}
+			
 			
 			$scope.updataEmail=function()
 			{
@@ -107,7 +97,7 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 				  else
 				  {
 					//  alert("not logined");
-					  window.location = "../login.html";
+					  window.location = "login.html";
 				  }
 				});
 		}
