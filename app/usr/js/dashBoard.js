@@ -1,30 +1,7 @@
 // inject firebase service
-var app = angular.module("teamforming", ["firebase"]); 
+var app = angular.module("dashBoardApp", ["firebase"]); 
 
-app.value('user', {
-    email: 'test'
-});
-
-app.controller("wrapperCtrl", 
-		
-		function($scope,$rootScope,user) {
-		
-			$rootScope.$on("updataEmailCall", function(){
-			   $scope.updataEmail();
-			});
-			
-			
-			
-			$scope.updataEmail=function()
-			{
-				$scope.email=user.email;
-				
-			}
-			
-
-		}
-	);
-app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray) {
+app.controller("dashBoardCtrl", function($scope, $firebaseArray) {
 
 		// sync with firebaseArray
 		var userAccount = firebase.database().ref("UserAccount");
@@ -62,20 +39,14 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 				
 				$scope.accountInfo.role=data.val().role;
 				$scope.accountInfo.email=data.val().email;
-				
-				//set user email to global
-				user.email=data.val().email;
-				$rootScope.$emit("updataEmailCall", {});
-				
-				
 				console.log($scope.accountInfo);
 				if($scope.accountInfo.role=="0")
 				{
-					console.log("you are logined as studnet");
+					alert("you are logined as studnet");
 				}
 				else
 				{
-					console.log("you are logined as teacher");
+					alert("you are logined as teacher");
 					loadCreatedCourses($scope.accountInfo.email);
 					
 				}
@@ -85,7 +56,6 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 	
 		function isLogined()
 		{
-			
 				firebase.auth().onAuthStateChanged(function(user) {
 				  if (user) 
 				  {
@@ -97,14 +67,13 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 				  else
 				  {
 					//  alert("not logined");
-					  window.location = "login.html";
+					  window.location = "../login.html";
 				  }
 				});
 		}
 		
 		var init=function()
 		{
-			console.log("test");
 			isLogined();
 		};
 		init();
