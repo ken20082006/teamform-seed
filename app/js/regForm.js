@@ -8,7 +8,8 @@ app.controller("regCtrl", function($scope, $firebaseArray) {
 		$scope.input = {
 			email: "",
 			userName: "",
-			role:""
+			role:"",
+			haveTeam:"0"
 		}
 		// sync with firebaseArray
 		var ref = firebase.database().ref("UserAccount");
