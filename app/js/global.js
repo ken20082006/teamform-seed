@@ -7,7 +7,8 @@ app.value('user', {
 	role:'',
 	userName:'',
 	key:'',
-	course:[]
+	course:[],
+	team:[]
 });
 
 app.controller("wrapperCtrl", function($scope,$rootScope,user) {
@@ -52,6 +53,20 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 				user.userName=data.val().userName;
 				user.key=data.getKey();
 				user.course=data.val().course;
+				user.team=data.val().team;
+				
+				/*if(typeof(sessionStorage.User)=="undefined")
+				{
+					sessionStorage.setItem('User',JSON.stringify(user));
+					console.log("no user data");
+				}
+				else
+				{
+					console.log("has user data");
+					console.log(sessionStorage.User);
+			
+				}*/
+				
 				$rootScope.$emit("updataEmailCall", {});	
 				
 				if(user.role=="0")
@@ -113,6 +128,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			$scope.role=user.role;
 			$scope.userName=user.userName;
 			$scope.key=user.key;
+			$scope.team=user.team;
 		}
 	
 		$rootScope.$on("updateRole", function(){
@@ -179,6 +195,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 						email:$scope.email,
 						role:$scope.role,
 						userName:$scope.userName,
+						team:$scope.team,
 						course:courseArray
 					};
 					firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
@@ -214,6 +231,7 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 			$scope.userName=user.userName;
 			$scope.key=user.key;
 			$scope.course=user.course;
+			$scope.team=user.team;
 		}
 		$scope.courseArray=[];
 	
@@ -226,15 +244,46 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 		//redirect the page when user click on "view detail"
 		//student without team -> teamsearch
 		//others -> teampannel
+		
+		function teamChecking(key)
+		{
+			if(typeof($scope.team)=="undefined")
+			{
+				console.log("not hv any team yet");
+				return true;
+			}
+			else
+			{
+			
+				if($scope.team.hasOwnProperty(key) )
+				{
+					console.log("has team in this course");
+					return false;
+				}
+				else
+				{
+					console.log("no team in this course");
+					return true;
+				}
+			}
+			
+		}
+		
 		$scope.dashBoardChangePage=function(key)
 		{
-			if(user.role=="0" && true)//without team checking
+			//sessionStorage.setItem('currentCourse',key);
+			//sessionStorage.setItem('flag',true);
+			if(user.role=="0" && teamChecking(key))
 			{
-				$window.location.href="teamSearch.html#/"+key;
+				//return false;
+				$window.location.href="teamSearch.html?c="+key;
+				//$window.location.href="teamSearch.html";
 				
 			}else
 			{
-				$window.location.href="teamPanel.html#/"+key;
+				//return false;
+				$window.location.href="teamPanel.html?c="+key;
+				//$window.location.href="teamPanel.html";
 			}
 			
 		}
@@ -255,6 +304,185 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 		}
 		
 		
+});
+
+
+
+app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,$window) {
+		
+		/*initialzation and checking*/
+		var courses = firebase.database().ref("courses");
+		$scope.courseFB=$firebaseArray(courses);
+
+	
+		$scope.updateRole=function()
+		{
+			$scope.email=user.email;
+			$scope.role=user.role;
+			$scope.userName=user.userName;
+			$scope.key=user.key;
+			$scope.course=user.course;
+			$scope.team=user.team;
+		}
+	
+		$scope.currCourse={
+			key:"",
+			image:"",
+			message:"",
+			owner:"",
+			title:""
+		};
+
+	
+		$rootScope.$on("updateRole", function(){
+			   $scope.updateRole();
+			   loadcoursesInfo();
+		});
+		
+
+		function gup( name, url ) {
+			if (!url) url = location.href;
+			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+			var regexS = "[\\?&]"+name+"=([^&#]*)";
+			var regex = new RegExp( regexS );
+			var results = regex.exec( url );
+			return results == null ? null : results[1];
+		}
+
+		
+		function loadcoursesInfo()
+		{
+			//console.log(sessionStorage);
+			
+			$scope.currCourse.key=gup('c', window.location.href);
+			
+			if($scope.currCourse.key==null||$scope.currCourse.key=="")
+			{
+				$window.location.href="index.html";		
+			}
+			else
+			{
+				firebase.database().ref("courses/"+$scope.currCourse.key).once('value', function(data) {
+					if(data.val()==null)
+					{
+						console.log("invalid input of course id");
+						$window.location.href="index.html";
+					}
+					else
+					{
+						$scope.currCourse.message=data.val().message;
+						$scope.currCourse.image=data.val().image;
+						$scope.currCourse.owner=data.val().owner;
+						$scope.currCourse.title=data.val().title;						
+					}
+				});
+
+			}
+
+		}
+				
+});
+
+
+
+app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$window) {
+		
+		/*initialzation and checking*/
+		var courses = firebase.database().ref("courses");
+		$scope.courseFB=$firebaseArray(courses);
+
+	
+		$scope.updateRole=function()
+		{
+			$scope.email=user.email;
+			$scope.role=user.role;
+			$scope.userName=user.userName;
+			$scope.key=user.key;
+			$scope.course=user.course;
+			$scope.team=user.team;
+		}
+	
+		$scope.currCourse={
+			key:"",
+			image:"",
+			message:"",
+			owner:"",
+			title:""
+		};
+
+	
+		$rootScope.$on("updateRole", function(){
+			   $scope.updateRole();
+			   loadcoursesInfo();
+			   
+		});
+		
+		
+		function roleAccessCheck()
+		{
+			if($scope.role=="0")
+			{
+				if(typeof($scope.team)=="undefined"||!$scope.team.hasOwnProperty($scope.currCourse.key) )
+				{
+					console.log("no team in this course");
+					//return;
+					$window.location.href="index.html";
+				}
+			}
+			else
+			{
+				if($scope.currCourse.owner!=$scope.email)
+				{
+					console.log("you are teacher but not the course owner");
+					//return;
+					$window.location.href="index.html";
+				}
+			}
+			
+		}
+
+		function gup( name, url ) {
+			if (!url) url = location.href;
+			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+			var regexS = "[\\?&]"+name+"=([^&#]*)";
+			var regex = new RegExp( regexS );
+			var results = regex.exec( url );
+			return results == null ? null : results[1];
+		}
+
+		
+		function loadcoursesInfo()
+		{
+			//console.log(sessionStorage);
+			
+			$scope.currCourse.key=gup('c', window.location.href);
+			
+			if($scope.currCourse.key==null||$scope.currCourse.key=="")
+			{
+				$window.location.href="index.html";		
+			}
+			else
+			{
+				firebase.database().ref("courses/"+$scope.currCourse.key).once('value', function(data) {
+					if(data.val()==null)
+					{
+						console.log("invalid input of course id");
+						$window.location.href="index.html";
+					}
+					else
+					{
+						$scope.currCourse.message=data.val().message;
+						$scope.currCourse.image=data.val().image;
+						$scope.currCourse.owner=data.val().owner;
+						$scope.currCourse.title=data.val().title;	
+						roleAccessCheck();						
+					}
+				});
+
+			}
+
+		}
+				
 });
 
 

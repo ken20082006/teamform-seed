@@ -48,13 +48,15 @@
 				email:"",
 				role:"",
 				userName:"",
-				course:[]		
+				course:[],
+				team:[]
 			}
 			
 			newUserData.email=data.val().email;
 			newUserData.role=data.val().role;
 			newUserData.userName=data.val().userName;
 			newUserData.course=data.val().course;
+			newUserData.team=data.val().team;
 			if(typeof(newUserData.course)=="undefined")
 			{
 				newUserData.course=[];
