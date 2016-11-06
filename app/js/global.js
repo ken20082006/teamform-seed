@@ -1,6 +1,7 @@
 // inject firebase service
 var app = angular.module("teamforming", ["firebase"]); 
 
+
 app.value('user', {
     email: '',
 	role:'',
@@ -31,7 +32,7 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 				});
 			window.location = "login.html";
 			}
-
+			
 });
 app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray) {
 
@@ -89,7 +90,7 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 		
 	});
 	
-	app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseArray) {
+app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseArray) {
 		
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
@@ -199,7 +200,7 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 	});
 	
 	
-	app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray) {
+app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$window) {
 		
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
@@ -221,6 +222,23 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 			   loadcourses();
 		});
 		
+		
+		//redirect the page when user click on "view detail"
+		//student without team -> teamsearch
+		//others -> teampannel
+		$scope.dashBoardChangePage=function(key)
+		{
+			if(user.role=="0" && true)//without team checking
+			{
+				$window.location.href="teamSearch.html#/"+key;
+				
+			}else
+			{
+				$window.location.href="teamPanel.html#/"+key;
+			}
+			
+		}
+		
 		function loadcourses()
 		{
 			if(typeof($scope.course)!="undefined")
@@ -236,6 +254,8 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 			}
 		}
 		
+		
 });
 
 
+//JS function
