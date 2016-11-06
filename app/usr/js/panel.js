@@ -1,32 +1,38 @@
 // inject firebase service
-//var app = angular.module("createCoursesApp", ["firebase"]); 
+var app = angular.module("panelApp", ["firebase"]); 
 
-app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseArray) {
+app.controller("panelCtrl", function($scope, $firebaseArray) {
 
 		// sync with firebaseArray
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
-		
+	
 		var courses = firebase.database().ref("courses");
 		$scope.courses = $firebaseArray(courses);
 	
-	/*	$scope.accountInfo=
+		$scope.accountInfo=
 		{
 			name:"",
 			email:"",
 			role:""
 		
-		};*/
+		};
 		
-		$scope.courseInfo=
-		{
-			title:"",
-			image:"",
-			owner:"",
-			message:""
+		$scope.coursesArray=[];
+		
+		function loadCreatedCourses(email){
+
+			courses.orderByChild("owner").equalTo(email).on("child_added", function(data){
+				
+				//$scope.coursesArray.push(JSON.stringify({"key":i,"data":data.val()}));
+				$scope.coursesArray.push({"key":data.getKey(),"data":data.val()});
+
+			});
+
 		}
 		
-		/*function getUserInfo(email)
+		
+		function getUserInfo(email)
 		{	
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 			{
@@ -37,19 +43,18 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 				if($scope.accountInfo.role=="0")
 				{
 					alert("you are logined as studnet");
-					 window.location = "index.html";
 				}
 				else
 				{
 					alert("you are logined as teacher");
+					loadCreatedCourses($scope.accountInfo.email);
 					
 				}
 			});
 
-		}*/
-		alert(12);
+		}
 	
-		/*function isLogined()
+		function isLogined()
 		{
 				firebase.auth().onAuthStateChanged(function(user) {
 				  if (user) 
@@ -71,19 +76,27 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 		{
 			isLogined();
 		};
-		init();*/
+		init();
 		
 		
-		$scope.createCourse = function() {
-	
-			$scope.courseInfo.owner=$scope.accountInfo.email;
-			console.log($scope.accountInfo.email);
-			console.log($scope.courseInfo);
-			$scope.courses.$add($scope.courseInfo);
-		
+		$scope.logout = function() {
+			firebase.auth().signOut().then(function() {
+			  console.log('Signed Out');
+			}, function(error) {
+			  console.error('Sign Out Error', error);
+			});
+			 isLogined();
 		}
 		
+		
+		
 
-	});
+
+		
+
+
+
+	}
+);
 
 
