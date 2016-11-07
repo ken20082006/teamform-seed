@@ -9,7 +9,6 @@ app.controller("regCtrl", function($scope, $firebaseArray) {
 			email: "",
 			userName: "",
 			role:"",
-			haveTeam:"0"
 		}
 		// sync with firebaseArray
 		var ref = firebase.database().ref("UserAccount");
