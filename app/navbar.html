@@ -3,11 +3,11 @@
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="#">
-                        Hi, {{email}}
+                        Hi, {{userName}}
                     </a>
                 </li>
                 <li>
-                    <a href="#">Dashboard</a>
+                    <a href="index.html">Dashboard</a>
                 </li>
                 <li>
                     <a href="#">Shortcuts</a>
@@ -26,6 +26,9 @@
                 </li>
                 <li>
                     <a href="#">Contact</a>
+                </li>
+				<li ng-click="logout()">
+                    <a href="#">Logout</a>
                 </li>
             </ul>
         </div>

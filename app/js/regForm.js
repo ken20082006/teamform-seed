@@ -3,11 +3,12 @@ var app = angular.module("regApp", ["firebase"]);
 
 app.controller("regCtrl", function($scope, $firebaseArray) {
 
-
+		$scope.password="";
+		
 		$scope.input = {
 			email: "",
-			password: "",
-			role:""
+			userName: "",
+			role:"",
 		}
 		// sync with firebaseArray
 		var ref = firebase.database().ref("UserAccount");
@@ -29,21 +30,25 @@ app.controller("regCtrl", function($scope, $firebaseArray) {
 		}
 		
 		$scope.createUser = function() {
-			
-		firebase.auth().createUserWithEmailAndPassword($scope.input.email,$scope.input.password).catch(function(error) {
+		var isError=false;
+		firebase.auth().createUserWithEmailAndPassword($scope.input.email,$scope.password).catch(function(error) {
 		  // Handle Errors here.
 		  var errorCode = error.code;
 		  var errorMessage = error.message;
-
-		  return false;
+		alert(errorMessage);
+		  isError=true;
 		  // ...
 		}).then(function(){
+			if(!isError)
+			{
+				$scope.accInfo.$add($scope.input);
+			}
 			
-			$scope.accInfo.$add($scope.input);
 		});
 		}
 
 	}
 );
+
 
 

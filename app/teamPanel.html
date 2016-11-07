@@ -11,7 +11,7 @@
 		JQuery: Necessary for some bootstrap interactions (v1.12.4 is used)		
 		Bootstrap: Library and CSS for bootstrap framework (v3.3.7 is used)
 		Font-awesome: More icons for the web development (v4.6.3 is used)		
-		site.css: A customized css for our web application. Not from any web framework. 
+		site.css: A customized css for our web application. Not from any web framework. 
 	-->
 	        
     <script src="lib/jquery.min.js"></script>      
@@ -41,10 +41,12 @@
 	  firebase.initializeApp(config);
 	  
 	  $(document).ready(function(){
-
-
+			//$.get("navbar.html",function(response){
+			//$('#navBar').append(response);
+			//});
+			//$('#wrapper').('navbar.html');
 		});
-
+	  
 	</script>
 	
 	<!-- global function -->
@@ -66,50 +68,13 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
+		<div ng-controller="teamPanelCtrl">
 		
-		<div class="row" ng-controller="teamSearchCtrl">
-            <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-12">
-                     
-                     <div class="text-center">
-                        <h1>{{currCourse.title}}Team Search</h1>
-                        <p>Search the team by name</p>
-                     </div>
-
-                     <br >
-
-                     <div class="text-center">
-
-                        <input id="input_text" type="text" class="input-lg">
-                        <br>
-                        <em>Enter a name (e.g. COMP3111-L1, COMP3111-L2 or COMP3111H) to join the team</em>
-						
-						
-						<div>
-                           
-                           <button id="btn_admin" type="button" class="btn btn-primary" >random team</button>
-                          
-
-
-                           <button id="btn_leader" type="button" class="btn btn-primary" >recommend team</button>
-                          
-                          
-
-
-						</div>
-                        
-                     </div>
-					
-					
-																 
-					
-					 
-                  </div>
-               </div>
-            </div>
-         </div>
-      
+		{{currCourse.title}}
+		
+		
+		</div>
+		
 		
 		
        
@@ -124,7 +89,13 @@
 
 
     <!-- Menu Toggle Script -->
-    
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+	
+    </script>
 	
 
 </body>
