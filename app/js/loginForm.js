@@ -41,10 +41,10 @@ app.controller("loginCtrl", function($scope, $firebaseArray) {
 			  // Handle Errors here.
 			  var errorCode = error.code;
 			  var errorMessage = error.message;
-			  if (errorCode === 'auth/wrong-password') {
-				alert('Wrong password.');
+			  if (errorCode == 'auth/wrong-password' || errorCode == 'auth/user-not-found') {
+				$scope.error_message = 'Incorrect email or password.';
 			  } else {
-				alert(errorMessage);
+				$scope.error_message = errorMessage;
 			  }
 			  return false;
 			  // ...
