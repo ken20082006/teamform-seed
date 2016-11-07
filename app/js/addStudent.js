@@ -42,21 +42,34 @@
 
 		userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 		{
-
-			var newUserData=
+			var newUserData;
+			if(typeof(data.val().team)!="undefined")
 			{
-				email:"",
-				role:"",
-				userName:"",
-				course:[],
-				team:[]
+				newUserData=
+				{
+					email:"",
+					role:"",
+					userName:"",
+					course:[],
+					team:[]
+				}
+				newUserData.team=data.val().team;
 			}
-			
+			else
+			{
+				newUserData=
+				{
+					email:"",
+					role:"",
+					userName:"",
+					course:[]
+				}
+			}			
 			newUserData.email=data.val().email;
 			newUserData.role=data.val().role;
 			newUserData.userName=data.val().userName;
 			newUserData.course=data.val().course;
-			newUserData.team=data.val().team;
+			
 			if(typeof(newUserData.course)=="undefined")
 			{
 				newUserData.course=[];

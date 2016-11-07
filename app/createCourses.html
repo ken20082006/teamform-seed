@@ -104,6 +104,12 @@
 				
 				<textarea name="description" ng-model="courseInfo.message" required></textarea>
 			</div>
+			<div>
+				<label>Member range(2-20)</label>
+				<p>Min</p><input type="number" ng-model="courseInfo.min" min="2" max="20">
+				<p>Max</p><input type="number" ng-model="courseInfo.max" min="2" max="20">
+			</div>
+			
 			<input type="submit" name="submit" id="submit"  ng-click="createCourse()">
 		</form>
 </body>

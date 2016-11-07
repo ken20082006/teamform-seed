@@ -128,7 +128,6 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			$scope.role=user.role;
 			$scope.userName=user.userName;
 			$scope.key=user.key;
-			$scope.team=user.team;
 		}
 	
 		$rootScope.$on("updateRole", function(){
@@ -169,7 +168,9 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			title:"",
 			image:"image/grey.png",
 			owner:"",
-			message:""
+			message:"",
+			max:"",
+			min:""
 		}
 		$scope.fileName;
 		
@@ -182,36 +183,52 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			$('#base64PicURL').attr('src','');
 		}
 		
+		function validInput()
+		{
+			if($scope.courseInfo.title==""||$scope.courseInfo.message==""||$scope.courseInfo.min==""||$scope.courseInfo.max=="")
+			{
+				console.log("some missing data");
+				return false;
+			}
+			return true;	
+		}
+		
 		$scope.createCourse = function() {
 			var isError=false;
-			$scope.courseInfo.owner=$scope.email;
-			$scope.courses.$add($scope.courseInfo).then(function(){
-				var courseArray=[];
-				courses.orderByChild("owner").equalTo($scope.email).on("child_added", function(data)
-				{
-					courseArray.push(data.getKey());		
-					var newUserData=
+			if(validInput())
+			{
+				$scope.courseInfo.owner=$scope.email;
+			
+				$scope.courses.$add($scope.courseInfo).then(function(){
+					var courseArray=[];
+					courses.orderByChild("owner").equalTo($scope.email).on("child_added", function(data)
 					{
-						email:$scope.email,
-						role:$scope.role,
-						userName:$scope.userName,
-						team:$scope.team,
-						course:courseArray
-					};
-					firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
-				});
+						courseArray.push(data.getKey());		
+						var newUserData=
+						{
+							email:$scope.email,
+							role:$scope.role,
+							userName:$scope.userName,
+							course:courseArray
+						};
+						firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
+						isError=false;
+					});
 
-			}, function(error) {
-			  isError=true;
-			  alert("some error occur");
-			  console.error(error);
-			}).then(function(){
+				}, function(error) {
+				  isError=true;
+				  alert("some error occur");
+				  console.error(error);
+				}).then(function(){
+					
+					if(!isError)
+					{
+						 window.location = "index.html";
+					}			
+				});		
 				
-				if(!isError)
-				{
-					 window.location = "index.html";
-				}			
-			});	
+			}
+
 		}
 
 	});
@@ -313,7 +330,8 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
 		$scope.courseFB=$firebaseArray(courses);
-
+		var team = firebase.database().ref("Team");
+		$scope.teamInfo = $firebaseArray(team);
 	
 		$scope.updateRole=function()
 		{
@@ -330,10 +348,23 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			image:"",
 			message:"",
 			owner:"",
-			title:""
+			title:"",
+			team:[],
+			max:"",
+			min:""
+		};
+		
+		$scope.newTeam=
+		{
+			name:"",
+			description:"",
+			leaderID:"",
+			member:[],
+			courseID:""
 		};
 
-	
+		$scope.existedTeam=[];
+
 		$rootScope.$on("updateRole", function(){
 			   $scope.updateRole();
 			   loadcoursesInfo();
@@ -362,23 +393,127 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			}
 			else
 			{
-				firebase.database().ref("courses/"+$scope.currCourse.key).once('value', function(data) {
-					if(data.val()==null)
-					{
-						console.log("invalid input of course id");
-						$window.location.href="index.html";
-					}
-					else
-					{
-						$scope.currCourse.message=data.val().message;
-						$scope.currCourse.image=data.val().image;
-						$scope.currCourse.owner=data.val().owner;
-						$scope.currCourse.title=data.val().title;						
-					}
-				});
+				if(typeof($scope.team)!="undefined"&&$scope.team.hasOwnProperty($scope.currCourse.key))
+				{
+					$window.location.href="teamPanel.html?c="+$scope.currCourse.key;
+					
+				}
+				else
+				{
+					firebase.database().ref("courses/"+$scope.currCourse.key).once('value', function(data) {
+						if(data.val()==null)
+						{
+							console.log("invalid input of course id");
+							$window.location.href="index.html";
+						}
+						else
+						{
+							$scope.currCourse.message=data.val().message;
+							$scope.currCourse.image=data.val().image;
+							$scope.currCourse.owner=data.val().owner;
+							$scope.currCourse.title=data.val().title;						
+							$scope.currCourse.team=data.val().team;						
+							$scope.currCourse.max=data.val().max;						
+							$scope.currCourse.min=data.val().min;	
+							loadExistedTeam();							
+						}
+					});
+				}
 
 			}
 
+		}
+		
+		
+		function loadExistedTeam()
+		{
+			for(i=0;i<$scope.currCourse.team.length;i++)
+			{
+				
+				firebase.database().ref("Team/"+$scope.currCourse.team[i]).once('value', function(data) {
+					$scope.existedTeam.push(data.val());					
+				});
+			}
+		}
+		
+		$scope.createTeamForm=function()
+		{
+			$("#teamForm").find('input[type="text"]').val('');
+			$("#teamForm").find('textarea').val('');
+			$.fancybox.open("#teamForm");	
+		}
+		
+		function validCheck()
+		{
+			
+			if($scope.newTeam.name.trim()!=""&&$scope.newTeam.description.trim()!="")
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		$scope.createTeam=function()
+		{
+			if(validCheck())
+			{
+
+				$scope.newTeam.leaderID=$scope.email;
+				$scope.newTeam.member.push($scope.email);
+				$scope.newTeam.courseID=$scope.currCourse.key;
+
+				$scope.teamInfo.$add($scope.newTeam).then(function(data)
+				{
+					
+					if(typeof($scope.team)=="undefined")
+					{
+						$scope.team={};
+						$scope.team[$scope.currCourse.key]=data.getKey();
+					}
+					else
+					{
+						$scope.team[$scope.currCourse.key]=data.getKey();
+					}
+					var newUserData=
+					{
+						course:$scope.course,
+						email:$scope.email,
+						role:$scope.role,
+						userName:$scope.userName,
+						team:$scope.team
+					}
+						firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
+					
+					if(typeof($scope.currCourse.team)=="undefined")
+					{
+						$scope.currCourse.team=[];
+						$scope.currCourse.team.push(data.getKey());
+					}
+					else
+					{
+						$scope.currCourse.team.push(data.getKey());
+					}
+					var newCourseData=
+					{
+						image:$scope.currCourse.image,
+						max:$scope.currCourse.max,
+						message:$scope.currCourse.message,
+						min:$scope.currCourse.min,
+						owner:$scope.currCourse.owner,
+						title:$scope.currCourse.title,
+						team:$scope.currCourse.team
+						
+					}
+					firebase.database().ref("courses/"+$scope.currCourse.key).set(newCourseData);
+					$window.location.href="teamPanel.html?c="+$scope.currCourse.key;
+				});
+			}
+			else
+			{
+			
+				console.log("some data missed");
+			}
+			
 		}
 				
 });
@@ -390,6 +525,9 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
 		$scope.courseFB=$firebaseArray(courses);
+		
+		var team = firebase.database().ref("Team");
+		$scope.teamFB=$firebaseArray(team);
 
 	
 		$scope.updateRole=function()
@@ -410,6 +548,18 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			title:""
 		};
 
+		
+		$scope.joinedTeam=
+		{
+			key:"",
+			name:"",
+			description:"",
+			leaderID:"",
+			member:[],
+			courseID:""
+		};
+		
+		
 	
 		$rootScope.$on("updateRole", function(){
 			   $scope.updateRole();
@@ -417,6 +567,18 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			   
 		});
 		
+		function getTeamInfo()
+		{
+			$scope.joinedTeam.key=$scope.team[$scope.currCourse.key];
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) {
+				$scope.joinedTeam.name=data.val().name;
+				$scope.joinedTeam.description=data.val().description;
+				$scope.joinedTeam.leaderID=data.val().leaderID;
+				$scope.joinedTeam.member=data.val().member;						
+				$scope.joinedTeam.courseID=data.val().courseID;							
+			});
+			
+		}
 		
 		function roleAccessCheck()
 		{
@@ -438,7 +600,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					$window.location.href="index.html";
 				}
 			}
-			
+			getTeamInfo();
 		}
 
 		function gup( name, url ) {
