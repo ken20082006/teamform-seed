@@ -11,7 +11,7 @@
 		JQuery: Necessary for some bootstrap interactions (v1.12.4 is used)		
 		Bootstrap: Library and CSS for bootstrap framework (v3.3.7 is used)
 		Font-awesome: More icons for the web development (v4.6.3 is used)		
-		site.css: A customized css for our web application. Not from any web framework. 
+		site.css: A customized css for our web application. Not from any web framework. 
 	-->
 	        
     <script src="lib/jquery.min.js"></script>      
@@ -40,7 +40,12 @@
 	  };
 	  firebase.initializeApp(config);
 	  
-
+	  $(document).ready(function(){
+			//$.get("navbar.html",function(response){
+			//$('#navBar').append(response);
+			//});
+			//$('#wrapper').('navbar.html');
+		});
 	  
 	</script>
 	
@@ -63,43 +68,13 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
+		<div ng-controller="teamPanelCtrl">
 		
-		<div id="coursesContentBlock" ng-controller="indexCtrl" >
-			<div class="row" style="margin: 20px;">
-				<div ng-repeat="q in courseArray">
-	
-					<div class="col-lg-3 col-md-6">
-				
-						<div class="panel">
-							<div class="panel-heading"  style=" background-image:url({{q.data.image}});background-size:100% 100%;color:#fff">
-								<div class="row" style="min-height:100px;">
-									<div class="col-xs-9 text-right">
-										<div class="huge">{{q.data.title}}	</div>
-										<input  type="hidden" id="cKey" value="{{q.key}}">
-									</div>
-								</div>
-	
-							</div>
-							<div class="row" style="min-height:100px;">
-								<div class="col-xs-9 ">
-									<div>{{q.data.message}}	</div>
-								</div>
-							</div>
-							<a style="cursor: pointer;" ng-click="dashBoardChangePage(q.key)">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-
-				</div>
-			</div>
+		{{currCourse.title}} {{joinedTeam.name}}
+		
+		
 		</div>
-
-
+		
 		
 		
        
@@ -114,7 +89,13 @@
 
 
     <!-- Menu Toggle Script -->
-    
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+	
+    </script>
 	
 
 </body>

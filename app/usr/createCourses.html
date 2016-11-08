@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html ng-app="createCoursesApp"> 
+<head>
+<title>Create Course</title>
+	<!-- Angular Library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+	<!-- Firebase -->
+	<script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
+
+	<!-- AngularFire URL: https://github.com/firebase/angularfire -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyB6bC90FN323tYhfGdeesZodkj3jEymAMU",
+		authDomain: "comp3111teamform.firebaseapp.com",
+		databaseURL: "https://comp3111teamform.firebaseio.com",
+		storageBucket: "comp3111teamform.appspot.com",
+		messagingSenderId: "990477328608"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+
+
+	
+</head>
+<body>
+
+	<div ng-controller="createCoursesCtrl" class="container">
+	<h2>Create Course</h2>
+		<form name="form" >
+			<div >
+				<label>Course Title </label>
+				<input type="text" name="title" ng-model="courseInfo.title" required>
+			</div>
+
+			<div>
+				<label>Course Profile Picture</label>
+				<input type="text" name="imsge" ng-model="courseInfo.image" required>
+			</div>
+			<div>
+				<label>Description</label>
+				<textarea name="description" ng-model="courseInfo.message" required></textarea>
+			</div>
+			<input type="submit" name="submit" id="submit"  ng-click="createCourse()">
+		</form>
+</body>
+	</div>
+
+	<script src="js/createCourses.js"></script>
+
+</html>

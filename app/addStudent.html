@@ -1,0 +1,57 @@
+<!DOCTYPE html> 
+<html ng-app="addStudentApp"> 
+<head>
+<title>Add student</title>
+	<!-- Angular Library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+	<!-- Firebase -->
+	<script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
+
+	<!-- AngularFire URL: https://github.com/firebase/angularfire -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyB6bC90FN323tYhfGdeesZodkj3jEymAMU",
+		authDomain: "comp3111teamform.firebaseapp.com",
+		databaseURL: "https://comp3111teamform.firebaseio.com",
+		storageBucket: "comp3111teamform.appspot.com",
+		messagingSenderId: "990477328608"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+</head>
+<body>
+
+	<div ng-controller="addStudentCtrl" class="container">
+	<h2>Add student</h2>
+		<form name="form" >
+			<div >
+				<label>Course </label>
+				<select name="courseSelect" id="courseSelect" ng-model="courseSelect">
+				  <option ng-repeat="q in courseFB" value="{{q.title}}[{{q.$id}}]">{{q.title}}</option>
+				</select>
+				
+			</div>
+			<div >
+				<label>Student </label>
+				<select name="studentSelect" id="studentSelect" ng-model="studentSelect">
+				  <option ng-repeat="q in userFB" value="{{q.$id}}^{{q.email}}{{q.role}}">{{q.email}}[{{q.role}}]</option>
+				</select>
+				<span> 0 is student, no teacher should be added</span>
+			</div>
+
+			<br>
+			<input type="submit" name="submit" id="submit"  ng-click="addStudent()">
+		</form>
+		<div>no checking for if the student has been joined the class, please refer to the db</div>
+	</div>
+
+
+	<script src="js/addStudent.js"></script>
+
+</body>
+</html>
