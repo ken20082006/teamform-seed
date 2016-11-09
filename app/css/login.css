@@ -5,11 +5,31 @@ html {
   position: absolute;
   font-family: Raleway, sans-serif;
   background-color: #5D92BA;
-  background: url(https://newevolutiondesigns.com/images/freebies/city-wallpaper-18.jpg) no-repeat fixed;
+  background: url(http://fullhdpictures.com/wp-content/uploads/2016/07/Mobile-Graduation-Wallpaper.jpg) no-repeat fixed;
   background-size: cover;
-  background-position: 50%;
+  background-attachment: inherit;
+  background-position: center;
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
+}
+
+
+#header
+{
+	text-align:center;
+	font-size:25px;
+	font-weight:bold;
+	margin:15px;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+	background-color:#96E2DE;
+}
+
+#header1
+{
+	margin:15px 10px 20px 10px;
+	font-size:16px;
+	font-weight:500;
+	font-family: Constantia, "Lucida Bright", "DejaVu Serif", Georgia, serif;
 }
 
 .container {
@@ -207,3 +227,10 @@ html {
   width: 100%;
   font-family: Raleway;
 }
+.error_message{
+  color: red;
+  font-size: 1.2rem;
+  font-family: Raleway;
+  position: relative;
+}
+

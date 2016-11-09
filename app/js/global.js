@@ -325,6 +325,12 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		$scope.courseFB=$firebaseArray(courses);
 		var team = firebase.database().ref("Team");
 		$scope.teamInfo = $firebaseArray(team);
+		
+		
+		//team filter variables
+		$scope.query = {}
+		$scope.searchBy = '$'
+		$scope.orderProp="name";      
 	
 		$scope.updateRole=function()
 		{
@@ -469,6 +475,8 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 					$scope.existedTeam.push({"key":data.getKey(),"data":data.val()});					
 				});
 			}
+			
+			
 		}
 		
 		$scope.createTeamForm=function()
@@ -786,4 +794,3 @@ console.log("waiting",waitingID);
 });
 
 
-//JS function
