@@ -11,7 +11,7 @@
 		JQuery: Necessary for some bootstrap interactions (v1.12.4 is used)		
 		Bootstrap: Library and CSS for bootstrap framework (v3.3.7 is used)
 		Font-awesome: More icons for the web development (v4.6.3 is used)		
-		site.css: A customized css for our web application. Not from any web framework. 
+		site.css: A customized css for our web application. Not from any web framework. 
 	-->
 	        
     <script src="lib/jquery.min.js"></script>      
@@ -40,28 +40,13 @@
 	  };
 	  firebase.initializeApp(config);
 	  
-    File.prototype.convertToBase64 = function(callback){
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                 callback(e.target.result)
-            };
-            reader.onerror = function(e) {
-                 callback(null);
-            };        
-            reader.readAsDataURL(this);
-    };
-
-
-	$( document ).ready(function() {
-	/*	$("#profilePic").on('change',function(){
-			$("#base64Img").val('');
-			  var selectedFile = this.files[0];
-			  selectedFile.convertToBase64(function(base64){
-				   $("#base64Img").val(base64);
-				   $('img').attr("src",base64);
-			  }) 
-			});*/
-});
+	  $(document).ready(function(){
+			//$.get("navbar.html",function(response){
+			//$('#navBar').append(response);
+			//});
+			//$('#wrapper').('navbar.html');
+		});
+	  
 	</script>
 	
 	<!-- global function -->
@@ -83,37 +68,7 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
-			<div ng-controller="createCoursesCtrl" class="container">
-	<h2>Create Course</h2>
-		<form name="form" >
-			<div >
-				<label>Course Title </label>
-				<input type="text" name="title" ng-model="courseInfo.title" required>
-			</div>
-
-			<div>
-				<label>Course Profile Picture</label>
-				<input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
-				
-				<img src id="base64PicURL" style="max-width:500px;height:auto;">
-				<span id="base64Name"></span>
-				<a id="removeURL" style="display:none;" ng-click="removeImg()">Remove</a>
-			</div>
-			<div>
-				<label>Description</label>
-				
-				<textarea name="description" ng-model="courseInfo.message" required></textarea>
-			</div>
-			<div>
-				<label>Member range(2-20)</label>
-				<p>Min</p><input type="number" ng-model="courseInfo.min" min="2" max="20">
-				<p>Max</p><input type="number" ng-model="courseInfo.max" min="2" max="20">
-			</div>
-			
-			<input type="submit" name="submit" id="submit"  ng-click="createCourse()">
-		</form>
-</body>
-	</div>
+		
 		
 		
 		
@@ -140,3 +95,4 @@
 
 </body>
 </html>
+Contact GitHub 
