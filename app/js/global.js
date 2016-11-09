@@ -591,7 +591,9 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		$scope.requestHandler=function(operation,email,waitingID)
 		{
-			
+		
+console.log("waiting",waitingID);
+		
 			if(operation==0)
 			{
 				console.log("accept");
@@ -643,24 +645,42 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 				}
 				
 				userObjectArrayPush(email,$scope.teamMember);
-				for(i=0;i<$scope.waitingList.length;i++)
-				{
+				removeWaitingList(waitingID);
 				
-					if($scope.waitingList[i].key==waitingID)
-					{
-						$scope.waitingList.splice(i, 1);
-						break;
-					}
-				}
-				//delete from team's request [email]
-				//add to team's member[email]
-				//delete from useracc's request (coruse id [$scope.ckey]&& team id[$scope.joinedTeam.key])
-				//add to user team (coruse id [$scope.ckey]&& team id[$scope.joinedTeam.key])
+
 			}
 			else
 			{
 				console.log("Decline");
+				firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
+				{
+					var newTeamData=data.val();		
+					removeElementFromArrayByValue(email,newTeamData.request);
+					firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
+				});
+
+				console.log(waitingID);
 				
+				firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
+				{
+					var newUserData=data.val();		
+					removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+					firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
+				});
+				removeWaitingList(waitingID);
+				
+			}
+		}
+		
+		function removeWaitingList(waitingID)
+		{
+			for(i=0;i<$scope.waitingList.length;i++)
+			{
+				if($scope.waitingList[i].key==waitingID)
+				{
+					$scope.waitingList.splice(i, 1);
+					break;
+				}
 			}
 		}
 		
