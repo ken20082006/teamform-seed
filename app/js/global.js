@@ -581,6 +581,8 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		$scope.joinedTeam={};
 		$scope.teamMember=[];
 		$scope.waitingList=[];
+		$scope.lastestTeamMember=[];
+		$scope.lastestWaitingList=[];
 		$scope.ckey;
 		
 		$rootScope.$on("updateRole", function(){
@@ -589,10 +591,126 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			   
 		});
 		
-		$scope.requestHandler=function(operation,email,waitingID)
-		{
+
 		
-console.log("waiting",waitingID);
+		function deleteAllWaitingList()
+		{
+			
+			if(typeof($scope.lastestWaitingList)!="undefined")
+			{
+				
+				for(i=0;i<$scope.lastestWaitingList.length;i++)
+				{
+					var email=$scope.lastestWaitingList[i];
+					userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+					{
+						$scope.requestHandler(1,1,email,data.getKey());
+					});
+				}
+			}
+		
+		}
+		
+		function deleteAllTeamMember()
+		{
+			for(i=0;i<$scope.lastestTeamMember.length;i++)
+			{
+				var email=$scope.lastestTeamMember[i];
+				userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+				{
+					$scope.deleteMember(1,email,data.getKey());
+				});
+			}
+		}
+		
+		$scope.deleteTeam=function()
+		{
+
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) {
+
+
+				for(i=0;i<data.val().member.length;i++)
+				{
+					$scope.lastestTeamMember.push(data.val().member[i]);
+				}
+				if(typeof(data.val().request)!="undefined")
+				{
+					for(i=0;i<data.val().request.length;i++)
+					{
+						$scope.lastestWaitingList.push(data.val().request[i]);
+					}
+				}
+
+			}).then(function(){
+				
+				
+				$.when(deleteAllTeamMember()).done(function(){
+					$.when(deleteAllWaitingList()).done(function() 
+					{
+						firebase.database().ref("Team/"+$scope.joinedTeam.key).remove();
+						firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) 
+						{
+							var newCourseData=data.val();		
+							removeElementFromArrayByValue($scope.joinedTeam.key,newCourseData.team);
+							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData);
+						}).then(function(){
+							$window.location.href="index.html";		
+						}); 
+					});
+
+				});
+				
+		
+			});
+			
+
+
+		}
+		
+		$scope.deleteMember=function(operation,email,memberID)
+		{
+			
+			//console.log($scope.teamMember);
+			if(operation==0&&$scope.email==email)
+			{
+				alert("you can't delete the owner")
+			}
+			else
+			{
+				if(operation==0)
+				{
+					firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
+					{
+						var newTeamData=data.val();		
+						removeElementFromArrayByValue(email,newTeamData.member);
+						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
+					});
+				}
+
+				firebase.database().ref("UserAccount/"+memberID).once('value', function(data) 
+				{
+					var newUserData=data.val();
+					delete newUserData.team[$scope.ckey];
+											
+					if(jQuery.isEmptyObject(newUserData.team))
+					{
+						delete newUserData["team"];
+					}
+					
+					firebase.database().ref("UserAccount/"+memberID).set(newUserData);
+					
+				});	
+				if(operation==0)
+				{
+					removeUserList($scope.teamMember,memberID);
+				}
+				
+			}
+
+		}
+		
+		$scope.requestHandler=function(operation,type,email,waitingID)
+		{
 		
 			if(operation==0)
 			{
@@ -619,7 +737,7 @@ console.log("waiting",waitingID);
 						}
 						newUserData.team[$scope.ckey]=$scope.joinedTeam.key
 						
-						firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
+						
 						if(typeof(newUserData.request!="undefined"))
 						{
 							console.log(newUserData.request);
@@ -634,8 +752,12 @@ console.log("waiting",waitingID);
 								});
 							}
 						}
-
-						
+						delete newUserData.request[$scope.ckey];
+						if(jQuery.isEmptyObject(newUserData.request))
+						{
+							delete newUserData["request"];
+						}
+						firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
 					});				
 
 				}
@@ -645,7 +767,8 @@ console.log("waiting",waitingID);
 				}
 				
 				userObjectArrayPush(email,$scope.teamMember);
-				removeWaitingList(waitingID);
+				//removeWaitingList(waitingID);
+				removeUserList($scope.waitingList,waitingID);
 				
 
 			}
@@ -659,7 +782,6 @@ console.log("waiting",waitingID);
 					firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
 				});
 
-				console.log(waitingID);
 				
 				firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
 				{
@@ -667,22 +789,28 @@ console.log("waiting",waitingID);
 					removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
 					firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
 				});
-				removeWaitingList(waitingID);
-				
+				//removeWaitingList(waitingID);
+				if(type==0)
+				{
+					removeUserList($scope.waitingList,waitingID);
+				}
+
 			}
 		}
 		
-		function removeWaitingList(waitingID)
+
+		function removeUserList(array,userID)
 		{
-			for(i=0;i<$scope.waitingList.length;i++)
+			for(i=0;i<array.length;i++)
 			{
-				if($scope.waitingList[i].key==waitingID)
+				if(array[i].key==userID)
 				{
-					$scope.waitingList.splice(i, 1);
+					array.splice(i, 1);
 					break;
 				}
 			}
 		}
+		
 		
 		function removeElementFromArrayByValue(value,array)
 		{
@@ -709,20 +837,13 @@ console.log("waiting",waitingID);
 				for(i=0;i<$scope.joinedTeam.member.length;i++)
 				{
 					
-					/*userAccount.orderByChild("email").equalTo($scope.joinedTeam.member[i]).on("child_added", function(data)
-					{
-						$scope.teamMember.push({"key":data.getKey(),"data":data.val()});
-					});*/
 					userObjectArrayPush($scope.joinedTeam.member[i],$scope.teamMember);
 				}
 				if(typeof($scope.joinedTeam.request)!="undefined")
 				{
 					for(i=0;i<$scope.joinedTeam.request.length;i++)
 					{
-						/*userAccount.orderByChild("email").equalTo($scope.joinedTeam.request[i]).on("child_added", function(data)
-						{
-							$scope.waitingList.push({"key":data.getKey(),"data":data.val()});
-						});*/
+
 						userObjectArrayPush($scope.joinedTeam.request[i],$scope.waitingList);
 					}
 				}
