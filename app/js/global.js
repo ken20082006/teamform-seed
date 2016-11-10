@@ -330,7 +330,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		//team filter variables
 		$scope.query = {}
 		$scope.searchBy = '$'
-		$scope.orderProp="name";      
+		$scope.orderProp="name";   
 	
 		$scope.updateRole=function()
 		{
