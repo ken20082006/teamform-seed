@@ -862,6 +862,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					console.log("no team in this course");
 					$window.location.href="index.html";
 				}
+				renderTeamInfo();
 			}
 			else
 			{
@@ -871,7 +872,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					$window.location.href="index.html";
 				}
 			}
-			renderTeamInfo();
+		
 		}
 
 		function gup( name, url ) {
@@ -911,6 +912,116 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			}
 
 		}
+		
+		/**********************************teacher update info********************************************************/
+		
+				
+		File.prototype.convertToBase64 = function(callback){
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				 callback(e.target.result)
+			};
+			reader.onerror = function(e) {
+				 callback(null);
+			};        
+			reader.readAsDataURL(this);
+		};
+		
+		$scope.fileNameChanged = function (ele) 
+		{
+		  var file = ele.files[0];
+		  if(file.type.length>0&&file.type.substr(0,5)=="image")
+		  {
+				file.convertToBase64(function(base64){
+				$scope.courseInfo.image=base64;
+				$scope.fileName=file.name;
+				$('#base64PicURL').attr('src',base64);
+				$('#base64Name').html(file.name);
+				$('#removeURL').show();
+				$('#profilePic').val('');
+			}); 
+			  	  
+		  }
+		  else
+		  {
+			  alert("invliad file format");
+			//  $scope.removeImg();
+			  $('#profilePic').val('');
+		  }
+
+
+		}
+		
+		$scope.courseInfo=
+		{
+			title:"",
+			image:"",
+			owner:"",
+			message:"",
+			max:"",
+			min:""
+		}
+		$scope.fileName;
+		
+		$scope.removeImg=function(){
+		
+			$('#removeURL').hide();
+			$('#base64Name').html('');
+			$scope.courseInfo.image='image/grey.png';
+			$scope.fileName='';
+			$('#base64PicURL').attr('src','');
+
+		}
+		
+		function validInput()
+		{
+			$scope.courseInfo.title=$scope.currCourse.title;
+			$scope.courseInfo.message=$scope.currCourse.message;
+			$scope.courseInfo.min=$scope.currCourse.min;
+			$scope.courseInfo.max=$scope.currCourse.max;
+			$scope.courseInfo.owner=$scope.email;
+			if(typeof($scope.courseInfo.image)=="undefined"||$scope.courseInfo.image=="")
+			{
+				$scope.courseInfo.image='image/grey.png';
+			}
+			
+			if(typeof($scope.courseInfo.title)=="undefined"||typeof($scope.courseInfo.message)=="undefined"||typeof($scope.courseInfo.min)=="undefined"||typeof($scope.courseInfo.max)=="undefined")
+			{
+				console.log("some missing data");
+				return false;
+			}
+			return true;	
+		}
+		
+		$scope.editCourse = function() {
+
+			if(validInput())
+			{
+				firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) 
+				{
+					if(typeof(data.val().team)!="undefined")
+					{
+						$scope.courseInfo.team=data.val().team;
+					}
+					
+					firebase.database().ref("courses/"+$scope.ckey).set($scope.courseInfo).then(function(){
+						
+						$window.location.href="index.html";		
+						
+					});
+				});
+			
+			}else
+			{
+				alert("some missing data");
+			}
+
+		}
+		
+		
+
+		
+
 				
 });
 
