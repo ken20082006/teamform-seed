@@ -93,7 +93,7 @@
                      
                      <div class="text-center">
                         <h1>{{currCourse.title}}Team Search</h1>
-                        <p>Search the team by {{searchBy}}</p>
+                        <p>Search the team by <span ng-if="searchBy!='$'">{{searchBy}}</span><span ng-if="searchBy=='$'">All</span></p>
                      </div>
 
                      <br >

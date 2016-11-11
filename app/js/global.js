@@ -23,6 +23,7 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 			{
 				$scope.email=user.email;
 				$scope.userName=user.userName;
+				$scope.role=user.role;
 				
 			}
 			$scope.logout = function() {
