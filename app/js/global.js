@@ -330,7 +330,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		//team filter variables
 		$scope.query = {}
 		$scope.searchBy = '$'
-		$scope.orderProp="name";      
+		$scope.orderProp="name";   
 	
 		$scope.updateRole=function()
 		{
@@ -581,6 +581,8 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		$scope.joinedTeam={};
 		$scope.teamMember=[];
 		$scope.waitingList=[];
+		$scope.lastestTeamMember=[];
+		$scope.lastestWaitingList=[];
 		$scope.ckey;
 		
 		$rootScope.$on("updateRole", function(){
@@ -589,100 +591,269 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			   
 		});
 		
-		$scope.requestHandler=function(operation,email,waitingID)
-		{
-		
-console.log("waiting",waitingID);
-		
-			if(operation==0)
-			{
-				console.log("accept");
 
-				var memberNumber=$scope.joinedTeam.member.length;
-				if(memberNumber+1<=$scope.currCourse.max)
+		
+		$scope.quitTeam=function()
+		{
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
+			{
+				var newTeamData=data.val();		
+				removeElementFromArrayByValue($scope.email,newTeamData.member);
+				firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
+			});
+			userAccount.orderByChild("email").equalTo($scope.email).on("child_added", function(data)
+			{
+				var newUserData=data.val();	
+				delete newUserData.team[$scope.ckey];
+				if(jQuery.isEmptyObject(newUserData.team))
+				{
+					delete newUserData["team"];
+				}
+				firebase.database().ref("UserAccount/"+data.getKey()).set(newUserData).then(function()
+				{		
+					$window.location.href="index.html";		
+				});
+			});
+			
+		}
+		
+		function deleteAllWaitingList()
+		{
+			
+			if(typeof($scope.lastestWaitingList)!="undefined")
+			{
+				
+				for(i=0;i<$scope.lastestWaitingList.length;i++)
+				{
+					var email=$scope.lastestWaitingList[i];
+					userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+					{
+						$scope.requestHandler(1,1,email,data.getKey());
+					});
+				}
+			}
+		
+		}
+		
+		function deleteAllTeamMember()
+		{
+			for(i=0;i<$scope.lastestTeamMember.length;i++)
+			{
+				var email=$scope.lastestTeamMember[i];
+				userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+				{
+					$scope.deleteMember(1,email,data.getKey());
+				});
+			}
+		}
+		
+		$scope.deleteTeam=function()
+		{
+
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) {
+
+
+				for(i=0;i<data.val().member.length;i++)
+				{
+					$scope.lastestTeamMember.push(data.val().member[i]);
+				}
+				if(typeof(data.val().request)!="undefined")
+				{
+					for(i=0;i<data.val().request.length;i++)
+					{
+						$scope.lastestWaitingList.push(data.val().request[i]);
+					}
+				}
+
+			}).then(function(){
+				
+				
+				$.when(deleteAllTeamMember()).done(function(){
+					$.when(deleteAllWaitingList()).done(function() 
+					{
+						firebase.database().ref("Team/"+$scope.joinedTeam.key).remove();
+						firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) 
+						{
+							var newCourseData=data.val();		
+							removeElementFromArrayByValue($scope.joinedTeam.key,newCourseData.team);
+							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData);
+						}).then(function(){
+							$window.location.href="index.html";		
+						}); 
+					});
+
+				});
+				
+		
+			});
+			
+		}
+		
+		$scope.deleteMember=function(operation,email,memberID)
+		{
+
+			if(operation==0&&$scope.joinedTeam.leaderID==email)
+			{
+				alert("you can't delete the owner")
+			}
+			else
+			{
+				if(operation==0)
 				{
 					firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
 					{
 						var newTeamData=data.val();		
-						newTeamData.request.splice(newTeamData.request.indexOf(email), 1);
-						newTeamData.member.push(email);
+						removeElementFromArrayByValue(email,newTeamData.member);
 						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
 					});
+				}
 
-					firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
+				firebase.database().ref("UserAccount/"+memberID).once('value', function(data) 
+				{
+					var newUserData=data.val();
+					delete newUserData.team[$scope.ckey];
+											
+					if(jQuery.isEmptyObject(newUserData.team))
 					{
-						var newUserData=data.val();
-						removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
-						if(typeof(newUserData.team)=="undefined")
-						{
-							newUserData.team={};
-						}
-						newUserData.team[$scope.ckey]=$scope.joinedTeam.key
-						
-						firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
-						if(typeof(newUserData.request!="undefined"))
-						{
-							console.log(newUserData.request);
-							for(i=0;i<newUserData.request[$scope.ckey].length;i++)
-							{
-								firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
-
-									var newTeamData=data.val();
-									removeElementFromArrayByValue(newUserData.email,newTeamData.request);
-									firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
-									
-								});
-							}
-						}
-
-						
-					});				
-
-				}
-				else
+						delete newUserData["team"];
+					}
+					
+					firebase.database().ref("UserAccount/"+memberID).set(newUserData);
+					
+				});	
+				if(operation==0)
 				{
-					alert("exceed max limitation");
+					removeUserList($scope.teamMember,memberID);
 				}
 				
-				userObjectArrayPush(email,$scope.teamMember);
-				removeWaitingList(waitingID);
-				
-
 			}
-			else
-			{
-				console.log("Decline");
-				firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
-				{
-					var newTeamData=data.val();		
-					removeElementFromArrayByValue(email,newTeamData.request);
-					firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
-				});
 
-				console.log(waitingID);
-				
-				firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
-				{
-					var newUserData=data.val();		
-					removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
-					firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
-				});
-				removeWaitingList(waitingID);
-				
-			}
 		}
 		
-		function removeWaitingList(waitingID)
+		$scope.requestHandler=function(operation,type,email,waitingID)
 		{
-			for(i=0;i<$scope.waitingList.length;i++)
+				
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
 			{
-				if($scope.waitingList[i].key==waitingID)
+				var newTeamData=data.val();		
+				console.log("newTeamData ",newTeamData);
+				firebase.database().ref("courses/"+$scope.ckey).once('value', function(data)
 				{
-					$scope.waitingList.splice(i, 1);
+				
+					if(operation==0)
+					{
+						console.log("accept");									
+						var maxSize=data.val().max;
+						$scope.currCourse.max=maxSize;
+						var memberNumber=newTeamData.member.length;
+						if(memberNumber+1<=maxSize)
+						{
+	
+							newTeamData.request.splice(newTeamData.request.indexOf(email), 1);
+							newTeamData.member.push(email);
+							firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
+
+
+							firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
+							{
+								var newUserData=data.val();
+								removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+								if(typeof(newUserData.team)=="undefined")
+								{
+									newUserData.team={};
+								}
+								newUserData.team[$scope.ckey]=$scope.joinedTeam.key
+								
+								
+								if(typeof(newUserData.request!="undefined"))
+								{
+									console.log(newUserData.request);
+									for(i=0;i<newUserData.request[$scope.ckey].length;i++)
+									{
+										firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
+
+											var newTeamData=data.val();
+											removeElementFromArrayByValue(newUserData.email,newTeamData.request);
+											firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
+											
+										});
+									}
+								}
+								delete newUserData.request[$scope.ckey];
+								if(jQuery.isEmptyObject(newUserData.request))
+								{
+									delete newUserData["request"];
+								}
+								firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
+							});				
+
+						}
+						else
+						{
+							alert("exceed max limitation");
+						}
+
+						
+						updateUserList(newTeamData);
+							
+					}
+					else
+					{
+						console.log("Decline");
+
+						removeElementFromArrayByValue(email,newTeamData.request);
+						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);				
+						
+						firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
+						{
+							var newUserData=data.val();		
+							removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+							firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
+						});
+
+						if(type==0)
+						{
+							updateUserList(newTeamData);
+						}
+
+					}
+				});
+			});
+		}
+		
+
+		function updateUserList(newTeamData)
+		{
+			var tmpMember=[];
+			var tmpWaiting=[];
+			for(i=0;i<newTeamData.member.length;i++)
+			{
+				userObjectArrayPush(newTeamData.member[i],tmpMember);
+			}
+			$scope.teamMember=tmpMember;
+			if(typeof(newTeamData.request.length)!="undefined")
+			{
+				for(i=0;i<newTeamData.request.length;i++)
+				{
+					userObjectArrayPush(newTeamData.request[i],tmpWaiting);
+				}
+			}
+
+			$scope.waitingList=tmpWaiting;
+		}
+		
+		function removeUserList(array,userID)
+		{
+			for(i=0;i<array.length;i++)
+			{
+				if(array[i].key==userID)
+				{
+					array.splice(i, 1);
 					break;
 				}
 			}
 		}
+		
 		
 		function removeElementFromArrayByValue(value,array)
 		{
@@ -705,24 +876,27 @@ console.log("waiting",waitingID);
 	
 				$scope.joinedTeam=data.val();
 				$scope.joinedTeam.key=data.getKey();
+				if($scope.joinedTeam.leaderID==$scope.email)
+				{
+					$scope.isOwner=true;
+				}
+				else
+				{
+					$scope.isOwner=false;
+				}
+				
+				console.log("$scope.isOwner",$scope.isOwner);
 				
 				for(i=0;i<$scope.joinedTeam.member.length;i++)
 				{
 					
-					/*userAccount.orderByChild("email").equalTo($scope.joinedTeam.member[i]).on("child_added", function(data)
-					{
-						$scope.teamMember.push({"key":data.getKey(),"data":data.val()});
-					});*/
 					userObjectArrayPush($scope.joinedTeam.member[i],$scope.teamMember);
 				}
 				if(typeof($scope.joinedTeam.request)!="undefined")
 				{
 					for(i=0;i<$scope.joinedTeam.request.length;i++)
 					{
-						/*userAccount.orderByChild("email").equalTo($scope.joinedTeam.request[i]).on("child_added", function(data)
-						{
-							$scope.waitingList.push({"key":data.getKey(),"data":data.val()});
-						});*/
+
 						userObjectArrayPush($scope.joinedTeam.request[i],$scope.waitingList);
 					}
 				}
@@ -741,6 +915,7 @@ console.log("waiting",waitingID);
 					console.log("no team in this course");
 					$window.location.href="index.html";
 				}
+				renderTeamInfo();
 			}
 			else
 			{
@@ -750,7 +925,7 @@ console.log("waiting",waitingID);
 					$window.location.href="index.html";
 				}
 			}
-			renderTeamInfo();
+		
 		}
 
 		function gup( name, url ) {
@@ -790,6 +965,116 @@ console.log("waiting",waitingID);
 			}
 
 		}
+		
+		/**********************************teacher update info********************************************************/
+		
+				
+		File.prototype.convertToBase64 = function(callback){
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				 callback(e.target.result)
+			};
+			reader.onerror = function(e) {
+				 callback(null);
+			};        
+			reader.readAsDataURL(this);
+		};
+		
+		$scope.fileNameChanged = function (ele) 
+		{
+		  var file = ele.files[0];
+		  if(file.type.length>0&&file.type.substr(0,5)=="image")
+		  {
+				file.convertToBase64(function(base64){
+				$scope.courseInfo.image=base64;
+				$scope.fileName=file.name;
+				$('#base64PicURL').attr('src',base64);
+				$('#base64Name').html(file.name);
+				$('#removeURL').show();
+				$('#profilePic').val('');
+			}); 
+			  	  
+		  }
+		  else
+		  {
+			  alert("invliad file format");
+			//  $scope.removeImg();
+			  $('#profilePic').val('');
+		  }
+
+
+		}
+		
+		$scope.courseInfo=
+		{
+			title:"",
+			image:"",
+			owner:"",
+			message:"",
+			max:"",
+			min:""
+		}
+		$scope.fileName;
+		
+		$scope.removeImg=function(){
+		
+			$('#removeURL').hide();
+			$('#base64Name').html('');
+			$scope.courseInfo.image='image/grey.png';
+			$scope.fileName='';
+			$('#base64PicURL').attr('src','');
+
+		}
+		
+		function validInput()
+		{
+			$scope.courseInfo.title=$scope.currCourse.title;
+			$scope.courseInfo.message=$scope.currCourse.message;
+			$scope.courseInfo.min=$scope.currCourse.min;
+			$scope.courseInfo.max=$scope.currCourse.max;
+			$scope.courseInfo.owner=$scope.email;
+			if(typeof($scope.courseInfo.image)=="undefined"||$scope.courseInfo.image=="")
+			{
+				$scope.courseInfo.image='image/grey.png';
+			}
+			
+			if(typeof($scope.courseInfo.title)=="undefined"||typeof($scope.courseInfo.message)=="undefined"||typeof($scope.courseInfo.min)=="undefined"||typeof($scope.courseInfo.max)=="undefined")
+			{
+				console.log("some missing data");
+				return false;
+			}
+			return true;	
+		}
+		
+		$scope.editCourse = function() {
+
+			if(validInput())
+			{
+				firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) 
+				{
+					if(typeof(data.val().team)!="undefined")
+					{
+						$scope.courseInfo.team=data.val().team;
+					}
+					
+					firebase.database().ref("courses/"+$scope.ckey).set($scope.courseInfo).then(function(){
+						
+						$window.location.href="index.html";		
+						
+					});
+				});
+			
+			}else
+			{
+				alert("some missing data");
+			}
+
+		}
+		
+		
+
+		
+
 				
 });
 
