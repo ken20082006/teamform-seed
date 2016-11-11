@@ -136,3 +136,13 @@
         margin-right: 0;
     }
 }
+
+input[type=submit] {
+	margin-bottom:5px;
+    padding:5px 10px; 
+    background:#09F;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+}
