@@ -593,6 +593,30 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 
 		
+		$scope.quitTeam=function()
+		{
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
+			{
+				var newTeamData=data.val();		
+				removeElementFromArrayByValue($scope.email,newTeamData.member);
+				firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
+			});
+			userAccount.orderByChild("email").equalTo($scope.email).on("child_added", function(data)
+			{
+				var newUserData=data.val();	
+				delete newUserData.team[$scope.ckey];
+				if(jQuery.isEmptyObject(newUserData.team))
+				{
+					delete newUserData["team"];
+				}
+				firebase.database().ref("UserAccount/"+data.getKey()).set(newUserData).then(function()
+				{		
+					$window.location.href="index.html";		
+				});
+			});
+			
+		}
+		
 		function deleteAllWaitingList()
 		{
 			
@@ -663,15 +687,12 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 			});
 			
-
-
 		}
 		
 		$scope.deleteMember=function(operation,email,memberID)
 		{
-			
-			//console.log($scope.teamMember);
-			if(operation==0&&$scope.email==email)
+
+			if(operation==0&&$scope.joinedTeam.leaderID==email)
 			{
 				alert("you can't delete the owner")
 			}
@@ -711,94 +732,116 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		$scope.requestHandler=function(operation,type,email,waitingID)
 		{
-		
-			if(operation==0)
+				
+			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
 			{
-				console.log("accept");
-
-				var memberNumber=$scope.joinedTeam.member.length;
-				if(memberNumber+1<=$scope.currCourse.max)
+				var newTeamData=data.val();		
+				console.log("newTeamData ",newTeamData);
+				firebase.database().ref("courses/"+$scope.ckey).once('value', function(data)
 				{
-					firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
+				
+					if(operation==0)
 					{
-						var newTeamData=data.val();		
-						newTeamData.request.splice(newTeamData.request.indexOf(email), 1);
-						newTeamData.member.push(email);
-						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
-					});
+						console.log("accept");									
+						var maxSize=data.val().max;
+						$scope.currCourse.max=maxSize;
+						var memberNumber=newTeamData.member.length;
+						if(memberNumber+1<=maxSize)
+						{
+	
+							newTeamData.request.splice(newTeamData.request.indexOf(email), 1);
+							newTeamData.member.push(email);
+							firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
 
-					firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
-					{
-						var newUserData=data.val();
-						removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
-						if(typeof(newUserData.team)=="undefined")
-						{
-							newUserData.team={};
-						}
-						newUserData.team[$scope.ckey]=$scope.joinedTeam.key
-						
-						
-						if(typeof(newUserData.request!="undefined"))
-						{
-							console.log(newUserData.request);
-							for(i=0;i<newUserData.request[$scope.ckey].length;i++)
+
+							firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
 							{
-								firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
+								var newUserData=data.val();
+								removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+								if(typeof(newUserData.team)=="undefined")
+								{
+									newUserData.team={};
+								}
+								newUserData.team[$scope.ckey]=$scope.joinedTeam.key
+								
+								
+								if(typeof(newUserData.request!="undefined"))
+								{
+									console.log(newUserData.request);
+									for(i=0;i<newUserData.request[$scope.ckey].length;i++)
+									{
+										firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
 
-									var newTeamData=data.val();
-									removeElementFromArrayByValue(newUserData.email,newTeamData.request);
-									firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
-									
-								});
-							}
+											var newTeamData=data.val();
+											removeElementFromArrayByValue(newUserData.email,newTeamData.request);
+											firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
+											
+										});
+									}
+								}
+								delete newUserData.request[$scope.ckey];
+								if(jQuery.isEmptyObject(newUserData.request))
+								{
+									delete newUserData["request"];
+								}
+								firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
+							});				
+
 						}
-						delete newUserData.request[$scope.ckey];
-						if(jQuery.isEmptyObject(newUserData.request))
+						else
 						{
-							delete newUserData["request"];
+							alert("exceed max limitation");
 						}
-						firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
-					});				
 
-				}
-				else
-				{
-					alert("exceed max limitation");
-				}
-				
-				userObjectArrayPush(email,$scope.teamMember);
-				//removeWaitingList(waitingID);
-				removeUserList($scope.waitingList,waitingID);
-				
+						
+						updateUserList(newTeamData);
+							
+					}
+					else
+					{
+						console.log("Decline");
 
-			}
-			else
-			{
-				console.log("Decline");
-				firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
-				{
-					var newTeamData=data.val();		
-					removeElementFromArrayByValue(email,newTeamData.request);
-					firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
+						removeElementFromArrayByValue(email,newTeamData.request);
+						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);				
+						
+						firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
+						{
+							var newUserData=data.val();		
+							removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+							firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
+						});
+
+						if(type==0)
+						{
+							updateUserList(newTeamData);
+						}
+
+					}
 				});
-
-				
-				firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
-				{
-					var newUserData=data.val();		
-					removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
-					firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
-				});
-				//removeWaitingList(waitingID);
-				if(type==0)
-				{
-					removeUserList($scope.waitingList,waitingID);
-				}
-
-			}
+			});
 		}
 		
 
+		function updateUserList(newTeamData)
+		{
+			var tmpMember=[];
+			var tmpWaiting=[];
+			for(i=0;i<newTeamData.member.length;i++)
+			{
+				userObjectArrayPush(newTeamData.member[i],tmpMember);
+			}
+			$scope.teamMember=tmpMember;
+			if(typeof(newTeamData.request.length)!="undefined")
+			{
+				for(i=0;i<newTeamData.request.length;i++)
+				{
+					userObjectArrayPush(newTeamData.request[i],tmpWaiting);
+				}
+			}
+
+			$scope.waitingList=tmpWaiting;
+		}
+		
 		function removeUserList(array,userID)
 		{
 			for(i=0;i<array.length;i++)
@@ -833,6 +876,16 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 	
 				$scope.joinedTeam=data.val();
 				$scope.joinedTeam.key=data.getKey();
+				if($scope.joinedTeam.leaderID==$scope.email)
+				{
+					$scope.isOwner=true;
+				}
+				else
+				{
+					$scope.isOwner=false;
+				}
+				
+				console.log("$scope.isOwner",$scope.isOwner);
 				
 				for(i=0;i<$scope.joinedTeam.member.length;i++)
 				{
