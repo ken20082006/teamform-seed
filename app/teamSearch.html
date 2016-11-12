@@ -93,18 +93,18 @@
                      
                      <div class="text-center">
                         <h1>{{currCourse.title}}Team Search</h1>
-                        <p>Search the team by name</p>
+                        <p>Search the team by <span ng-if="searchBy!='$'">{{searchBy}}</span><span ng-if="searchBy=='$'">All</span></p>
                      </div>
 
                      <br >
 
                      <div class="text-center">
 
-                        <input id="input_text" type="text" class="input-lg" ng-model="searchTeam[searchBy]">
+                        <input id="input_text" type="text" class="input-lg" ng-model="searchTeam.data[searchBy]">
 						<select ng-model="searchBy">
 							<option value="$">All</option>
 							<option value="name">Name</option>
-							<option value="tag">Tag</option>
+							<option value="description">Description</option>
 						</select>   
                         <br>
                         <em>Enter a name (e.g. COMP3111-L1, COMP3111-L2 or COMP3111H) to join the team</em>
