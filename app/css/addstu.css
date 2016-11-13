@@ -1,0 +1,24 @@
+@charset "utf-8";
+
+#header
+{
+	font-style:italic;
+	font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", "Arial Black", sans-serif;
+	
+}
+
+hr
+{
+	border-color:#666;
+	margin-bottom:40px;
+}
+
+#cou
+{
+	margin:0px 0px 15px 0px
+}
+
+.coutext
+{
+	margin-right:10px;
+}
