@@ -62,8 +62,10 @@
 		<div id="navBar" ng-controller="wrapperCtrl">
 		<div ng-include="'navbar.html'"></div>
 		</div>
+        <div class="heading">
+            <h1>Dash Board</h1>
+        </div>
         <!-- Page Content -->
-		
 		<div id="coursesContentBlock" ng-controller="indexCtrl" >
 			<div class="row" style="margin: 20px;">
 				<div ng-repeat="q in courseArray">
@@ -71,10 +73,10 @@
 					<div class="col-lg-3 col-md-6">
 				
 						<div class="panel">
-							<div class="panel-heading"  style="background-image: url({{q.data.image}}); background-size: 100% 100%; color: #FFF">
-								<div class="row" style="min-height:100px;">
-									<div class="col-xs-9 text-right">
-										<div class="huge">{{q.data.title}}	</div>
+							<div class="panel-heading" style="background-image: url({{q.data.image}}); background-size: 100% 100%; color: #FFF">
+								<div class="row">
+									<div>
+										<div class="huge t_title">{{q.data.title}}	</div>
 										<input  type="hidden" id="cKey" value="{{q.key}}">
 									</div>
 								</div>
