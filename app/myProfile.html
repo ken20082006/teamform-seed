@@ -68,9 +68,17 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
-		
-		
-		
+		<div ng-controller="myProfileCtrl">
+			<div>
+				<label>Nick Name</label><input type="text" value="{{currUser.userName}}" ng-model="currUser.userName">
+			</div>
+			<div>
+				<label>Password</label><input type="password" ng-model="password">
+			</div>
+			<div>
+				<input type="submit" ng-click="editProfile()">
+			</div>
+		</div>
 		
        
         <!-- /#page-content-wrapper -->

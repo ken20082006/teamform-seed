@@ -19,11 +19,9 @@
       	  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"> 
-    
-    	<link href="css/createcou.css" rel="stylesheet" type="text/css">
-  
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
+    <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">   
+	<link href="css/createcou.css" rel="stylesheet" type="text/css">
       
     <!-- Customized libraries shared by pages -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
@@ -31,6 +29,7 @@
 	<script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
 	<!-- AngularFire URL: https://github.com/firebase/angularfire -->
 	<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+	<script src="js/bootstrap-datepicker.min.js"></script>
 
 	<script>
 	  // Initialize Firebase
@@ -75,7 +74,6 @@
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/dash.css">
-
 <body>
 <div ng-controller="dashBoardCtrl">
 
@@ -88,10 +86,10 @@
 		</div>
         <!-- Page Content -->
 			<div ng-controller="createCoursesCtrl" class="container">
-    <div id="ccheader">
-	<h2>Create Course</h2>
-    </div>
-    <hr>
+	    <div id="ccheader">
+			<h2>Create Course</h2>
+		</div>
+		<hr>
 		<form name="form" >
 			<div >
 				<label>Course Code: </label>
@@ -100,28 +98,31 @@
 
 			<div id="pic">
 				<label>Course Profile Picture</label>
-				<input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" >
+				<input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
 				
 				<img src id="base64PicURL" style="max-width:500px;height:auto;">
 				<span id="base64Name"></span>
 				<a id="removeURL" style="display:none;" ng-click="removeImg()">Remove</a>
 			</div>
-			<div id="des">
-				<label>Description:</label>
-				<br>
-				<textarea name="description" ng-model="courseInfo.message" required rows="5" cols="50" ></textarea>
+			<div>
+				<label>Description</label>
+				
+				<textarea name="description" ng-model="courseInfo.message" required rows="5" cols="50"></textarea>
 			</div>
 			<div>
-				<label>Team size(2-20)</label>
-				<p>Min</p><input type="number" ng-model="courseInfo.min" min="2" max="20" >
-				<p>Max</p><input type="number" ng-model="courseInfo.max" min="2" max="20" >
+				<label>Member range(2-20)</label>
+				<p>Min</p><input type="number" ng-model="courseInfo.min" min="2" max="20">
+				<p>Max</p><input type="number" ng-model="courseInfo.max" min="2" max="20">
 			</div>
-			
-            <div id="sub">
-			<input type="submit" name="submit" id="submit"  ng-click="createCourse()">
-            </div>
+			<div>
+				<label>Date</label><input type="text" ng-model="courseInfo.date" id="datepicker" required>
+				
+			</div>
+			<div id="sub">
+				<input type="submit" name="submit" id="submit"  ng-click="createCourse()">
+			</div>
 		</form>
-
+</body>
 	</div>
 		
 		

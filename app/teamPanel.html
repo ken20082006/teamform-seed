@@ -94,15 +94,7 @@
 				<div>
 					<label>Description</label><textarea  ng-model="currCourse.message" required>{{currCourse.title}}</textarea>
 				</div>
-				<div>
-					<label>Range(2-20)</label>
-					<br>
-					<label>min</label>
-					<input type="number" value="{{currCourse.min}}" ng-model="currCourse.min" min="2" max="20" required>
-					<br>
-					<label>max</label>
-					<input type="number" value="{{currCourse.max}}" ng-model="currCourse.max" min="2" max="20" required>
-				</div>
+
 				<div>
 				<label>Image</label>
 				<input type="file" id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
