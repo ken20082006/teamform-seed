@@ -18,7 +18,7 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 				$rootScope.$emit("updateRole", {});
 			});
 						
-			$rootScope.$on("updateUserName", function()
+			$rootScope.$on("updateUserName", function() // update the username displayed on nav bar when the profile is edited
 			{
 				$scope.userName=user.userName;
 				$scope.$apply();
@@ -87,7 +87,7 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 			  }
 			  else
 			  {
-				  window.location = "login.html";
+				  window.location = "login.html";//redirect to login page if the user is not logined
 			  }
 			});
 		}
@@ -112,7 +112,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 		{
 			if($scope.role!="1")
 			{
-				 window.location = "index.html";
+				 window.location = "index.html";// only the teacher role can enter create course page
 			}
 			
 		}
@@ -142,7 +142,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 
 		/*create course functions*/
 		
-		File.prototype.convertToBase64 = function(callback){
+		File.prototype.convertToBase64 = function(callback){		//function of  convert uploaded image to base64 image
 			var reader = new FileReader();
 			reader.onload = function(e) {
 				 callback(e.target.result)
@@ -153,20 +153,20 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			reader.readAsDataURL(this);
 		};
 		
-		$scope.fileNameChanged = function (ele) 
+		$scope.fileNameChanged = function (ele) // trigger when user upload a file
 		{
 		  var file = ele.files[0];
-		  if(file.type.length>0&&file.type.substr(0,5)=="image")
+		  if(file.type.length>0&&file.type.substr(0,5)=="image")  // check for the format type of the chose file
 		  {
-				file.convertToBase64(function(base64){
-				$scope.courseInfo.image=base64;
-				$scope.fileName=file.name;
-				$('#base64PicURL').attr('src',base64);
-				$('#base64Name').html(file.name);
-				$('#removeURL').show();
-				$('#profilePic').val('');
-			}); 
-			  	  
+				file.convertToBase64(function(base64)
+				{
+					$scope.courseInfo.image=base64;
+					$scope.fileName=file.name;
+					$('#base64PicURL').attr('src',base64);
+					$('#base64Name').html(file.name);
+					$('#removeURL').show();
+					$('#profilePic').val('');
+				}); 		  	  
 		  }
 		  else
 		  {
@@ -174,7 +174,6 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			  $scope.removeImg();
 			  $('#profilePic').val('');
 		  }
-
 
 		}
 		
@@ -190,7 +189,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 		}
 		$scope.fileName;
 		
-		$scope.removeImg=function(){
+		$scope.removeImg=function(){ //function for remove the uploaded image
 		
 			$('#removeURL').hide();
 			$('#base64Name').html('');
@@ -200,7 +199,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 
 		}
 		
-		function validInput()
+		function validInput()// check if any empty input of essential data or invalid input
 		{
 			if($scope.courseInfo.title==""||$scope.courseInfo.message==""||$scope.courseInfo.min==""||$scope.courseInfo.max==""||$scope.courseInfo.date=="")
 			{
@@ -214,6 +213,12 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 			}
 			return true;	
 		}
+		
+		/*create course flow*/
+		/*
+			add an entry in courses table
+			add the course id to the course array in the  course's owner user
+		*/
 		
 		$scope.createCourse = function() {
 			var isError=false;
@@ -278,6 +283,23 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 			   loadcourses();
 		});
 		
+		function loadcourses()
+		{
+			if(typeof($scope.course)!="undefined")
+			{
+				var tmpCourse=[];
+				for(i=0;i<$scope.course.length;i++)
+				{
+					firebase.database().ref("courses/"+$scope.course[i]).once('value', function(data) {
+						tmpCourse.push({"key":data.getKey(),"data":data.val()});	
+						
+					});
+				}
+				$scope.courseArray=tmpCourse;
+			}
+		}	
+		
+		/*****page access control*****/
 		
 		//redirect the page when user click on "view detail"
 		//student without team -> teamsearch
@@ -321,21 +343,7 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 			
 		}
 		
-		function loadcourses()
-		{
-			if(typeof($scope.course)!="undefined")
-			{
-				var tmpCourse=[];
-				for(i=0;i<$scope.course.length;i++)
-				{
-					firebase.database().ref("courses/"+$scope.course[i]).once('value', function(data) {
-						tmpCourse.push({"key":data.getKey(),"data":data.val()});	
-						
-					});
-				}
-				$scope.courseArray=tmpCourse;
-			}
-		}		
+	
 });
 
 
@@ -388,6 +396,14 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		
 		$scope.requestValid=true;
 		
+		/*checking list*/
+		/*
+			join request&&delete request
+			1. if has team in that course, redirect to the team panel
+			delete request
+			2.if not in the request list in that team, update the interface by loading team data again
+		*/
+		
 		function requestValidCheck(operation,key)//1 is delete request, 0 is join request
 		{
 			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
@@ -425,6 +441,12 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			});
 		}
 		
+		/*remove request flow*/
+		/*
+			1. delete the user email in the  request array in the Team table
+			2. delete the team id in specific course array of request object in UserAccount table
+			3. set the joined variable be false
+		*/
 		
 		$scope.removeRequest=function(i,key)
 		{
@@ -457,6 +479,12 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 
 		}
 		
+		/*join request flow*/
+		/*
+			1. add the user email in the  request array in the Team table
+			2. add the team id in specific course array of request object in UserAccount table
+			3. set the joined variable be true
+		*/
 		
 		$scope.joinRequest=function(index,key)
 		{
@@ -513,6 +541,9 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			});
 			
 		}
+		
+		//function for cutting the parameter from url
+		//eg. gup( 'c', 'www.123.com?c=aaa'  ) will return 'aaa'
 
 		function gup( name, url ) {
 			if (!url) url = location.href;
@@ -523,7 +554,9 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			return results == null ? null : results[1];
 		}
 
-		
+		//redirect the page if the course key on url is invalid
+		//redirect the page if the user has a team in this course already
+		//load the basic info of this course
 		function loadcoursesInfo()
 		{
 			
@@ -560,7 +593,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 
 		}
 		
-		
+		//load the created team
 		function loadExistedTeam()
 		{
 			var tmpTeam=[];
@@ -576,7 +609,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						firebase.database().ref("Team/"+data.val().team[i]).once('value', function(data) {
 							if(typeof(data.val().request)!="undefined")
 							{
-								if(data.val().request.indexOf($scope.email)>-1)
+								if(data.val().request.indexOf($scope.email)>-1)//if current user's email is in team request array, mark it as joined
 								{		
 									tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":true});		
 								}
@@ -598,7 +631,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			});
 	
 		}
-		
+		//call out the team create form
 		$scope.createTeamForm=function()
 		{
 			$("#teamForm").find('input[type="text"]').val('');
@@ -606,6 +639,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			$.fancybox.open("#teamForm");	
 		}
 		
+		//check if any essentail input is missed on the team create form
 		function validCheck()
 		{
 			
@@ -615,26 +649,32 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			}
 			return false;
 		}
+		
 		function removeElementFromArrayByValue(value,array)
 		{
 			array.splice(array.indexOf(value), 1);
 		}
 		
+		//delete all the join requests of a course of a user
 		function deleteAllJoinRequestFromTeam(newUserData)
 		{
 			for(i=0;i<newUserData.request[$scope.ckey].length;i++)
 			{
 				firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
-		
 					var newTeamData=data.val();
 					removeElementFromArrayByValue($scope.email,newTeamData.request);
-					console.log("newTeamData ",newTeamData)
 					firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
 				});
 			}
 			
 		}
-		
+		/*crate team flow */
+		/*
+			1.add a new entry in the Team table
+			2.add the team key in the specific course array of team object in UserAccount Table
+			3.delete all the team id in specific course array of request object in UserAccount Table ie. the waiting join request
+			4.add the key id in team array in courses table
+		*/
 		$scope.createTeam=function()
 		{
 			if(validCheck())
@@ -742,7 +782,11 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		});
 		
 
-		
+		/*quit team flow*/
+		/*
+			1.delete the user email for the team array in Team table
+			2.delete the entry with the course id (key) in team object in UserAccount table
+		*/
 		$scope.quitTeam=function()
 		{
 			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
@@ -766,7 +810,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			});
 			
 		}
-		
+		//delete all the data that related to the team waiting request
 		function deleteAllWaitingList()
 		{
 			
@@ -1035,7 +1079,6 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					$scope.isOwner=false;
 				}
 				
-				console.log("$scope.isOwner",$scope.isOwner);
 				
 				for(i=0;i<$scope.joinedTeam.member.length;i++)
 				{
@@ -1242,18 +1285,102 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 		}
 	
 		$rootScope.$on("updateRole", function(){
-			   $scope.updateRole();
-			   $scope.loadUserData();
+			$scope.updateRole();
+		    $scope.loadUserData();
+		    initTagList();
+		    initAutoComplete();
 		});
 		
 		$scope.currUser;
 		$scope.password;
 
+		$scope.defaultTags=[];
+		$scope.addedTags;
+
+		
+		function removeElementFromArrayByValue(value,array)
+		{
+			array.splice(array.indexOf(value), 1);
+		}
+		
+		$scope.removeTag=function(tag)
+		{
+			removeElementFromArrayByValue(tag,$scope.addedTags);
+		}
+
+		
+		$scope.addTag=function()
+		{
+			
+			var tmpTag=$('#autoComplete').val();
+			
+			if(typeof(tmpTag)=="undefined"||tmpTag.trim()=="")
+			{
+				alert("you should enter a valid tag");
+				return;
+			}
+			
+			if(typeof($scope.addedTags)=="undefined")
+			{
+				$scope.addedTags=[];
+				$scope.addedTags.push(tmpTag);
+			}
+			else
+			{
+				if($scope.addedTags.indexOf(tmpTag.trim())>-1)
+				{
+					alert("you have adde this tag already");
+						return;
+				}
+				else
+				{
+					$scope.addedTags.push(tmpTag);
+				}		
+			}
+			$('#autoComplete').val('');
+			
+		}
+		
+		function initTagList()
+		{
+			$.getJSON('tags.json', function(data) {
+				
+				$scope.defaultTags=data.data;
+				for(var i=0;i<$scope.defaultTags.length;i++)
+				{
+					
+					$scope.defaultTags[i]=$scope.defaultTags[i]+" ";
+				}	
+			});
+
+			
+		}
+		function initAutoComplete()
+		{
+			$( "#autoComplete" ).autocomplete({
+
+				source: function(request, response) {
+					var results = $.ui.autocomplete.filter($scope.defaultTags, request.term);
+					for(var i=0;i<results.length;i++)
+					{
+						results[i]=results[i].trim();
+					}
+					response(results.slice(0, 10));
+				}  
+				
+			}).focus(function() {
+
+				$(this).autocomplete("search"," ");
+				$(this).autocomplete( "option", "minLength", 0 );
+			});;
+		}
+		
 		$scope.loadUserData=function()
 		{
 			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
 			{
-				$scope.currUser=data.val();				
+				$scope.currUser=data.val();	
+				$scope.addedTags=data.val().tags;	
 			});
 			
 		}
@@ -1286,6 +1413,17 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 				{
 					var newUserData=data.val(); 
 					newUserData.userName=$scope.currUser.userName; 
+					if(typeof($scope.addedTags)!="undefined")
+					{
+						newUserData.tags=$scope.addedTags;
+					}
+					else
+					{
+						if(newUserData.hasOwnProperty['tags'])
+						{
+							delete newUserData['tags'];
+						}
+					}
 					firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
 						user.userName=$scope.currUser.userName;
 						
