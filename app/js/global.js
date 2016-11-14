@@ -42,9 +42,9 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
 
-		$this.getUserInfo = function (email)
+		function getUserInfo(email)
 		{	
-
+			console.log("test");
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 			{
 
@@ -72,11 +72,12 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 	
 		$this.isLogined=function ()
 		{	
+		
 			firebase.auth().onAuthStateChanged(function(user) {
 			  if (user) 
 			  {
 				// User is signed in.
-				$this.getUserInfo(user.email);
+				getUserInfo(user.email);
 
 			  }
 			  else
@@ -193,7 +194,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 
 		}
 		
-		function $this.validInput()// check if any empty input of essential data or invalid input
+		$this.validInput=function ()// check if any empty input of essential data or invalid input
 		{
 			if($scope.courseInfo.title==""||$scope.courseInfo.message==""||$scope.courseInfo.min==""||$scope.courseInfo.max==""||$scope.courseInfo.date=="")
 			{
@@ -1281,8 +1282,8 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 		$rootScope.$on("updateRole", function(){
 			$scope.updateRole();
 		    $scope.loadUserData();
-		    initTagList();
-		    initAutoComplete();
+		    $this.initTagList();
+		    $this.initAutoComplete();
 		});
 		
 		$scope.currUser;
