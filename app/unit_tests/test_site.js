@@ -32,24 +32,8 @@ firebase.initializeApp(config);
 			
 			expect(scope.updataEmail).toHaveBeenCalled();
 		});
-
-   });
-   
-	
-	//$scope.updataEmail=function()
-	describe('updataEmailCall from global to local test', function() {
-
-		var ctrl, scope;
-
-		beforeEach(function() {
-			module('teamforming'); 
-			inject(function($rootScope, $controller) {
-				scope = $rootScope.$new();
-				ctrl = $controller('wrapperCtrl', {$scope: scope});
-			});
-		});
-
-
+		
+		//$scope.updataEmail=function()
 		it('should get email for global value', function() {
 			scope.updataEmail();
 			
@@ -58,119 +42,141 @@ firebase.initializeApp(config);
 			expect(scope.role).toEqual("");
 			
 		});
+		
+		//logout()
+		it('logout()', function() {
+			scope.logout();
+			
+		});
 
    });
    
-   //$scope.logout = function()
-	describe('updataEmailCall from global to local test', function() {
-   });
-      
-   
+	
+	
    //dashBoardCtrl
-   describe('dashBoardCtrl', function(){
-	
-	var email= "stu@test.com";
-	
-	beforeEach(function() {
-		module('teamforming', 'firebase'); 
-		inject(function($rootScope, $controller) {
-			scope = $rootScope.$new();
-			ctrl = $controller('dashBoardCtrl', {$scope: scope});
-		});
-	});
-	
-	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray) {
-	
-		firebase.initializeApp(config);
-		getUserInfo(email);
+   describe('dashBoardCtrl', function() {
 
-	}));
-	
-	
-});
+		var ctrl, scope,firebaseArray;
+		var email="std@test.com";
+		var user;
 
-   //createCoursesCtrl
-   describe('createCoursesCtrl', function(){
-	
-	beforeEach(function() {
-		module('teamforming', 'firebase'); 
-		inject(function($rootScope, $controller) {
-			scope = $rootScope.$new();
-			ctrl = $controller('createCoursesCtrl', {$scope: scope});
+		beforeEach(function() {
+			module('teamforming'); 
+			inject(function($rootScope, $controller) {
+				scope = $rootScope.$new();
+				ctrl = $controller('dashBoardCtrl', {$scope: scope,user:user});
+			});
 		});
-	});
-	
-	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray) {
-	
-		firebase.initializeApp(config);
 		
-
-	}));
-	
-	
-});
-
-
-   //indexCtrl
-   describe('indexCtrl', function(){
-	
-	beforeEach(function() {
-		module('teamforming', 'firebase'); 
-		inject(function($rootScope, $controller) {
-			scope = $rootScope.$new();
-			ctrl = $controller('indexCtrl', {$scope: scope});
+		//isLogined()
+		it('getUserInfo(email)', function() {
+			
+			expect(ctrl.getUserInfo("std@test.com")).toEqual("std@test.com");
 		});
-	});
-	
-	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray,$window) {
-	
-		firebase.initializeApp(config);
-		
 
-	}));
-	
-	
-});
+		//isLogined()
+		it('isLogined()', function() {
+			
+			expect(scope.isLogined()).toEqual("");
+		});
 
+   });
+   
+      //createCoursesCtrl
+   describe('createCoursesCtrl', function() {
+
+		var ctrl, scope;
+
+		beforeEach(function() {
+			module('teamforming'); 
+			inject(function($rootScope, $controller) {
+				scope = $rootScope.$new();
+				ctrl = $controller('createCoursesCtrl', {$scope: scope});
+			});
+		});
+
+		//redirect()
+		it('redirect()', function() {
+			scope.role=1;
+			expect(ctrl.redirect()).toEqual(null);
+		});
+
+   });
+   
+      //indexCtrl
+   describe('updataEmailCall from global to local test', function() {
+
+		var ctrl, scope;
+
+		beforeEach(function() {
+			module('teamforming'); 
+			inject(function($rootScope, $controller) {
+				scope = $rootScope.$new();
+				ctrl = $controller('indexCtrl', {$scope: scope});
+			});
+		});
+
+
+		it('should call updateEmail()', function() {
+		});
+
+   });
+   
    //teamSearchCtrl
-   describe('teamSearchCtrl', function(){
-	
-	beforeEach(function() {
-		module('teamforming', 'firebase'); 
-		inject(function($rootScope, $controller) {
-			scope = $rootScope.$new();
-			ctrl = $controller('teamSearchCtrl', {$scope: scope});
+   describe('updataEmailCall from global to local test', function() {
+
+		var ctrl, scope;
+
+		beforeEach(function() {
+			module('teamforming'); 
+			inject(function($rootScope, $controller) {
+				scope = $rootScope.$new();
+				ctrl = $controller('teamSearchCtrl', {$scope: scope});
+			});
 		});
-	});
-	
-	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray,$window) {
-	
-		firebase.initializeApp(config);
-		
 
-	}));
-	
-	
-});
 
+		it('should call updateEmail()', function() {
+		});
+
+   });
+   
+   
    //teamPanelCtrl
-   describe('teamPanelCtrl', function(){
-	
-	beforeEach(function() {
-		module('teamforming', 'firebase'); 
-		inject(function($rootScope, $controller) {
-			scope = $rootScope.$new();
-			ctrl = $controller('teamPanelCtrl', {$scope: scope});
-		});
-	});
-	
-	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray,$window) {
-	
-		firebase.initializeApp(config);
-		
+   describe('updataEmailCall from global to local test', function() {
 
-	}));
-	
-	
-});
-	
+		var ctrl, scope;
+
+		beforeEach(function() {
+			module('teamforming'); 
+			inject(function($rootScope, $controller) {
+				scope = $rootScope.$new();
+				ctrl = $controller('teamPanelCtrl', {$scope: scope});
+			});
+		});
+
+
+		it('should call updateEmail()', function() {
+		});
+
+   });
+   
+   //myProfileCtrl
+   describe('updataEmailCall from global to local test', function() {
+
+		var ctrl, scope;
+
+		beforeEach(function() {
+			module('teamforming'); 
+			inject(function($rootScope, $controller) {
+				scope = $rootScope.$new();
+				ctrl = $controller('myProfileCtrl', {$scope: scope});
+			});
+		});
+
+
+		it('should call updateEmail()', function() {
+		});
+
+   });
+   
