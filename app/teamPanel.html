@@ -148,18 +148,7 @@
                     <br>
                     <textarea  ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
 				</div>
-				<div id="con3" style="margin:0px 20px 20px 20px">
-					<label>Team size(2-20)</label>
-					<br>
-                    <br>
-					<label>min</label>
-                    <br>
-					<input type="number" value="{{currCourse.min}}" ng-model="currCourse.min" min="2" max="20" required style="text-align:center; width:50px;">
-					<br>
-					<label>max</label>
-                    <br>
-					<input type="number" value="{{currCourse.max}}" ng-model="currCourse.max" min="2" max="20" required style="text-align:center; width:50px;">
-				</div>
+				
 				<div id="con4" style="margin:0px 20px 20px 20px">
 				<label>Image</label>
 				<input type="file" id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
