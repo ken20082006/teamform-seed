@@ -69,33 +69,87 @@
 		</div>
         <!-- Page Content -->
 		<div ng-controller="teamPanelCtrl">
-		
-		{{currCourse.title}} {{joinedTeam.name}}
+        <div ng-if="role=='0'"> 
+		<div id="header" style="font-size:30px; font-weight:bold; 	font-style:italic; margin:5px 20px 10px 20px; 	font-style:italic;
+	font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", "Arial Black", sans-serif">
+ 
+        Team Panel
+        
+        <hr style="	border-color:#666; margin-bottom:40px">
+        </div>
+        
+        <div id="cont1" style="margin:0px 20px 40px 20px; font-size:22px; font-weight:500; color:#009">
+		Course code: {{currCourse.title}}
+        <br>
+		Role: student
+        <br>   
+        Team name: {{joinedTeam.name}}
+        <br>
+        Max size of this team: {{currCourse.max}}
+        <br>
 
-			<div ng-if="role=='0'"> 
-			studnet
-			<p ng-if="isOwner==true">Team Leader<a ng-click="deleteTeam()">Delete Team</a></p>
-			<p ng-if="isOwner==false">Team Member<a ng-click="quitTeam()">Quit Team</a></p>
-			<p>Max{{currCourse.max}}</p>
+
+			<p ng-if="isOwner==true">Team role: Team Leader
+            <br>
+            Action: <button type="button" class="btn btn-primary btn-sm" a ng-click="deleteTeam()">Delete Team</a></button></p>
+			<p ng-if="isOwner==false">Team role: Team Member
+            <br>
+            Action: <button type="button" class="btn btn-primary btn-sm" a ng-click="quitTeam()">Quit Team</a></button></p>
+
+          </div>
+            <div id="con2" style="margin:0px 20px 0px 20px">
 			<h3>Team member</h3>
-			<div ng-repeat="q in teamMember">
-			{{q}} <span ng-if="isOwner==true"><a ng-click="deleteMember(0,q.data.email,q.key)">delete </a></span>
-			</div>
-			<h3>waiting list</h3>
-			<div ng-repeat="q in waitingList">
-			{{q}}<span ng-if="isOwner==true"><a ng-click="requestHandler(0,0,q.data.email,q.key)">Accept</a><a ng-click="requestHandler(1,0,q.data.email,q.key)">Decline</a></span>
-			</div>
-			</div>
-			<div ng-if="role=='1'"> 
-			teacher
-				<div>
-					<label>Title</label><input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required>
-				</div>
-				<div>
-					<label>Description</label><textarea  ng-model="currCourse.message" required>{{currCourse.title}}</textarea>
-				</div>
+			<table class="table table-bordered" >
+			  <tr>
+			    <th>Name</th>
+			    <th>Email</th>
+			    <span ng-if="isOwner==true"><th>Action</th></span>
+		      </tr>
+			  <tr ng-repeat="q in teamMember">
+			    <td>{{ q.data.userName }}</td>
+			    <td>{{ q.data.email }}</td>
+			    <span ng-if="isOwner==true"><td><a ng-click="deleteMember(0,q.data.email,q.key)">delete </a></td></span>
+		      </tr>
+			  </table>
+			<h3>Member waiting list</h3>
 
-				<div>
+			<table class="table table-bordered" >
+			  <tr>
+			    <th>Name</th>
+			    <th>Email</th>
+			    <span ng-if="isOwner==true"><th>Action</th></span>
+		      </tr>
+			  <tr ng-repeat="q in waitingList">
+			    <td>{{ q.data.userName }}</td>
+			    <td>{{ q.data.email }}</td>
+			    <span ng-if="isOwner==true"><td><button type="button" class="btn btn-success" a ng-click="requestHandler(0,0,q.data.email,q.key)">Accept</a></button><button type="button" class="btn btn-danger" a ng-click="requestHandler(1,0,q.data.email,q.key)" style="margin-left:10px">Decline</a></button></td></span>
+		      </tr>
+			  </table>
+            
+            
+            
+            
+            
+            
+		  </div>
+          </div>
+			<div ng-if="role=='1'"> 
+		    <div id="header" style="font-size:30px; font-weight:bold; font-style:italic; margin:5px 20px 10px 20px; 	font-style:italic;font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", "Arial Black", sans-serif">  
+            Edit Course 
+        <hr style="	border-color:#666; margin-bottom:40px">
+        </div>     
+          
+				<div id="con1" style="margin:20px 20px 20px 20px">
+					<label>Title </label> 
+					<input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required style="text-align:center;" size="20">
+				</div>
+				<div id="con2" style="margin:0px 20px 20px 20px">
+					<label>Description</label>
+                    <br>
+                    <textarea  ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
+				</div>
+				
+				<div id="con4" style="margin:0px 20px 20px 20px">
 				<label>Image</label>
 				<input type="file" id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
 				<img src="{{currCourse.image}}" id="base64PicURL">
@@ -105,8 +159,9 @@
 
 				</div>
 				
-				<input type="submit" ng-click="editCourse()">
+				<input type="submit" ng-click="editCourse()" style="margin:0px 20px 20px 20px">
 			</div>
+            </div>
 			
 		
 		</div>
