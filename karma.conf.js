@@ -12,16 +12,14 @@ module.exports = function(config) {
 	  'lib/firebase.js',
 	  'lib/angularfire.min.js',	  
 	  'js/*.js',
-      'unit_tests/*.js'	  
+      'unit_tests/*.js',
+	  'js/fancyBox/source/*.js',
+	  'https://code.jquery.com/ui/1.12.1/jquery-ui.js'
     ],
 	exclude: [
 	],
 	preprocessors: {	 	
-		 'js/site.js' : ['coverage'],		
-		 'js/index.js' : ['coverage'],
-		 'js/admin.js' : ['coverage'],
-		 'js/team.js' : ['coverage'],
-		 'js/member.js' : ['coverage']
+		 'js/global.js' : ['coverage']
 	},
 	reporters: ['progress', 'coverage'],
 	coverageReporter: {
