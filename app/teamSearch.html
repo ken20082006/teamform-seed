@@ -17,7 +17,7 @@
     <script src="lib/jquery.min.js"></script>      
     <script src="lib/bootstrap.min.js"></script>      
       	  
-	<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css" >
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
 
@@ -131,7 +131,7 @@
 								<div class="col-lg-3 col-md-6">
 							
 									<div class="panel">
-										<div class="panel-heading"  style="background:#009; color:#F60" >
+										<div class="panel-heading"  style="background:#eee;color:#fff">
 											<div class="row" style="min-height:100px;">
 												<div class="col-xs-9 text-right">
 													<div class="huge">{{q.data.name}}	</div>
@@ -145,13 +145,24 @@
 												<div>{{q.data.description}}	</div>
 											</div>
 										</div>
-										<a style="cursor: pointer;"  ng-click="joinRequest(q.key)">
-											<div class="panel-footer">
-												<span class="pull-left">Join request</span>
-												<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-												<div class="clearfix"></div>
-											</div>
-										</a>
+										<span ng-if="q.joined==false">
+											<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
+												<div class="panel-footer">
+													<span class="pull-left">Join request</span>
+													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+													<div class="clearfix"></div>
+												</div>
+											</a>
+										</span>
+										<span ng-if="q.joined==true">
+											<a style="cursor: pointer;"  ng-click="removeRequest($index,q.key)">
+												<div class="panel-footer">
+													<span class="pull-left">delete request</span>
+													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+													<div class="clearfix"></div>
+												</div>
+											</a>
+										</span>
 									</div>
 								</div>
 
