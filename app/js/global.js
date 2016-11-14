@@ -18,12 +18,6 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 				$rootScope.$emit("updateRole", {});
 			});
 						
-			$rootScope.$on("updateUserName", function() // update the username displayed on nav bar when the profile is edited
-			{
-				$scope.userName=user.userName;
-				$scope.$apply();
-
-			});
 			
 			$scope.updataEmail=function()
 			{
@@ -1427,7 +1421,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 					firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
 						user.userName=$scope.currUser.userName;
 						
-						$rootScope.$emit("updateUserName", function(){});	
+						$rootScope.$emit("updataEmailCall", {});		
 						alert("success");
 						
 					});
