@@ -1,5 +1,14 @@
-describe('global.js', function() {
-	
+'use restrict';
+var config = {
+apiKey: "AIzaSyB6bC90FN323tYhfGdeesZodkj3jEymAMU",
+authDomain: "comp3111teamform.firebaseapp.com",
+databaseURL: "https://comp3111teamform.firebaseio.com",
+storageBucket: "comp3111teamform.appspot.com",
+messagingSenderId: "990477328608"
+};
+firebase.initializeApp(config);
+
+
    //wrapperCtrl test
    
    //$rootScope.$on("updataEmailCall", function()
@@ -25,6 +34,7 @@ describe('global.js', function() {
 		});
 
    });
+   
 	
 	//$scope.updataEmail=function()
 	describe('updataEmailCall from global to local test', function() {
@@ -53,62 +63,114 @@ describe('global.js', function() {
    
    //$scope.logout = function()
 	describe('updataEmailCall from global to local test', function() {
-		
    });
+      
    
-   //wrapperCtrl test
-   
-   //$rootScope.$on("updataEmailCall", function()
-   describe('updataEmailCall from global to local test', function() {
-
-		var ctrl, scope;
-
-		beforeEach(function() {
-			module('teamforming'); 
-			inject(function($rootScope, $controller) {
-				scope = $rootScope.$new();
-				ctrl = $controller('wrapperCtrl', {$scope: scope});
-			});
+   //dashBoardCtrl
+   describe('dashBoardCtrl', function(){
+	
+	var email= "stu@test.com";
+	
+	beforeEach(function() {
+		module('teamforming', 'firebase'); 
+		inject(function($rootScope, $controller) {
+			scope = $rootScope.$new();
+			ctrl = $controller('dashBoardCtrl', {$scope: scope});
 		});
+	});
+	
+	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray) {
+	
+		firebase.initializeApp(config);
+		getUserInfo(email);
 
-
-		it('should call updateEmail()', function() {
-			spyOn(scope, 'updataEmail');
-			scope.$emit("updataEmailCall", {});	
-			
-			
-			expect(scope.updataEmail).toHaveBeenCalled();
-		});
-
-   });
+	}));
 	
 	
-	//createCoursesCtrl test
-	
-	//function redirect()
-   describe('redirect', function() {
-
-		var windowObj = {location: {href: ''}};
-		var ctrl, scope;
-
-		beforeEach(function() {
-			module('teamforming'); 
-			inject(function($rootScope, $controller) {
-				scope = $rootScope.$new();
-				ctrl = $controller('createCoursesCtrl', {$scope: scope});
-			});
-		});
-
-
-		it('if role !=1 should redirect to index', function() {
-			scope.role=0;
-			
-			scope.redirect();	
-			
-			expect(windowObj.location.href).toEqual('/login.html');
-		});
-
-   });
-	
-
 });
+
+   //createCoursesCtrl
+   describe('createCoursesCtrl', function(){
+	
+	beforeEach(function() {
+		module('teamforming', 'firebase'); 
+		inject(function($rootScope, $controller) {
+			scope = $rootScope.$new();
+			ctrl = $controller('createCoursesCtrl', {$scope: scope});
+		});
+	});
+	
+	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray) {
+	
+		firebase.initializeApp(config);
+		
+
+	}));
+	
+	
+});
+
+
+   //indexCtrl
+   describe('indexCtrl', function(){
+	
+	beforeEach(function() {
+		module('teamforming', 'firebase'); 
+		inject(function($rootScope, $controller) {
+			scope = $rootScope.$new();
+			ctrl = $controller('indexCtrl', {$scope: scope});
+		});
+	});
+	
+	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray,$window) {
+	
+		firebase.initializeApp(config);
+		
+
+	}));
+	
+	
+});
+
+   //teamSearchCtrl
+   describe('teamSearchCtrl', function(){
+	
+	beforeEach(function() {
+		module('teamforming', 'firebase'); 
+		inject(function($rootScope, $controller) {
+			scope = $rootScope.$new();
+			ctrl = $controller('teamSearchCtrl', {$scope: scope});
+		});
+	});
+	
+	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray,$window) {
+	
+		firebase.initializeApp(config);
+		
+
+	}));
+	
+	
+});
+
+   //teamPanelCtrl
+   describe('teamPanelCtrl', function(){
+	
+	beforeEach(function() {
+		module('teamforming', 'firebase'); 
+		inject(function($rootScope, $controller) {
+			scope = $rootScope.$new();
+			ctrl = $controller('teamPanelCtrl', {$scope: scope});
+		});
+	});
+	
+	it('some test desc ...', inject(function ($scope,$rootScope,user, $firebaseArray,$window) {
+	
+		firebase.initializeApp(config);
+		
+
+	}));
+	
+	
+});
+	
