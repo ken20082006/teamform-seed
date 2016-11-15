@@ -131,6 +131,8 @@
     background-color:skyblue;
 }
 .sidebar-top{
+	width: 150px;
+    overflow: hidden;
     height: 34px;
     line-height: 34px;
     text-align: center;
