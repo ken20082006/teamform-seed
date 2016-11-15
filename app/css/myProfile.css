@@ -1,6 +1,4 @@
 .profile{
-    text-align: center;
-    
     border: 10px solid transparent;
     padding: 15px;
     -webkit-border-image: url(../image/border.png) 30 stretch; /* Safari 3.1-5 */
@@ -17,6 +15,7 @@ p{
 
 label{
     padding-right:20px;
+    padding-bottom: 10px;
 }
 
 .heading h1{
@@ -33,4 +32,10 @@ label{
 
 .myProfile{
     padding-left: 50px;
+}
+
+.section{
+    border-bottom: 1px dotted grey;
+    margin-bottom: 10px;
+    font-size: 1.5em;
 }
