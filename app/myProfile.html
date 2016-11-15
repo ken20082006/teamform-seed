@@ -16,11 +16,12 @@
 	        
     <script src="lib/jquery.min.js"></script>      
     <script src="lib/bootstrap.min.js"></script>      
-      	  
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 	
+	  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
-
+	 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
       
     <!-- Customized libraries shared by pages -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
@@ -68,9 +69,27 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
-		
-		
-		
+		<div ng-controller="myProfileCtrl">
+			<div>
+				<label>Nick Name</label><input type="text" value="{{currUser.userName}}" ng-model="currUser.userName">
+			</div>
+			<div>
+				<label>Password</label><input type="password" ng-model="password">
+			</div>
+			<div>
+				
+			</div>
+			<div>
+				<label>Tags</label>
+				<br>
+				<input type="text" id="autoComplete" ><a style="margin-left:5px;cursor:pointer" ng-click="addTag()">+</a>
+			</div>
+			<div id="addedTags" ng-repeat="q in addedTags">
+			<span style="background:#eee">{{q}}<a style="margin-left:5px;cursor:pointer" ng-click="removeTag(q)">x</a></span>
+			</div>
+			
+			<input type="submit" ng-click="editProfile()">
+		</div>
 		
        
         <!-- /#page-content-wrapper -->
@@ -95,4 +114,3 @@
 
 </body>
 </html>
-Contact GitHub 

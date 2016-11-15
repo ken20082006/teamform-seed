@@ -1,26 +1,22 @@
 
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
+                <div class="sidebar-top">Team Forming</div>
                 <li class="sidebar-brand">
-                    <h3>
-                        Welcome, {{userName}}
-                    </h3>
+                    <a href="#">
+                        Hi, {{userName}}
+                    </a>
                 </li>
-                <div class="line"></div>
-                <li>
+                <li style="margin-top:30px;">
                     <a href="index.html">Dashboard</a>
-                </li>
-                <li>
-                    <a href="myProfile.html">Profile</a>
                 </li>
 				<li ng-if="role=='1'">
                     <a href="createCourses.html">Create Course</a>
                 </li>
-                <li>
-                    <a href="">Course List</a>
-                </li>
-            
-				<li class="logout" ng-click="logout()">
+				<li>
+					<a href="myProfile.html">My Profile</a>
+				</li>
+				<li ng-click="logout()">
                     <a href="#">Logout</a>
                 </li>
             </ul>
