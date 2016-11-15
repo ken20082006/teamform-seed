@@ -57,7 +57,7 @@
 	
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="css/dash.css">
+	<link href="css/myProfile.css" rel="stylesheet" type="text/css">
 <body>
 <div ng-controller="dashBoardCtrl">
 
@@ -69,29 +69,75 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
-		<div ng-controller="myProfileCtrl">
-			<div>
-				<label>Nick Name</label><input type="text" value="{{currUser.userName}}" ng-model="currUser.userName">
-			</div>
-			<div>
-				<label>Password</label><input type="password" ng-model="password">
-			</div>
-			<div>
-				
-			</div>
-			<div>
-				<label>Tags</label>
-				<br>
-				<input type="text" id="autoComplete" ><a style="margin-left:5px;cursor:pointer" ng-click="addTag()">+</a>
-			</div>
-			<div id="addedTags" ng-repeat="q in addedTags">
-			<span style="background:#eee">{{q}}<a style="margin-left:5px;cursor:pointer" ng-click="removeTag(q)">x</a></span>
-			</div>
-			
-			<input type="submit" ng-click="editProfile()">
+        <div class="row content">
+        <div class="heading"><h1>My Profile</h1></div>
+		<div ng-controller="myProfileCtrl" style="padding:10px 20px 0 20px">
+			<div class="section">Profile Picture</div>
+						
+			<div class="section">General</div>
+			<table>
+                <tbody>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Username</label></td>
+						<td><input type="text" value="{{currUser.userName}}" ng-model="currUser.userName"></td>
+					</tr>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Password</label></td>
+						<td><input type="password" ng-model="password"></td>
+					</tr>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Tags</label></td>
+						<td><input type="text" id="autoComplete" ><a style="margin-left:5px;cursor:pointer" ng-click="addTag()">+</a></td>
+					</tr>
+					<tr>
+						<td><div style="height:30px;"></div></td><td colspan="1">
+							<div id="addedTags" ng-repeat="q in addedTags">
+								<center><span style="background:#eee">{{q}}<a style="margin-left:5px;cursor:pointer" ng-click="removeTag(q)">x</a></span></center>
+							</div>
+						</td>
+					</tr>
+                </tbody>
+			</table>
+			<div class="section">Contact Information</div>
+			<table>
+                <tbody>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Email</label></td>
+						<td><input type="text" value="{{currUser.userEmail}}" ng-model="currUser.userEmail"></td>
+					</tr>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Skype</label></td>
+						<td><input type="text" value="{{currUser.userSkype}}" ng-model="currUser.userSkype"></td>
+					</tr>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Phone</label></td>
+						<td><input type="text" value="{{currUser.userPhone}}" ng-model="currUser.userPhone"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="section">Social</div>
+			<table>
+                <tbody>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Facebook</label></td>
+						<td><input type="text" value="{{currUser.userFacebook}}" ng-model="currUser.userFacebook"></td>
+					</tr>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Twitter</label></td>
+						<td><input type="text" value="{{currUser.userTwitter}}" ng-model="currUser.userTwitter"></td>
+					</tr>
+					<tr>
+						<td style="padding-right:5px;padding-bottom:10px;"><label>Google+</label></td>
+						<td><input type="text" value="{{currUser.userGoogle}}" ng-model="currUser.userGoogle"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="submit" class="btn btn-info" ng-click="editProfile()"></td>
+					</tr>
+                </tbody>
+            </table>
 		</div>
 		
-       
+       </div>
         <!-- /#page-content-wrapper -->
 
     </div>
