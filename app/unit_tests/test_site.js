@@ -10,9 +10,7 @@ firebase.initializeApp(config);
 
 
    //wrapperCtrl test
-   
-   //$rootScope.$on("updataEmailCall", function()
-   describe('updataEmailCall from global to local test', function() {
+   describe('wrapperCtrl', function() {
 
 		var ctrl, scope;
 
@@ -81,24 +79,24 @@ firebase.initializeApp(config);
 		it('should call updateEmail()', function() {
 			
 			spyOn(scope, 'updateRole');
-			spyOn(ctrl, 'redirect');
-			spyOn(ctrl, 'initDatePicker');
+			spyOn(scope, 'redirect');
+			spyOn(scope, 'initDatePicker');
 			scope.$emit("updateRole", {});	
 			
 			
 			expect(scope.updateRole).toHaveBeenCalled();
-			expect(ctrl.redirect).toHaveBeenCalled();
-			expect(ctrl.initDatePicker).toHaveBeenCalled();
+			expect(scope.redirect).toHaveBeenCalled();
+			expect(scope.initDatePicker).toHaveBeenCalled();
 		});
 		
 		//redirect()
 		it('redirect()', function() {
 			scope.role=1;
-			expect(ctrl.redirect()).toEqual(null);
+			expect(scope.redirect()).toEqual(null);
 			scope.role=0;
-			spyOn(ctrl, 'doRedirect');
-			ctrl.redirect();
-			expect(ctrl.doRedirect).toHaveBeenCalled();
+			spyOn(scope, 'doRedirect');
+			scope.redirect();
+			expect(scope.doRedirect).toHaveBeenCalled();
 		});
 		
 		it('updateRole()', function() {
@@ -124,25 +122,25 @@ firebase.initializeApp(config);
 		
 		it('validInput()', function() {
 			scope.courseInfo.title="";
-			expect(ctrl.validInput()).toEqual(false);
+			expect(scope.validInput()).toEqual(false);
 			scope.courseInfo.title="aa";
 			scope.courseInfo.message="aa";
 			scope.courseInfo.date="aa";
 			scope.courseInfo.max=3;
 			scope.courseInfo.min=4;
-			expect(ctrl.validInput()).toEqual(false);
+			expect(scope.validInput()).toEqual(false);
 			scope.courseInfo.min=1;
-			expect(ctrl.validInput()).toEqual(true);
+			expect(scope.validInput()).toEqual(true);
 		});
 
 		it('initDatePicker()', function() {
-			ctrl.initDatePicker();
+			scope.initDatePicker();
 
 		});
 		
 		//File.prototype.convertToBase64 = function(callback) function of  convert uploaded image to base64 image
 		it('convertToBase64', function() {
-			ctrl.initDatePicker();
+			scope.initDatePicker();
 
 		});
 		
@@ -174,10 +172,10 @@ firebase.initializeApp(config);
 		//$scope.dashBoardChangePage=function(key)
 		it('should do redirect to teamSearch or teamPanel', function() {
 			user.role=1;
-			spyOn(ctrl, 'doRedirect');
+			spyOn(scope, 'doRedirect');
 			scope.dashBoardChangePage("");
 			
-			expect(ctrl.doRedirect).toHaveBeenCalled();
+			expect(scope.doRedirect).toHaveBeenCalled();
 			
 		});
 		
@@ -185,28 +183,28 @@ firebase.initializeApp(config);
 		it('should call loadcourses() updateRole()', function() {
 			
 			spyOn(scope, 'updateRole');
-			spyOn(ctrl, 'loadcourses');
+			spyOn(scope, 'loadcourses');
 			scope.$emit("updateRole", {});	
 			
 			
 			expect(scope.updateRole).toHaveBeenCalled();
-			expect(ctrl.loadcourses).toHaveBeenCalled();
+			expect(scope.loadcourses).toHaveBeenCalled();
 		});
 		
 		it('should call loadcourses()', function() {
-			ctrl.loadcourses();
+			scope.loadcourses();
 			scope.course=["a"];
-			ctrl.loadcourses();
+			scope.loadcourses();
 			expect(scope.courseArray).toBeDefined();
 		});
 		it('should call teamChecking()', function() {
 
 			var key="data";
-			expect(ctrl.teamChecking(key)).toEqual(true);
+			expect(scope.teamChecking(key)).toEqual(true);
 			scope.team={"abc":"123"};
-			expect(ctrl.teamChecking(key)).toEqual(true);
+			expect(scope.teamChecking(key)).toEqual(true);
 			scope.team={"data":"123"};
-			expect(ctrl.teamChecking(key)).toEqual(false);
+			expect(scope.teamChecking(key)).toEqual(false);
 		});
 		
 		it('should call updateRole()', function() {
@@ -235,9 +233,9 @@ firebase.initializeApp(config);
 		it('$this.loadcoursesInfo=function', function() {
 			
 			scope.ckey="";
-			spyOn(ctrl, 'doRedirect');
-			ctrl.loadcoursesInfo();
-			expect(ctrl.doRedirect).toHaveBeenCalled();
+			spyOn(scope, 'doRedirect');
+			scope.loadcoursesInfo();
+			expect(scope.doRedirect).toHaveBeenCalled();
 		});
 		
 		
@@ -245,12 +243,12 @@ firebase.initializeApp(config);
 		it('should call loadcoursesInfo() updateRole()', function() {
 			
 			spyOn(scope, 'updateRole');
-			spyOn(ctrl, 'loadcoursesInfo');
+			spyOn(scope, 'loadcoursesInfo');
 			scope.$emit("updateRole", {});	
 			
 			
 			expect(scope.updateRole).toHaveBeenCalled();
-			expect(ctrl.loadcoursesInfo).toHaveBeenCalled();
+			expect(scope.loadcoursesInfo).toHaveBeenCalled();
 		});
 		
 		
@@ -267,7 +265,7 @@ firebase.initializeApp(config);
 		});
 		
 		it('should call loadExistedTeam ()', function() {
-			ctrl.loadExistedTeam();
+			scope.loadExistedTeam();
 		});
 		
 		it('should call joinRequest ()', function() {
@@ -279,7 +277,7 @@ firebase.initializeApp(config);
 		});
 		
 		it('should call requestValidCheck ()', function() {
-			ctrl.requestValidCheck (1,"abc");
+			scope.requestValidCheck (1,"abc");
 		});
 		
 		it('should call updateRole()', function() {
@@ -288,21 +286,21 @@ firebase.initializeApp(config);
 		
 
 		it('should call gup()', function() {
-			expect(ctrl.gup("c","www.123.com?c=234")).toEqual("234");
-			ctrl.gup("c");
+			expect(scope.gup("c","www.123.com?c=234")).toEqual("234");
+			scope.gup("c");
 		});
 		
 		it('should call validCheck()', function() {
 			scope.newTeam.name="";
-			expect(ctrl.validCheck()).toEqual(false);
+			expect(scope.validCheck()).toEqual(false);
 			scope.newTeam.name="1";
 			scope.newTeam.description="ff";
-			expect(ctrl.validCheck()).toEqual(true);
+			expect(scope.validCheck()).toEqual(true);
 		});
 		
 		it('should call removeElementFromArrayByValue()', function() {
 				var arr=["key","abc"];
-				ctrl.removeElementFromArrayByValue("key",arr);
+				scope.removeElementFromArrayByValue("key",arr);
 				expect(arr.length).toEqual(1);
 		});
 		
@@ -310,7 +308,7 @@ firebase.initializeApp(config);
 		it('should call deleteAllJoinRequestFromTeam()', function() {
 				scope.ckey="aa";
 				var newUserData={"request":{"aa":["a"]}};
-				ctrl.deleteAllJoinRequestFromTeam(newUserData);
+				scope.deleteAllJoinRequestFromTeam(newUserData);
 
 		});
 
@@ -338,21 +336,21 @@ firebase.initializeApp(config);
 		it('$this.loadcoursesInfo=function', function() {
 			
 			scope.ckey="";
-			spyOn(ctrl, 'doRedirect');
-			ctrl.loadcoursesInfo();
-			expect(ctrl.doRedirect).toHaveBeenCalled();
+			spyOn(scope, 'doRedirect');
+			scope.loadcoursesInfo();
+			expect(scope.doRedirect).toHaveBeenCalled();
 		});
 		
 		//$rootScope.$on("updateRole", function()
 		it('should call loadcoursesInfo() updateRole()', function() {
 			
 			spyOn(scope, 'updateRole');
-			spyOn(ctrl, 'loadcoursesInfo');
+			spyOn(scope, 'loadcoursesInfo');
 			scope.$emit("updateRole", {});	
 			
 			
 			expect(scope.updateRole).toHaveBeenCalled();
-			expect(ctrl.loadcoursesInfo).toHaveBeenCalled();
+			expect(scope.loadcoursesInfo).toHaveBeenCalled();
 		});
 		
 		it('removeImg ()', function() {
@@ -370,7 +368,7 @@ firebase.initializeApp(config);
 			var newTeamData={};
 			newTeamData.member=["a","b"];
 			newTeamData.request=["a","b"];
-			ctrl.updateUserList(newTeamData);
+			scope.updateUserList(newTeamData);
 		});
 		
 		it('should call requestHandler()', function() {
@@ -408,59 +406,59 @@ firebase.initializeApp(config);
 		});
 		
 		it('should call deleteAllWaitingList()', function() {
-			ctrl.deleteAllWaitingList();
+			scope.deleteAllWaitingList();
 			scope.lastestWaitingList=["abc"];
-			ctrl.deleteAllWaitingList();
+			scope.deleteAllWaitingList();
 		});
 		it('should call deleteAllTeamMember()', function() {
 			scope.lastestTeamMember=["abc"];
-			ctrl.deleteAllTeamMember();
+			scope.deleteAllTeamMember();
 		});
 	
 		it('should call removeElementFromArrayByValue()', function() {
 			var arr=["key","abc"];
-			ctrl.removeElementFromArrayByValue("key",arr);
+			scope.removeElementFromArrayByValue("key",arr);
 			expect(arr.length).toEqual(1);
 		});
 
 		it('should call removeUserList()', function() {
 			var arr=[{"key":"abc"},{"abc":"key"}];
-			ctrl.removeUserList(arr,"abc");
+			scope.removeUserList(arr,"abc");
 			expect(arr.length).toEqual(1);
 			var arr2=[{"key":"1"}];
-			ctrl.removeUserList(arr2,"abc");
+			scope.removeUserList(arr2,"abc");
 		});
 
 		it('should call userObjectArrayPush()', function() {
 			
-			ctrl.userObjectArrayPush("abc",[]);
+			scope.userObjectArrayPush("abc",[]);
 		});
 		it('should call renderTeamInfo()', function() {
 			
 			scope.team={"a":"f"};
 			scope.ckey="a";
-			ctrl.renderTeamInfo();
+			scope.renderTeamInfo();
 		});
 		it('should call roleAccessCheck()', function() {
 			scope.role="0";
 			scope.currCourse.key="a";
 			scope.team={"a":"b"};
-			ctrl.roleAccessCheck();
+			scope.roleAccessCheck();
 			scope.role="1";
 			scope.currCourse.owner="a";
 			scope.email="a";
-			ctrl.roleAccessCheck();
+			scope.roleAccessCheck();
 		});
 		
 		it('should call gup()', function() {
-			expect(ctrl.gup("c","www.123.com?c=234")).toEqual("234");
-			ctrl.gup("c");
+			expect(scope.gup("c","www.123.com?c=234")).toEqual("234");
+			scope.gup("c");
 		});
 		it('should call validInput()', function() {
-			expect(ctrl.validInput()).toEqual(false);
+			expect(scope.validInput()).toEqual(false);
 			scope.currCourse.title="123";
 			scope.currCourse.message="123";
-			expect(ctrl.validInput()).toEqual(true);
+			expect(scope.validInput()).toEqual(true);
 		});
 		it('should call editCourse ()', function() {
 			scope.editCourse(); 
@@ -488,12 +486,12 @@ firebase.initializeApp(config);
 		});
 		it('should call removeElementFromArrayByValue()', function() {
 			var arr=["key","abc"];
-			ctrl.removeElementFromArrayByValue("key",arr);
+			scope.removeElementFromArrayByValue("key",arr);
 			expect(arr.length).toEqual(1);
 		});
 		it('should call initTagList()', function() {
 
-			ctrl.initTagList();
+			scope.initTagList();
 
 		});	
 		
@@ -516,7 +514,7 @@ firebase.initializeApp(config);
 		});	
 		
 		it('should call initAutoComplete()', function() {
-			ctrl.initAutoComplete();
+			scope.initAutoComplete();
 		});	
 
 		it('should call loadUserData()', function() {
@@ -526,11 +524,11 @@ firebase.initializeApp(config);
 		
 		it('should call validInput()', function() {
 			scope["currUser"]={"a":"a"};
-			ctrl.validInput();
+			scope.validInput();
 			scope["currUser"]={"userName":"123"};
-			ctrl.validInput();
+			scope.validInput();
 			scope.password="a";
-			ctrl.validInput();
+			scope.validInput();
 		});	
 		
 		it('should call editProfile()', function() {
