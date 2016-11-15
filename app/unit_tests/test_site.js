@@ -231,7 +231,14 @@ firebase.initializeApp(config);
 		//redirect the page if the course key on url is invalid
 		//redirect the page if the user has a team in this course already
 		//load the basic info of this course
-		$this.loadcoursesInfo=function ()
+		//$this.loadcoursesInfo=function ()
+		it('$this.loadcoursesInfo=function', function() {
+			
+			scope.ckey="";
+			spyOn(ctrl, 'doRedirect');
+			ctrl.loadcoursesInfo();
+			expect(ctrl.doRedirect).toHaveBeenCalled();
+		});
 		
 		
 		//$rootScope.$on("updateRole", function()
@@ -324,8 +331,30 @@ firebase.initializeApp(config);
 		});
 
 
-		it('should call updateEmail()', function() {
+		//redirect the page if the course key on url is invalid
+		//redirect the page if the user has a team in this course already
+		//load the basic info of this course
+		//$this.loadcoursesInfo=function ()
+		it('$this.loadcoursesInfo=function', function() {
+			
+			scope.ckey="";
+			spyOn(ctrl, 'doRedirect');
+			ctrl.loadcoursesInfo();
+			expect(ctrl.doRedirect).toHaveBeenCalled();
 		});
+		
+		//$rootScope.$on("updateRole", function()
+		it('should call loadcoursesInfo() updateRole()', function() {
+			
+			spyOn(scope, 'updateRole');
+			spyOn(ctrl, 'loadcoursesInfo');
+			scope.$emit("updateRole", {});	
+			
+			
+			expect(scope.updateRole).toHaveBeenCalled();
+			expect(ctrl.loadcoursesInfo).toHaveBeenCalled();
+		});
+		
 		it('removeImg ()', function() {
 			scope.removeImg();
 	

@@ -368,6 +368,11 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		$scope.query = {}
 		$scope.searchBy = '$'
 		$scope.orderProp="name";   
+		
+		$this.doRedirect=function(href)
+		{
+			$window.location.href=href;
+		}
 	
 		$scope.updateRole=function()
 		{
@@ -569,13 +574,13 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			
 			if($scope.ckey==null||$scope.ckey=="")
 			{
-				$window.location.href="index.html";		
+				$this.doRedirect("index.html");		
 			}
 			else
 			{
 				if(typeof($scope.team)!="undefined"&&$scope.team.hasOwnProperty($scope.ckey))
 				{
-					$window.location.href="teamPanel.html?c="+$scope.ckey;			
+					$this.doRedirect("teamPanel.html?c="+$scope.ckey);			
 				}
 				else
 				{
@@ -583,7 +588,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						if(data.val()==null)
 						{
 							console.log("invalid input of course id");
-							$window.location.href="index.html";
+							$this.doRedirect("index.html");
 						}
 						else
 						{
@@ -761,6 +766,11 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
 
+		$this.doRedirect=function(href)
+		{
+			$window.location.href=href;
+		}
+		
 	
 		$scope.updateRole=function()
 		{
@@ -1142,7 +1152,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			
 			if($scope.ckey==null||$scope.ckey=="")
 			{
-				$window.location.href="index.html";		
+				$this.doRedirect("index.html");		
 			}
 			else
 			{
@@ -1150,7 +1160,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					if(data.val()==null)
 					{
 						console.log("invalid input of course id");
-						$window.location.href="index.html";
+						$this.doRedirect("index.html");
 					}
 					else
 					{
