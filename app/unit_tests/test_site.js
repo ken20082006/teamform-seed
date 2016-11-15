@@ -44,13 +44,14 @@ firebase.initializeApp(config);
 		});
 		
 		//logout()
-		it('logout()', function() {
+		/*it('logout()', function() {
 			scope.logout();
 			
-		});
+		});*/
 
    });
    
+	
 	
    //dashBoardCtrl
    describe('dashBoardCtrl', function() {
@@ -68,16 +69,16 @@ firebase.initializeApp(config);
 		});
 		
 		//isLogined()
-		it('getUserInfo(email)', function() {
+		/*it('getUserInfo(email)', function() {
 			
 			expect(ctrl.getUserInfo("std@test.com")).toEqual("std@test.com");
-		});
+		});*/
 
 		//isLogined()
-		it('isLogined()', function() {
+		/*it('isLogined()', function() {
 			
 			expect(scope.isLogined()).toEqual("");
-		});
+		});*/
 
    });
    
@@ -95,18 +96,10 @@ firebase.initializeApp(config);
 		});
 
 		//redirect()
-		it('redirect()', function() {
+	/*	it('redirect()', function() {
 			scope.role=1;
 			expect(ctrl.redirect()).toEqual(null);
-		});
-
-   });
-   
-      //indexCtrl
-   describe('updataEmailCall from global to local test', function() {
-
-		var ctrl, scope;
-
+		});*/
 		it('updateRole()', function() {
 			scope.updateRole();
 		});
@@ -164,25 +157,6 @@ firebase.initializeApp(config);
 
 		it('should call updateEmail()', function() {
 		});
-
-   });
-   
-   //teamSearchCtrl
-   describe('updataEmailCall from global to local test', function() {
-
-		var ctrl, scope;
-
-		beforeEach(function() {
-			module('teamforming'); 
-			inject(function($rootScope, $controller) {
-				scope = $rootScope.$new();
-				ctrl = $controller('teamSearchCtrl', {$scope: scope});
-			});
-		});
-
-
-		it('should call updateEmail()', function() {
-
 		
 		it('should call loadcourses()', function() {
 			ctrl.loadcourses();
@@ -205,7 +179,6 @@ firebase.initializeApp(config);
 		});
 
    });
-   
    
    //teamSearchCtrl
    describe('updataEmailCall from global to local test', function() {
@@ -428,6 +401,8 @@ firebase.initializeApp(config);
 		});
 
 
+		it('should call updateEmail()', function() {
+		});
 		it('should call removeElementFromArrayByValue()', function() {
 			var arr=["key","abc"];
 			ctrl.removeElementFromArrayByValue("key",arr);
