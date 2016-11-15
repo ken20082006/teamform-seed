@@ -69,11 +69,13 @@
 
 .sidebar-nav {
     position: absolute;
-    top: 0;
+    top: 34px;
     width: 150px;
     margin: 0;
     padding: 0;
     list-style: none;
+    height: 100%;
+    border-right: solid 1px grey;
 }
 
 .sidebar-nav li {
@@ -84,10 +86,11 @@
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #888;
+    color: #555;
 }
 
 .sidebar-nav li a:hover {
+    cursor: pointer;
     text-decoration: none;
     color: #fff;
     background: rgba(0,0,0,0.2);
