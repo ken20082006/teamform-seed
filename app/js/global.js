@@ -11,6 +11,7 @@ app.value('user', {
 	team:[]
 });
 
+
 app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 			
 			$rootScope.$on("updataEmailCall", function(){
@@ -103,11 +104,15 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
 		
+		$this.doRedirect=function (href) {
+			window.location = href;
+		}
+		
 		$this.redirect=function()
 		{
 			if($scope.role!="1")
 			{
-				 window.location = "index.html";// only the teacher role can enter create course page
+				 $this.doRedirect("index.html");// only the teacher role can enter create course page
 			}
 			
 		}
@@ -329,13 +334,18 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 
 			if(user.role=="0" && $this.teamChecking(key))
 			{
-				$window.location.href="teamSearch.html?c="+key;
+				$this.doRedirect("teamSearch.html?c="+key);
 				
 			}else
 			{
-				$window.location.href="teamPanel.html?c="+key;
+				$this.doRedirect("teamPanel.html?c="+key);
 			}
 			
+		}
+		
+		$this.doRedirect=function(href)
+		{
+			$window.location.href=href;
 		}
 		
 	

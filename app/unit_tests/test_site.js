@@ -24,7 +24,7 @@ firebase.initializeApp(config);
 			});
 		});
 
-
+		//$rootScope.$on("updataEmailCall", function()
 		it('should call updateEmail()', function() {
 			spyOn(scope, 'updataEmail');
 			scope.$emit("updataEmailCall", {});	
@@ -43,11 +43,6 @@ firebase.initializeApp(config);
 			
 		});
 		
-		//logout()
-		/*it('logout()', function() {
-			scope.logout();
-			
-		});*/
 
    });
    
@@ -56,31 +51,18 @@ firebase.initializeApp(config);
    //dashBoardCtrl
    describe('dashBoardCtrl', function() {
 
-		var ctrl, scope,firebaseArray;
-		var email="std@test.com";
-		var user;
+		var ctrl, scope;
 
 		beforeEach(function() {
 			module('teamforming'); 
 			inject(function($rootScope, $controller) {
 				scope = $rootScope.$new();
-				ctrl = $controller('dashBoardCtrl', {$scope: scope,user:user});
+				ctrl = $controller('dashBoardCtrl', {$scope: scope});
 			});
 		});
 		
-		//isLogined()
-		/*it('getUserInfo(email)', function() {
-			
-			expect(ctrl.getUserInfo("std@test.com")).toEqual("std@test.com");
-		});*/
-
-		//isLogined()
-		/*it('isLogined()', function() {
-			
-			expect(scope.isLogined()).toEqual("");
-		});*/
-
-   });
+		
+	});
    
       //createCoursesCtrl
    describe('createCoursesCtrl', function() {
@@ -94,12 +76,31 @@ firebase.initializeApp(config);
 				ctrl = $controller('createCoursesCtrl', {$scope: scope});
 			});
 		});
-
+		
+		//$rootScope.$on("updateRole", function()
+		it('should call updateEmail()', function() {
+			
+			spyOn(scope, 'updateRole');
+			spyOn(ctrl, 'redirect');
+			spyOn(ctrl, 'initDatePicker');
+			scope.$emit("updateRole", {});	
+			
+			
+			expect(scope.updateRole).toHaveBeenCalled();
+			expect(ctrl.redirect).toHaveBeenCalled();
+			expect(ctrl.initDatePicker).toHaveBeenCalled();
+		});
+		
 		//redirect()
-	/*	it('redirect()', function() {
+		it('redirect()', function() {
 			scope.role=1;
 			expect(ctrl.redirect()).toEqual(null);
-		});*/
+			scope.role=0;
+			spyOn(ctrl, 'doRedirect');
+			ctrl.redirect();
+			expect(ctrl.doRedirect).toHaveBeenCalled();
+		});
+		
 		it('updateRole()', function() {
 			scope.updateRole();
 		});
@@ -139,14 +140,28 @@ firebase.initializeApp(config);
 
 		});
 		
+		//File.prototype.convertToBase64 = function(callback) function of  convert uploaded image to base64 image
+		it('convertToBase64', function() {
+			ctrl.initDatePicker();
+
+		});
+		
 	});
    
       //indexCtrl
-   describe('updataEmailCall from global to local test', function() {
+   describe('indexCtrl', function() {
 
-		var ctrl, scope;
+		var ctrl, scope,user;
 
 		beforeEach(function() {
+			user={
+				email: '',
+				role:'',
+				userName:'',
+				key:'',
+				course:[],
+				team:[]
+			}
 			module('teamforming'); 
 			inject(function($rootScope, $controller) {
 				scope = $rootScope.$new();
@@ -155,7 +170,27 @@ firebase.initializeApp(config);
 		});
 
 
-		it('should call updateEmail()', function() {
+		
+		//$scope.dashBoardChangePage=function(key)
+		it('should do redirect to teamSearch or teamPanel', function() {
+			user.role=1;
+			spyOn(ctrl, 'doRedirect');
+			scope.dashBoardChangePage("");
+			
+			expect(ctrl.doRedirect).toHaveBeenCalled();
+			
+		});
+		
+		//$rootScope.$on("updateRole", function()
+		it('should call loadcourses() updateRole()', function() {
+			
+			spyOn(scope, 'updateRole');
+			spyOn(ctrl, 'loadcourses');
+			scope.$emit("updateRole", {});	
+			
+			
+			expect(scope.updateRole).toHaveBeenCalled();
+			expect(ctrl.loadcourses).toHaveBeenCalled();
 		});
 		
 		it('should call loadcourses()', function() {
@@ -181,7 +216,7 @@ firebase.initializeApp(config);
    });
    
    //teamSearchCtrl
-   describe('updataEmailCall from global to local test', function() {
+   describe('teamSearchCtrl', function() {
 
 		var ctrl, scope;
 
@@ -192,6 +227,25 @@ firebase.initializeApp(config);
 				ctrl = $controller('teamSearchCtrl', {$scope: scope});
 			});
 		});
+		
+		//redirect the page if the course key on url is invalid
+		//redirect the page if the user has a team in this course already
+		//load the basic info of this course
+		$this.loadcoursesInfo=function ()
+		
+		
+		//$rootScope.$on("updateRole", function()
+		it('should call loadcoursesInfo() updateRole()', function() {
+			
+			spyOn(scope, 'updateRole');
+			spyOn(ctrl, 'loadcoursesInfo');
+			scope.$emit("updateRole", {});	
+			
+			
+			expect(scope.updateRole).toHaveBeenCalled();
+			expect(ctrl.loadcoursesInfo).toHaveBeenCalled();
+		});
+		
 		
 		it('should call createTeam ()', function() {
 			scope.createTeam();
