@@ -38,7 +38,7 @@
     height: 100%;
     margin-left: -150px;
     overflow-y: auto;
-    background: #bfebfc; /* For browsers that do not support gradients */
+    background: #DDD; /* For browsers that do not support gradients */
   /*background: -webkit-linear-gradient(right, #bfebfc 60%, white); 
   background: -o-linear-gradient(right, #bfebfc 60%, white);
   background: -moz-linear-gradient(right, #bfebfc 60%, white); 
@@ -74,7 +74,7 @@
     padding: 0;
     list-style: none;
     height: 100%;
-    border-right: solid 1px grey;
+    border-right: solid 1px #999;
 }
 
 .sidebar-nav li {
