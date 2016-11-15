@@ -69,9 +69,8 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
-		
-		<div class="row" ng-controller="teamSearchCtrl">
-		
+		<div class="row content" ng-controller="teamSearchCtrl">
+		<div class="heading"><h1>Team Searching Panel</h1></div>
 		<div id="teamForm" style="display:none; width:500px; padding: 0px;" class="fancybox">
 			<h2>Create Team</h2>
 			<div>
@@ -108,8 +107,7 @@
 						</select>   
                         <br>
                         <em>Enter a name (e.g. COMP3111-L1, COMP3111-L2 or COMP3111H) to join the team</em>
-						
-						
+                         <br><br>
 						<div>
                            
                            <button id="btn_admin" type="button" class="btn btn-primary" >random team</button>
@@ -132,11 +130,8 @@
 							
 									<div class="panel">
 										<div class="panel-heading"  style="background:#eee;color:#fff">
-											<div class="row" style="min-height:100px;">
-												<div class="col-xs-9 text-right">
-													<div class="huge">{{q.data.name}}	</div>
-													
-												</div>
+											<div class="row">
+													<div class="huge t_title">{{q.data.name}}	</div>
 											</div>
 				
 										</div>
