@@ -10,7 +10,6 @@
 
 /* Toggle Styles */
 
-
 .menu_toggle_button,.menu_toggle_button:focus
 {
 	background:#000;
@@ -79,7 +78,7 @@
 }
 
 .sidebar-nav li {
-    text-indent: 40px;
+    text-align: center;
     line-height: 50px;
 }
 
@@ -103,17 +102,17 @@
 
 .sidebar-nav > .sidebar-brand {
     margin-top: 15px;
-    height: 40px;
     font-size: 16px;
     line-height: 40px;
-    text-align: left;
-    text-indent: 40px;
+    text-align: center;
+    text-indent: 0;
+    padding: 0 10px;
 }
 
 .sidebar-nav > .sidebar-brand:after {
     content: " ";
-    height: 15px;
-    width: 70%;
+    height: 17px;
+    width: 90%;
     margin: 0 auto;
     display: block;
     border-bottom: solid 1px grey;
@@ -174,4 +173,53 @@ input[type=submit] {
     cursor:pointer;
     -webkit-border-radius: 5px;
     border-radius: 5px; 
+}
+
+/*-fai change*/
+
+.content{
+    margin: 0 50px 20px 50px;
+}
+
+.heading h1{
+    font-size: 1.8em;
+    line-height: 1.5;
+    font-weight: 200;
+    padding: 5px;
+    padding-left: 20px;
+    width: 100%;
+    margin-top: -30px;
+    border-bottom: solid 1px #C7CDD1;
+    margin-bottom: 20px;
+}
+
+.panel{
+    border-width: 1px;
+    border-color: #666;
+    box-shadow: 5px 5px 5px #DDD;
+    margin-bottom: 25px;
+    min-width: 212;
+}
+
+.panel a:hover, .panel a:focus, .panel a:active{
+    text-decoration: none;
+}
+
+.panel-heading{
+    padding: 0 15px;
+}
+
+.panel-heading>div{
+    height: 88px;
+}
+
+.t_title{
+    width: 100%;
+    height:88px;
+    line-height: 88px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.4);
+    margin-top: 0px;
+    font-weight: 200;
+    font-size: 30px!important;
 }
