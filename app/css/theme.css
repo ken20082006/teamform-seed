@@ -38,11 +38,7 @@
     height: 100%;
     margin-left: -150px;
     overflow-y: auto;
-    background: #DDD; /* For browsers that do not support gradients */
-  /*background: -webkit-linear-gradient(right, #bfebfc 60%, white); 
-  background: -o-linear-gradient(right, #bfebfc 60%, white);
-  background: -moz-linear-gradient(right, #bfebfc 60%, white); 
-  background: linear-gradient(to right, #bfebfc 60%, white); */
+    background: #000;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -73,8 +69,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    height: 100%;
-    border-right: solid 1px #999;
+    height: calc(100% - 34px);
 }
 
 .sidebar-nav li {
@@ -85,14 +80,14 @@
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #555;
+    color: #BBB;
 }
 
 .sidebar-nav li a:hover {
     cursor: pointer;
     text-decoration: none;
     color: #fff;
-    background: rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.2);
 }
 
 .sidebar-nav li a:active,
@@ -118,8 +113,8 @@
     border-bottom: solid 1px grey;
 }
 
-.sidebar-nav > .sidebar-brand a {
-    color: #333;
+.sidebar-nav > .sidebar-brand{
+    color: white;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {
@@ -131,7 +126,7 @@
     background-color:skyblue;
 }
 .sidebar-top{
-	width: 150px;
+    width: 150  px;
     overflow: hidden;
     height: 34px;
     line-height: 34px;
