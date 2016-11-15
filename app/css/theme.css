@@ -8,6 +8,11 @@
     overflow-x: hidden;
  }
 
+.section{
+    border-bottom: 1px dotted grey;
+    margin-bottom: 10px;
+}
+
 /* Toggle Styles */
 
 .menu_toggle_button,.menu_toggle_button:focus
@@ -16,7 +21,6 @@
 	color:#FFF;
 	border-radius: 0px 0px 4px 0px;
 }
-
 
 #wrapper {
     padding-left: 0;
@@ -131,8 +135,6 @@
     background-color:skyblue;
 }
 .sidebar-top{
-	width: 150px;
-    overflow: hidden;
     height: 34px;
     line-height: 34px;
     text-align: center;
