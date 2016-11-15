@@ -85,7 +85,7 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
-			<div ng-controller="createCoursesCtrl" class="container">
+			<div ng-controller="createCoursesCtrl" id="ccc" >
 	    <div id="ccheader">
 			<h2>Create Course</h2>
 		</div>
@@ -104,26 +104,28 @@
 				<span id="base64Name"></span>
 				<a id="removeURL" style="display:none;" ng-click="removeImg()">Remove</a>
 			</div>
-			<div>
+			<div id="des">
 				<label>Description</label>
 				
 				<textarea name="description" ng-model="courseInfo.message" required rows="5" cols="50"></textarea>
 			</div>
-			<div>
+			<div id="pic">
 				<label>Member range(2-20)</label>
 				<p>Min</p><input type="number" ng-model="courseInfo.min" min="2" max="20">
 				<p>Max</p><input type="number" ng-model="courseInfo.max" min="2" max="20">
 			</div>
 			<div>
-				<label>Date</label><input type="text" ng-model="courseInfo.date" id="datepicker" required>
+				<label>Date </label><input type="text" ng-model="courseInfo.date" id="datepicker" required>
 				
 			</div>
 			<div id="sub">
 				<input type="submit" name="submit" id="submit"  ng-click="createCourse()">
 			</div>
 		</form>
+        </div>
+        </div>
 </body>
-	</div>
+
 		
 		
 		
