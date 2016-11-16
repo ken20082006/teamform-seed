@@ -1,0 +1,44 @@
+@charset "utf-8";
+
+
+
+
+
+#ccheader
+{
+	font-style:italic;
+	font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", "Arial Black", sans-serif;
+	
+}
+
+hr
+{
+	border-color:#666;
+	margin-bottom:40px;
+}
+
+#pic
+{
+	margin:15px 0px 15px 0px
+}
+
+#des
+{
+	margin-bottom:20px;
+}
+
+
+.input1:hover
+{
+	background-color:#FFC;
+}
+
+#sub
+{
+	margin-top:10px;
+}
+
+#ccc
+{
+	margin:0px 20px 0px 20px;
+}

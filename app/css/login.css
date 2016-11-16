@@ -1,0 +1,273 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway:300,200);
+html,body,.container,.login{
+    height: 100%;
+    width:100%;
+}
+
+body{
+    font-family: Raleway, sans-serif;
+    background-color: white;
+    background: url(http://fullhdpictures.com/wp-content/uploads/2016/07/Mobile-Graduation-Wallpaper.jpg) no-repeat fixed;
+    background-size: cover;
+    /*background-attachment: inherit;*/
+    background-position: center;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+
+#header
+{
+	text-align:center;
+	font-size:23px;
+	font-weight:bold;
+	margin:15px;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+    line-height: 30px;
+}
+
+#header1
+{
+	margin:25px 10px 35px 10px;
+	font-size:16px;
+	font-weight:500;
+    text-align: left;
+	font-family: Raleway;
+}
+
+hr{
+  border-color: #DDD;
+}
+.container{
+}
+
+.login {
+    text-align: center;
+   display:-ms-flexbox;
+-ms-flex-pack:center;
+-ms-flex-align:center;
+
+/* Firefox */
+display:-moz-box;
+-moz-box-pack:center;
+-moz-box-align:center;
+
+/* Safari, Opera, and Chrome */
+display:-webkit-box;
+-webkit-box-pack:center;
+-webkit-box-align:center;
+
+/* W3C */
+display:box;
+box-pack:center;
+box-align:center;
+}
+
+.input-txt {
+  width: 100%;
+  padding: 20px 10px;
+  background: #5D92BA;
+  border: none;
+  font-size: 16px;
+  color: black;
+  border-bottom: 1px dotted rgba(250, 250, 250, 0.4);
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-transition: background-color 0.5s ease-in-out;
+  -o-transition: background-color 0.5s ease-in-out;
+  -webkit-transition: background-color 0.5s ease-in-out;
+  transition: background-color 0.5s ease-in-out;
+}
+.input-txt:-moz-placeholder {
+  color: #81aac9;
+}
+.input-txt:-ms-input-placeholder {
+  color: #81aac9;
+}
+.input-txt::-webkit-input-placeholder {
+  color: #81aac9;
+}
+.input-txt:focus {
+  background-color: #4478a0;
+}
+
+.login-footer {
+    margin: 0;
+  margin-top: 10px;
+  overlow: hidden;
+  float: left;
+  width: 100%;
+}
+
+.btn {
+  padding: 15px 30px;
+  border: none;
+  background: white;
+  color: #5D92BA;
+}
+
+.form {
+  /*-moz-transform: translate3d(-50%, 0, 0);
+  -ms-transform: translate3d(-50%, 0, 0);
+  -webkit-transform: translate3d(-50%, 0, 0);
+  transform: translate3d(-50%, 0, 0);*/
+    display: inline-block;
+  width: 350px;
+  padding: 20px;
+    /*background-color: white;
+    border: 1px solid black;*/
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+}
+
+.form:before{
+    content: " ";
+    display: inline-block;
+    width: 400px;
+    height: 400px;
+    background-color: white;
+    position: absolute;
+    margin-left: -200px;
+    margin-top: -10px;
+    z-index: -1;
+    -ms-transform: rotate(45deg); 
+    -webkit-transform: rotate(45deg); 
+    transform: rotate(45deg);    
+}
+
+/*.form:before {
+  content: "";
+  width: 110%;
+  height: 110%;
+  position: absolute;
+  background: inherit;
+  left: -5%;
+  right: 0;
+  bottom: 0;
+  top: -5%;
+  -webkit-filter: blur(3px);
+  filter: blur(3px);
+}*/
+.form.goAway {
+  opacity: 0;
+  -moz-transform: scale(0.6) translate3d(-50%, 0, 0);
+  -ms-transform: scale(0.6) translate3d(-50%, 0, 0);
+  -webkit-transform: scale(0.6) translate3d(-50%, 0, 0);
+  transform: scale(0.6) translate3d(-50%, 0, 0);
+  -moz-transition: -moz-transform 200ms ease-in-out, opacity 100ms linear;
+  -o-transition: -o-transform 200ms ease-in-out, opacity 100ms linear;
+  -webkit-transition: -webkit-transform 200ms ease-in-out, opacity 100ms linear;
+  transition: transform 200ms ease-in-out, opacity 100ms linear;
+  -moz-transition-delay: 600ms;
+  -o-transition-delay: 600ms;
+  -webkit-transition-delay: 600ms;
+  transition-delay: 600ms;
+}
+.form .topbar .spanColor {
+  position: absolute;
+  width: 0px;
+  right: 20px;
+  height: 43px;
+  opacity: 0.2;
+  background-color: white;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  -moz-transition: width 150ms ease-in-out, background-color 150ms ease-in-out 250ms, border 150ms ease-in-out 250ms;
+  -o-transition: width 150ms ease-in-out, background-color 150ms ease-in-out 250ms, border 150ms ease-in-out 250ms;
+  -webkit-transition: width 150ms ease-in-out, background-color 150ms ease-in-out, border 150ms ease-in-out;
+  -webkit-transition-delay: 0s, 250ms, 250ms;
+  transition: width 150ms ease-in-out, background-color 150ms ease-in-out 250ms, border 150ms ease-in-out 250ms;
+}
+.form .topbar .input {
+  display: block;
+    margin: 0 auto;
+  width: 100%;
+  position: relative;
+  font-size: 16px;
+  background: #FFF;
+  border: 1px solid #666;
+  margin-bottom: 25px;
+  color: black;
+  padding: 7px 10px;
+}
+.form .topbar .input::-webkit-input-placeholder {
+  color: black;
+  font-size: 16px;
+  font-family: Raleway;
+  line-height: 1rem;
+  font-weight: 200;
+}
+.form .topbar .input:focus {
+  outline: none;
+  color: black;
+  border: 1px solid black;
+}
+.form .topbar .input.disabled:hover {
+  border: 1px solid #555;
+}
+.form .topbar .input:hover {
+  border: 1px solid black;
+}
+.form .checkbox{
+  position: relative;
+  float: left;
+}
+.form .submit {
+  padding: 10px 16px;
+margin: 0 auto;
+    margin-top: -38px;
+  font-size: 20px;
+  font-family: Raleway;
+  font-weight: 200;
+  display: block;
+  color: black;
+  position: relative;
+    z-index: 2;
+    background-color: transparent;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+    /*border: 1px solid #666;
+    background-color: #dbf9fc;*/
+}
+
+
+.form .login-footer:before{
+    content: " ";
+    display: inline-block;
+    z-index: 1;
+    width: 25px;
+    height: 25px;
+    background-color: #dbf9fc;
+    -ms-transform: rotate(45deg); 
+    -webkit-transform: rotate(45deg); 
+    transform: rotate(45deg);
+}
+
+.form .submit:focus {
+  outline: none;
+}
+.form .submit:hover {
+  color: black;
+  /*border: 1px solid black;*/
+}
+.remember {
+  color: black;
+  position: relative;
+  width: 100%;
+  font-family: Raleway;
+}
+.error_message{
+  color: red;
+  font-size: 1rem;
+  font-family: Raleway;
+  position: relative;
+line-height: 20px;
+    width: 100%;
+    height: 20px;
+}
+

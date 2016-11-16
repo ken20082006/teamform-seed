@@ -11,13 +11,13 @@
 		JQuery: Necessary for some bootstrap interactions (v1.12.4 is used)		
 		Bootstrap: Library and CSS for bootstrap framework (v3.3.7 is used)
 		Font-awesome: More icons for the web development (v4.6.3 is used)		
-		site.css: A customized css for our web application. Not from any web framework. 
+		site.css: A customized css for our web application. Not from any web framework. 
 	-->
 	        
     <script src="lib/jquery.min.js"></script>      
     <script src="lib/bootstrap.min.js"></script>      
       	  
-	<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css" >
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
 
@@ -40,7 +40,12 @@
 	  };
 	  firebase.initializeApp(config);
 	  
-
+	  $(document).ready(function(){
+			//$.get("navbar.html",function(response){
+			//$('#navBar').append(response);
+			//});
+			//$('#wrapper').('navbar.html');
+		});
 	  
 	</script>
 	
@@ -63,75 +68,30 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
+		<div class="row content">
+		<div class="heading"><h1>Team Searching Panel</h1></div>
 		
-		<div id="coursesContentBlock" ng-controller="indexCtrl" >
-       		<div class="row content">
-			<div class="heading">
-				<h1>Dash Board</h1>
-			</div>
-				<div class="section">Course</div>
-				<div ng-repeat="q in courseArray">
-	
-					<div class="col-lg-4 col-md-6">
-						<div class="panel">
-                            <a style="cursor: pointer;" ng-click="dashBoardChangePage(q.key)">
-							<div class="panel-heading"  style="background-image: url({{q.data.image}}); background-size: 100% 100%; color: #FFF">
-								<div class="row">
-								    <div class="huge t_title">{{q.data.title}}	</div>
-								    <input  type="hidden" id="cKey" value="{{q.key}}">
-								</div>
-	
-                                </div></a>
-							<div class="row" style="min-height:100px;">
-								<div class="col-xs-9 ">
-									<div>{{q.data.message}}	</div>
-								</div>
-							</div>
-							<a style="cursor: pointer;" ng-click="dashBoardChangePage(q.key)">
-								<div class="panel-footer">
-									<span class="pull-left">View Details</span>
-									<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-									<div class="clearfix"></div>
-								</div>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="content">
-				<div class="section">Recent Activity</div>
-				<ul style="list-style: none; display: block; margin-left: -20px; font-size: 1.25em;">
-					<li>
-						<span class="glyphicon glyphicon-bullhorn"></span>
-						Announcements
-						<table style="margin-left: 30px; font-size: .75em;">
-							<tr>
-								<td>
-									<a href="#1" style="padding: 10px; display: block;">Comp3111</a>
-								</td>
-								<td>
-									Project 1 released.
-								</td>
-							</tr>
-						</table>
-					</li>
-					<li>
-						<span class="glyphicon glyphicon-calendar"></span>
-						Meetings
-					</li>
-					
-				</ul>
-			</div>
-		</div>
-		      
+		
+       </div>
         <!-- /#page-content-wrapper -->
+
     </div>
-
+    
 	<!-- /#wrapper -->
+<!-- jQuery -->
+    
 
-	<!-- jQuery -->
+
 
     <!-- Menu Toggle Script -->
-    
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+	
+    </script>
+	
+
 </body>
 </html>
