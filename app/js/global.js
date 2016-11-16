@@ -25,7 +25,7 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 				$scope.email=user.email;
 				$scope.userName=user.userName;
 				$scope.role=user.role;
-				
+				$scope.$apply();
 			}
 			$scope.logout = function() {
 				firebase.auth().signOut().then(function() {
@@ -429,7 +429,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						$scope.requestValid=false;
 					}
 				}
-				if(operation==1)
+				if(operation==1&&$scope.requestValid)
 				{
 					firebase.database().ref("Team/"+key).once('value', function(data) {
 						if(typeof(data.val().request)!="undefined")
@@ -734,11 +734,10 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 								newCourseData.team=[];
 							}
 							newCourseData.team.push(teamKey);
-							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData);
-						}).then(function(){
-						
-						$window.location.href="teamPanel.html?c="+$scope.ckey;
-					});
+							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData).then(function(){
+								$window.location.href="teamPanel.html?c="+$scope.ckey;
+							});
+						});
 
 					});
 
@@ -747,7 +746,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			}
 			else
 			{
-				console.log("some data missed");
+				alert("some data missed");
 			}
 			
 		}
@@ -887,9 +886,9 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 						{
 							var newCourseData=data.val();		
 							$scope.removeElementFromArrayByValue($scope.joinedTeam.key,newCourseData.team);
-							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData);
-						}).then(function(){
-							$window.location.href="index.html";		
+							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData).then(function(){
+								$window.location.href="index.html";		
+							});
 						}); 
 					});
 
@@ -1168,6 +1167,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					{
 						$scope.currCourse=data.val();
 						$scope.currCourse.key=data.getKey();
+						$scope.courseInfo.image=$scope.currCourse.image;
 						$scope.roleAccessCheck();						
 					}
 				});
@@ -1222,8 +1222,8 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			owner:"",
 			message:"",
 			max:"",
-			min:""
-			//,date:""
+			min:"",
+			date:""
 		}
 		$scope.fileName;
 		
@@ -1243,7 +1243,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			$scope.courseInfo.message=$scope.currCourse.message;
 			$scope.courseInfo.max=$scope.currCourse.max;
 			$scope.courseInfo.min=$scope.currCourse.min;
-			//$scope.courseInfo.date=$scope.currCourse.date;
+			$scope.courseInfo.date=$scope.currCourse.date;
 			$scope.courseInfo.owner=$scope.email;
 			if(typeof($scope.courseInfo.image)=="undefined"||$scope.courseInfo.image=="")
 			{
@@ -1252,7 +1252,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			
 			if(typeof($scope.courseInfo.title)=="undefined"||typeof($scope.courseInfo.message)=="undefined")
 			{
-				alert("some missing data");
+				//alert("some missing data");
 				return false;
 			}
 			return true;	
@@ -1402,55 +1402,64 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			
 		}
 
-		$scope.validInput=function()
+		$scope.validInputForEditProfile=function()
 		{
+			
 			if(typeof($scope.currUser.userName)=="undefined"||$scope.currUser.userName.trim()=="")
 			{
 				alert("some data missed");
-				return false;
+
 			}
 			if(typeof($scope.password)!="undefined"&&$scope.password!="")
 			{
 				var user = firebase.auth().currentUser;
-				user.updatePassword($scope.password).then(function() {
-				}, function(error) 
+				user.updatePassword($scope.password).then(function()
+				{
+					$scope.updateProfileData();
+				}, 
+				function(error) 
 				{
 					alert(error);
-					return false;
+
 				});
 			}
-			return true;
+			else
+			{
+				$scope.updateProfileData();
+			}
+			
 		}
 
-		$scope.editProfile=function()
+		
+		$scope.updateProfileData=function()
 		{
-			if($scope.validInput())
+			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
 			{
-				firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
+				var newUserData=data.val(); 
+				newUserData.userName=$scope.currUser.userName; 
+				if(typeof($scope.addedTags)!="undefined")
 				{
-					var newUserData=data.val(); 
-					newUserData.userName=$scope.currUser.userName; 
-					if(typeof($scope.addedTags)!="undefined")
+					newUserData.tags=$scope.addedTags;
+				}
+				else
+				{
+					if(newUserData.hasOwnProperty['tags'])
 					{
-						newUserData.tags=$scope.addedTags;
+						delete newUserData['tags'];
 					}
-					else
-					{
-						if(newUserData.hasOwnProperty['tags'])
-						{
-							delete newUserData['tags'];
-						}
-					}
-					firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
-						user.userName=$scope.currUser.userName;
-						
-						$rootScope.$emit("updataEmailCall", {});		
-						alert("success");
-						
-					});
+				}
+				firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
+					user.userName=$scope.currUser.userName;
+					
+					$rootScope.$emit("updataEmailCall", {});		
+					alert("success");
+					
 				});
-			}
+			});
+			
 		}
+		
+
 		
 		
 	});
