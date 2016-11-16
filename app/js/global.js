@@ -11,6 +11,7 @@ app.value('user', {
 	team:[]
 });
 
+
 app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 			
 			$rootScope.$on("updataEmailCall", function(){
@@ -24,7 +25,7 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 				$scope.email=user.email;
 				$scope.userName=user.userName;
 				$scope.role=user.role;
-				
+				$scope.$apply();
 			}
 			$scope.logout = function() {
 				firebase.auth().signOut().then(function() {
@@ -38,11 +39,11 @@ app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 });
 app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray) {
 		// sync with firebaseArray
-		$this=this;
+
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
 
-		function getUserInfo(email)
+		$scope.getUserInfo=function (email)
 		{	
 			console.log("test");
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
@@ -67,17 +68,19 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 					console.log("you are logined as teacher");	
 				}
 			});
+			
+			return false;
 
 		}
 	
-		$this.isLogined=function ()
+		$scope.isLogined=function ()
 		{	
 		
 			firebase.auth().onAuthStateChanged(function(user) {
 			  if (user) 
 			  {
 				// User is signed in.
-				getUserInfo(user.email);
+				$scope.getUserInfo(user.email);
 
 			  }
 			  else
@@ -87,32 +90,36 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 			});
 		}
 		
-		$this.init=function()
+		$scope.init=function()
 		{
-			$this.isLogined();
+			$scope.isLogined();
 		};
-		$this.init();
+		$scope.init();
 		
 	});
 	
 app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseArray) {
-		$this=this;
+	
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
 		$scope.courses = $firebaseArray(courses);
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
 		
-		$this.redirect=function()
+		$scope.doRedirect=function (href) {
+			window.location = href;
+		}
+		
+		$scope.redirect=function()
 		{
 			if($scope.role!="1")
 			{
-				 window.location = "index.html";// only the teacher role can enter create course page
+				 $scope.doRedirect("index.html");// only the teacher role can enter create course page
 			}
 			
 		}
 		
-		$this.initDatePicker= function ()
+		$scope.initDatePicker= function ()
 		{
 			$('#datepicker').datepicker({
 				format: 'dd/mm/yyyy',
@@ -130,8 +137,8 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 	
 		$rootScope.$on("updateRole", function(){
 			   $scope.updateRole();
-				$this.redirect();
-				$this.initDatePicker();
+				$scope.redirect();
+				$scope.initDatePicker();
 		});
 		
 
@@ -194,7 +201,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 
 		}
 		
-		$this.validInput=function ()// check if any empty input of essential data or invalid input
+		$scope.validInput=function ()// check if any empty input of essential data or invalid input
 		{
 			if($scope.courseInfo.title==""||$scope.courseInfo.message==""||$scope.courseInfo.min==""||$scope.courseInfo.max==""||$scope.courseInfo.date=="")
 			{
@@ -217,7 +224,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 		
 		$scope.createCourse = function() {
 			var isError=false;
-			if($this.validInput())
+			if($scope.validInput())
 			{
 				$scope.courseInfo.owner=$scope.email;
 			
@@ -256,7 +263,7 @@ app.controller("createCoursesCtrl", function($scope,$rootScope,user, $firebaseAr
 	
 	
 app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$window) {
-		$this=this;
+
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
 		$scope.courseFB=$firebaseArray(courses);
@@ -275,10 +282,10 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 	
 		$rootScope.$on("updateRole", function(){
 			   $scope.updateRole();
-			   $this.loadcourses();
+			   $scope.loadcourses();
 		});
 		
-		$this.loadcourses=function ()
+		$scope.loadcourses=function ()
 		{
 			if(typeof($scope.course)!="undefined")
 			{
@@ -300,7 +307,7 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 		//student without team -> teamsearch
 		//others -> teampannel
 		
-		$this.teamChecking=function (key)
+		$scope.teamChecking=function (key)
 		{
 			if(typeof($scope.team)=="undefined")
 			{
@@ -327,15 +334,20 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 		$scope.dashBoardChangePage=function(key)
 		{
 
-			if(user.role=="0" && $this.teamChecking(key))
+			if(user.role=="0" && $scope.teamChecking(key))
 			{
-				$window.location.href="teamSearch.html?c="+key;
+				$scope.doRedirect("teamSearch.html?c="+key);
 				
 			}else
 			{
-				$window.location.href="teamPanel.html?c="+key;
+				$scope.doRedirect("teamPanel.html?c="+key);
 			}
 			
+		}
+		
+		$scope.doRedirect=function(href)
+		{
+			$window.location.href=href;
 		}
 		
 	
@@ -344,7 +356,7 @@ app.controller("indexCtrl", function($scope,$rootScope,user,$firebaseArray,$wind
 
 
 app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,$window) {
-		$this=this;
+
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
 		$scope.courseFB=$firebaseArray(courses);
@@ -358,6 +370,11 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		$scope.query = {}
 		$scope.searchBy = '$'
 		$scope.orderProp="name";   
+		
+		$scope.doRedirect=function(href)
+		{
+			$window.location.href=href;
+		}
 	
 		$scope.updateRole=function()
 		{
@@ -386,7 +403,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 
 		$rootScope.$on("updateRole", function(){
 			   $scope.updateRole();
-			   $this.loadcoursesInfo();
+			   $scope.loadcoursesInfo();
 		});
 		
 		$scope.requestValid=true;
@@ -399,7 +416,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			2.if not in the request list in that team, update the interface by loading team data again
 		*/
 		
-		$this.requestValidCheck = function(operation,key)//1 is delete request, 0 is join request
+		$scope.requestValidCheck = function(operation,key)//1 is delete request, 0 is join request
 		{
 			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
 			{
@@ -412,7 +429,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						$scope.requestValid=false;
 					}
 				}
-				if(operation==1)
+				if(operation==1&&$scope.requestValid)
 				{
 					firebase.database().ref("Team/"+key).once('value', function(data) {
 						if(typeof(data.val().request)!="undefined")
@@ -420,14 +437,14 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 							if(data.val().request.indexOf($scope.email)==-1)
 							{
 								alert("you are not in the waiting list");
-								$this.loadExistedTeam();
+								$scope.loadExistedTeam();
 								$scope.requestValid=false;
 							}
 						}
 						else
 						{
 							alert("you are not in the waiting list");
-							$this.loadExistedTeam();
+							$scope.loadExistedTeam();
 							$scope.requestValid=false;
 						}
 					});
@@ -445,18 +462,18 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		
 		$scope.removeRequest=function(i,key)
 		{
-			$.when($this.requestValidCheck(1,key)).done(function() 
+			$.when($scope.requestValidCheck(1,key)).done(function() 
 			{
 				if($scope.requestValid)
 				{
 					firebase.database().ref("Team/"+key).once('value', function(data) {
 						var newTeamData=data.val();
-						$this.removeElementFromArrayByValue($scope.email,newTeamData.request);
+						$scope.removeElementFromArrayByValue($scope.email,newTeamData.request);
 						firebase.database().ref("Team/"+key).set(newTeamData);
 					});
 					firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) {
 						var newUserData=data.val();
-						$this.removeElementFromArrayByValue(key,newUserData.request[$scope.ckey]);
+						$scope.removeElementFromArrayByValue(key,newUserData.request[$scope.ckey]);
 						if(typeof(newUserData.request[$scope.ckey])=="undefined")
 						{
 							if(jQuery.isEmptyObject(newUserData.request))
@@ -484,7 +501,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		$scope.joinRequest=function(index,key)
 		{
 
-			$.when($this.requestValidCheck(0,key)).done(function() 
+			$.when($scope.requestValidCheck(0,key)).done(function() 
 			{
 				if($scope.requestValid)
 				{
@@ -540,7 +557,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		//function for cutting the parameter from url
 		//eg. gup( 'c', 'www.123.com?c=aaa'  ) will return 'aaa'
 
-		$this.gup=function( name, url ) {
+		$scope.gup=function( name, url ) {
 			if (!url) url = location.href;
 			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
 			var regexS = "[\\?&]"+name+"=([^&#]*)";
@@ -552,20 +569,20 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		//redirect the page if the course key on url is invalid
 		//redirect the page if the user has a team in this course already
 		//load the basic info of this course
-		$this.loadcoursesInfo=function ()
+		$scope.loadcoursesInfo=function ()
 		{
 			
-			$scope.ckey=$this.gup('c', window.location.href);
+			$scope.ckey=$scope.gup('c', window.location.href);
 			
 			if($scope.ckey==null||$scope.ckey=="")
 			{
-				$window.location.href="index.html";		
+				$scope.doRedirect("index.html");		
 			}
 			else
 			{
 				if(typeof($scope.team)!="undefined"&&$scope.team.hasOwnProperty($scope.ckey))
 				{
-					$window.location.href="teamPanel.html?c="+$scope.ckey;			
+					$scope.doRedirect("teamPanel.html?c="+$scope.ckey);			
 				}
 				else
 				{
@@ -573,13 +590,13 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						if(data.val()==null)
 						{
 							console.log("invalid input of course id");
-							$window.location.href="index.html";
+							$scope.doRedirect("index.html");
 						}
 						else
 						{
 							$scope.currCourse=data.val();
 							$scope.currCourse.key=data.getKey();
-							$this.loadExistedTeam();							
+							$scope.loadExistedTeam();							
 						}
 					});
 				}
@@ -589,7 +606,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		}
 		
 		//load the created team
-		 $this.loadExistedTeam=function()
+		 $scope.loadExistedTeam=function()
 		{
 			var tmpTeam=[];
 			
@@ -635,7 +652,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		}
 		
 		//check if any essentail input is missed on the team create form
-		 $this.validCheck=function()
+		 $scope.validCheck=function()
 		{
 			
 			if($scope.newTeam.name.trim()!=""&&$scope.newTeam.description.trim()!="")
@@ -645,19 +662,19 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			return false;
 		}
 		
-		 $this.removeElementFromArrayByValue=function(value,array)
+		 $scope.removeElementFromArrayByValue=function(value,array)
 		{
 			array.splice(array.indexOf(value), 1);
 		}
 		
 		//delete all the join requests of a course of a user
-		 $this.deleteAllJoinRequestFromTeam=function(newUserData)
+		 $scope.deleteAllJoinRequestFromTeam=function(newUserData)
 		{
 			for(i=0;i<newUserData.request[$scope.ckey].length;i++)
 			{
 				firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
 					var newTeamData=data.val();
-					$this.removeElementFromArrayByValue($scope.email,newTeamData.request);
+					$scope.removeElementFromArrayByValue($scope.email,newTeamData.request);
 					firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
 				});
 			}
@@ -672,7 +689,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		*/
 		$scope.createTeam=function()
 		{
-			if($this.validCheck())
+			if($scope.validCheck())
 			{
 
 				$scope.newTeam.leaderID=$scope.email;
@@ -693,7 +710,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						newUserData.team[$scope.ckey]=teamKey;
 						if(typeof(newUserData.request)!="undefined"&&typeof(newUserData.request[$scope.ckey])!="undefined")
 						{
-							$.when($this.deleteAllJoinRequestFromTeam(newUserData)).done(function() 
+							$.when($scope.deleteAllJoinRequestFromTeam(newUserData)).done(function() 
 							{
 								delete newUserData.request[$scope.ckey]
 								if(jQuery.isEmptyObject(newUserData.request))
@@ -717,11 +734,10 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 								newCourseData.team=[];
 							}
 							newCourseData.team.push(teamKey);
-							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData);
-						}).then(function(){
-						
-						$window.location.href="teamPanel.html?c="+$scope.ckey;
-					});
+							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData).then(function(){
+								$window.location.href="teamPanel.html?c="+$scope.ckey;
+							});
+						});
 
 					});
 
@@ -730,7 +746,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 			}
 			else
 			{
-				console.log("some data missed");
+				alert("some data missed");
 			}
 			
 		}
@@ -740,7 +756,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 
 
 app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$window) {
-		$this=this;
+
 		/*initialzation and checking*/
 		var courses = firebase.database().ref("courses");
 		$scope.courseFB=$firebaseArray(courses);
@@ -751,6 +767,11 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
 
+		$scope.doRedirect=function(href)
+		{
+			$window.location.href=href;
+		}
+		
 	
 		$scope.updateRole=function()
 		{
@@ -772,7 +793,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		$rootScope.$on("updateRole", function(){
 			   $scope.updateRole();
-			   $this.loadcoursesInfo();
+			   $scope.loadcoursesInfo();
 			   
 		});
 		
@@ -787,7 +808,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
 			{
 				var newTeamData=data.val();		
-				$this.removeElementFromArrayByValue($scope.email,newTeamData.member);
+				$scope.removeElementFromArrayByValue($scope.email,newTeamData.member);
 				firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
 			});
 			userAccount.orderByChild("email").equalTo($scope.email).on("child_added", function(data)
@@ -806,7 +827,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			
 		}
 		//delete all the data that related to the team waiting request
-		$this.deleteAllWaitingList=function()
+		$scope.deleteAllWaitingList=function()
 		{
 			
 			if(typeof($scope.lastestWaitingList)!="undefined")
@@ -824,7 +845,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		}
 		
-		 $this.deleteAllTeamMember=function()
+		 $scope.deleteAllTeamMember=function()
 		{
 			for(i=0;i<$scope.lastestTeamMember.length;i++)
 			{
@@ -857,17 +878,17 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			}).then(function(){
 				
 				
-				$.when($this.deleteAllTeamMember()).done(function(){
-					$.when($this.deleteAllWaitingList()).done(function() 
+				$.when($scope.deleteAllTeamMember()).done(function(){
+					$.when($scope.deleteAllWaitingList()).done(function() 
 					{
 						firebase.database().ref("Team/"+$scope.joinedTeam.key).remove();
 						firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) 
 						{
 							var newCourseData=data.val();		
-							$this.removeElementFromArrayByValue($scope.joinedTeam.key,newCourseData.team);
-							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData);
-						}).then(function(){
-							$window.location.href="index.html";		
+							$scope.removeElementFromArrayByValue($scope.joinedTeam.key,newCourseData.team);
+							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData).then(function(){
+								$window.location.href="index.html";		
+							});
 						}); 
 					});
 
@@ -892,7 +913,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					firebase.database().ref("Team/"+$scope.joinedTeam.key).once('value', function(data) 
 					{
 						var newTeamData=data.val();		
-						$this.removeElementFromArrayByValue(email,newTeamData.member);
+						$scope.removeElementFromArrayByValue(email,newTeamData.member);
 						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);
 					});
 				}
@@ -912,7 +933,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 				});	
 				if(operation==0)
 				{
-					$this.removeUserList($scope.teamMember,memberID);
+					$scope.removeUserList($scope.teamMember,memberID);
 				}
 				
 			}
@@ -946,7 +967,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 							firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
 							{
 								var newUserData=data.val();
-								$this.removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+								$scope.removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
 								if(typeof(newUserData.team)=="undefined")
 								{
 									newUserData.team={};
@@ -962,7 +983,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 										firebase.database().ref("Team/"+newUserData.request[$scope.ckey][i]).once('value', function(data) {
 
 											var newTeamData=data.val();
-											$this.removeElementFromArrayByValue(newUserData.email,newTeamData.request);
+											$scope.removeElementFromArrayByValue(newUserData.email,newTeamData.request);
 											firebase.database().ref("Team/"+data.getKey()).set(newTeamData);
 											
 										});
@@ -983,26 +1004,26 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 						}
 
 						
-						$this.updateUserList(newTeamData);
+						$scope.updateUserList(newTeamData);
 							
 					}
 					else
 					{
 						console.log("Decline");
 
-						$this.removeElementFromArrayByValue(email,newTeamData.request);
+						$scope.removeElementFromArrayByValue(email,newTeamData.request);
 						firebase.database().ref("Team/"+$scope.joinedTeam.key).set(newTeamData);				
 						
 						firebase.database().ref("UserAccount/"+waitingID).once('value', function(data) 
 						{
 							var newUserData=data.val();		
-							$this.removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
+							$scope.removeElementFromArrayByValue($scope.joinedTeam.key,newUserData.request[$scope.ckey]);
 							firebase.database().ref("UserAccount/"+waitingID).set(newUserData);
 						});
 
 						if(type==0)
 						{
-							$this.updateUserList(newTeamData);
+							$scope.updateUserList(newTeamData);
 						}
 
 					}
@@ -1011,27 +1032,27 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		}
 		
 
-		$this.updateUserList=function(newTeamData)
+		$scope.updateUserList=function(newTeamData)
 		{
 			var tmpMember=[];
 			var tmpWaiting=[];
 			for(i=0;i<newTeamData.member.length;i++)
 			{
-				$this.userObjectArrayPush(newTeamData.member[i],tmpMember);
+				$scope.userObjectArrayPush(newTeamData.member[i],tmpMember);
 			}
 			$scope.teamMember=tmpMember;
 			if(typeof(newTeamData.request.length)!="undefined")
 			{
 				for(i=0;i<newTeamData.request.length;i++)
 				{
-					$this.userObjectArrayPush(newTeamData.request[i],tmpWaiting);
+					$scope.userObjectArrayPush(newTeamData.request[i],tmpWaiting);
 				}
 			}
 
 			$scope.waitingList=tmpWaiting;
 		}
 		
-		 $this.removeUserList=function(array,userID)
+		 $scope.removeUserList=function(array,userID)
 		{
 			for(i=0;i<array.length;i++)
 			{
@@ -1044,12 +1065,12 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		}
 		
 		
-		 $this.removeElementFromArrayByValue=function(value,array)
+		 $scope.removeElementFromArrayByValue=function(value,array)
 		{
 			array.splice(array.indexOf(value), 1);
 		}
 		
-		 $this.userObjectArrayPush=function(email,array)
+		 $scope.userObjectArrayPush=function(email,array)
 		{
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 			{
@@ -1059,7 +1080,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		}
 		
 		
-		 $this.renderTeamInfo=function()
+		 $scope.renderTeamInfo=function()
 		{
 			firebase.database().ref("Team/"+$scope.team[$scope.ckey]).once('value', function(data) {
 	
@@ -1078,14 +1099,14 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 				for(i=0;i<$scope.joinedTeam.member.length;i++)
 				{
 					
-					$this.userObjectArrayPush($scope.joinedTeam.member[i],$scope.teamMember);
+					$scope.userObjectArrayPush($scope.joinedTeam.member[i],$scope.teamMember);
 				}
 				if(typeof($scope.joinedTeam.request)!="undefined")
 				{
 					for(i=0;i<$scope.joinedTeam.request.length;i++)
 					{
 
-						$this.userObjectArrayPush($scope.joinedTeam.request[i],$scope.waitingList);
+						$scope.userObjectArrayPush($scope.joinedTeam.request[i],$scope.waitingList);
 					}
 				}
 
@@ -1094,7 +1115,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			
 		}
 		
-		 $this.roleAccessCheck=function()
+		 $scope.roleAccessCheck=function()
 		{
 			if($scope.role=="0")
 			{
@@ -1103,7 +1124,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					console.log("no team in this course");
 					$window.location.href="index.html";
 				}
-				$this.renderTeamInfo();
+				$scope.renderTeamInfo();
 			}
 			else
 			{
@@ -1116,7 +1137,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		}
 
-		$this.gup=function( name, url ) {
+		$scope.gup=function( name, url ) {
 			if (!url) url = location.href;
 			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
 			var regexS = "[\\?&]"+name+"=([^&#]*)";
@@ -1126,13 +1147,13 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		}
 
 		
-		 $this.loadcoursesInfo=function()
+		 $scope.loadcoursesInfo=function()
 		{
-			$scope.ckey=$this.gup('c', window.location.href);
+			$scope.ckey=$scope.gup('c', window.location.href);
 			
 			if($scope.ckey==null||$scope.ckey=="")
 			{
-				$window.location.href="index.html";		
+				$scope.doRedirect("index.html");		
 			}
 			else
 			{
@@ -1140,13 +1161,14 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					if(data.val()==null)
 					{
 						console.log("invalid input of course id");
-						$window.location.href="index.html";
+						$scope.doRedirect("index.html");
 					}
 					else
 					{
 						$scope.currCourse=data.val();
 						$scope.currCourse.key=data.getKey();
-						$this.roleAccessCheck();						
+						$scope.courseInfo.image=$scope.currCourse.image;
+						$scope.roleAccessCheck();						
 					}
 				});
 
@@ -1215,7 +1237,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 
 		}
 		
-		$this.validInput=function ()
+		$scope.validInput=function ()
 		{
 			$scope.courseInfo.title=$scope.currCourse.title;
 			$scope.courseInfo.message=$scope.currCourse.message;
@@ -1230,7 +1252,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			
 			if(typeof($scope.courseInfo.title)=="undefined"||typeof($scope.courseInfo.message)=="undefined")
 			{
-				alert("some missing data");
+				//alert("some missing data");
 				return false;
 			}
 			return true;	
@@ -1238,7 +1260,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		$scope.editCourse = function() {
 
-			if($this.validInput())
+			if($scope.validInput())
 			{
 				firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) 
 				{
@@ -1265,7 +1287,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 
 
 app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray) {
-		$this=this;
+
 		/*initialzation and checking*/
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
@@ -1282,8 +1304,8 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 		$rootScope.$on("updateRole", function(){
 			$scope.updateRole();
 		    $scope.loadUserData();
-		    $this.initTagList();
-		    $this.initAutoComplete();
+		    $scope.initTagList();
+		    $scope.initAutoComplete();
 		});
 		
 		$scope.currUser;
@@ -1293,14 +1315,14 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 		$scope.addedTags;
 
 		
-		 $this.removeElementFromArrayByValue=function(value,array)
+		 $scope.removeElementFromArrayByValue=function(value,array)
 		{
 			array.splice(array.indexOf(value), 1);
 		}
 		
 		$scope.removeTag=function(tag)
 		{
-			$this.removeElementFromArrayByValue(tag,$scope.addedTags);
+			$scope.removeElementFromArrayByValue(tag,$scope.addedTags);
 		}
 
 		
@@ -1336,7 +1358,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			
 		}
 		
-		$this.initTagList=function ()
+		$scope.initTagList=function ()
 		{
 			$.getJSON('tags.json', function(data) {
 				
@@ -1350,7 +1372,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 
 			
 		}
-		$this.initAutoComplete=function ()
+		$scope.initAutoComplete=function ()
 		{
 			$( "#autoComplete" ).autocomplete({
 
@@ -1380,55 +1402,64 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			
 		}
 
-		$this.validInput=function()
+		$scope.validInputForEditProfile=function()
 		{
+			
 			if(typeof($scope.currUser.userName)=="undefined"||$scope.currUser.userName.trim()=="")
 			{
 				alert("some data missed");
-				return false;
+
 			}
 			if(typeof($scope.password)!="undefined"&&$scope.password!="")
 			{
 				var user = firebase.auth().currentUser;
-				user.updatePassword($scope.password).then(function() {
-				}, function(error) 
+				user.updatePassword($scope.password).then(function()
+				{
+					$scope.updateProfileData();
+				}, 
+				function(error) 
 				{
 					alert(error);
-					return false;
+
 				});
 			}
-			return true;
+			else
+			{
+				$scope.updateProfileData();
+			}
+			
 		}
 
-		$scope.editProfile=function()
+		
+		$scope.updateProfileData=function()
 		{
-			if($this.validInput())
+			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
 			{
-				firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
+				var newUserData=data.val(); 
+				newUserData.userName=$scope.currUser.userName; 
+				if(typeof($scope.addedTags)!="undefined")
 				{
-					var newUserData=data.val(); 
-					newUserData.userName=$scope.currUser.userName; 
-					if(typeof($scope.addedTags)!="undefined")
+					newUserData.tags=$scope.addedTags;
+				}
+				else
+				{
+					if(newUserData.hasOwnProperty['tags'])
 					{
-						newUserData.tags=$scope.addedTags;
+						delete newUserData['tags'];
 					}
-					else
-					{
-						if(newUserData.hasOwnProperty['tags'])
-						{
-							delete newUserData['tags'];
-						}
-					}
-					firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
-						user.userName=$scope.currUser.userName;
-						
-						$rootScope.$emit("updataEmailCall", {});		
-						alert("success");
-						
-					});
+				}
+				firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
+					user.userName=$scope.currUser.userName;
+					
+					$rootScope.$emit("updataEmailCall", {});		
+					alert("success");
+					
 				});
-			}
+			});
+			
 		}
+		
+
 		
 		
 	});
