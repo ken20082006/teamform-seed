@@ -109,7 +109,7 @@
 			    	<td>{{ q.data.email }}</td>
                 	<td ng-if="joinedTeam.leaderID==q.data.email">Leader</td>
                 	<td ng-if="joinedTeam.leaderID!=q.data.email">Member</td>
-			    	<td ng-if="isOwner==true"><a ng-click="deleteMember(0,q.data.email,q.key)">delete </a></td>
+			    	<td ng-if="isOwner==true"><button type="button" class="btn btn-primary btn-sm" a ng-click="deleteMember(0,q.data.email,q.key)">delete </a></button></td>
 		      		</tr>
 			  	</table>
 
@@ -138,7 +138,7 @@
           
 				<div id="con1">
 					<label>Title </label> 
-					<input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20" >
+					<input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20" style="text-align: center;">
 				</div>
 				<div id="con2">
 					<label>Description</label>
@@ -151,10 +151,10 @@
 				<input type="file" id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
 				<img src="{{currCourse.image}}" id="base64PicURL" width="500px">
 				<span id="base64Name"></span>
-				<a id="removeURL" ng-click="removeImg()">Remove</a>
+				<button type="button" class="btn btn-primary btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>	
 				</div>
 			
-				<input type="submit" value="Submit" ng-click="editCourse()">
+				<input type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()">
 			</div>
 		</div>
 	</div>
