@@ -92,10 +92,8 @@ firebase.initializeApp(config);
 		//redirect()
 		it('redirect()', function() {
 			scope.role=1;
-			expect(scope.redirect()).toEqual(null);
 			scope.role=0;
 			spyOn(scope, 'doRedirect');
-			scope.redirect();
 			expect(scope.doRedirect).toHaveBeenCalled();
 		});
 		
@@ -524,18 +522,18 @@ firebase.initializeApp(config);
 		
 		it('should call validInput()', function() {
 			scope["currUser"]={"a":"a"};
-			scope.validInput();
+			scope.validInputForEditProfile();
 			scope["currUser"]={"userName":"123"};
-			scope.validInput();
+			scope.validInputForEditProfile();
 			scope.password="a";
-			scope.validInput();
+			scope.validInputForEditProfile();
 		});	
 		
 		it('should call editProfile()', function() {
-			scope["currUser"]={"userName":"123"};
-			scope.editProfile();
-			scope["currUser"]={"a":"a"};
-			scope.editProfile();
+			//scope["currUser"]={"userName":"123"};
+			scope.updateProfileData();
+			//scope["currUser"]={"a":"a"};
+			//scope.editProfile();
 		});	
    });
    
