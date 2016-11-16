@@ -1222,8 +1222,8 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			owner:"",
 			message:"",
 			max:"",
-			min:"",
-			date:""
+			min:""
+			//,date:""
 		}
 		$scope.fileName;
 		
@@ -1243,7 +1243,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			$scope.courseInfo.message=$scope.currCourse.message;
 			$scope.courseInfo.max=$scope.currCourse.max;
 			$scope.courseInfo.min=$scope.currCourse.min;
-			$scope.courseInfo.date=$scope.currCourse.date;
+			//$scope.courseInfo.date=$scope.currCourse.date;
 			$scope.courseInfo.owner=$scope.email;
 			if(typeof($scope.courseInfo.image)=="undefined"||$scope.courseInfo.image=="")
 			{
