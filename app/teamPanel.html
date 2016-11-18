@@ -20,6 +20,9 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
+	
+	<link rel="stylesheet" href="js/fancyBox/source/jquery.fancybox.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="js/fancyBox/source/jquery.fancybox.pack.js"></script>
 
       
     <!-- Customized libraries shared by pages -->
@@ -128,6 +131,34 @@
 			   		 <td ng-if="isOwner==true"><button type="button" class="btn btn-success" a ng-click="requestHandler(0,0,q.data.email,q.key)">Accept</a></button><button type="button" class="btn btn-danger" a ng-click="requestHandler(1,0,q.data.email,q.key)" style="margin-left:10px">Decline</a></button></td>
 		      		</tr>
 				</table>
+				<div ng-if="isOwner==true">
+				<div class="section">
+					<p>Member Invite list</p>
+					 <button id="btn_admin" type="button" class="btn btn-primary" ng-click="inviteForm()">Stduent List</button>
+				</div>
+				<table class="table table-bordered" >
+			  		<tr>
+			    	<th>Name</th>
+			    	<th>Email</th>
+			    	<th >Action</th>
+		      		</tr>
+			  		<tr ng-repeat="q in inviteList">
+			    	<td>{{ q.data.userName }}</td>
+			    	<td>{{ q.data.email }}</td>
+			   		 <td ><button type="button" class="btn btn-danger" a ng-click="inviteHandler(1,q.key,q.data.email)" style="margin-left:10px">Delete</a></button></td>
+		      		</tr>
+				</table>
+				
+				<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
+					Course Student List
+					<div ng-repeat="q in studentList">
+						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button></li>
+						<br>
+
+		      		</div>
+				</div>
+				
+				</div>
     
 			</div>
 			</div>
