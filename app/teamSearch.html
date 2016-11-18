@@ -129,7 +129,7 @@
 								<div class="col-lg-3 col-md-6">
 							
 									<div class="panel">
-										<div class="panel-heading"  style="background:#eee;color:#fff">
+										<a href="teamInfo.html?t={{q.key}}" target="_blank"><div class="panel-heading"  style="background:#eee;color:#fff">
 											<div class="row">
 													<div class="huge t_title">{{q.data.name}}	</div>
 											</div>
@@ -139,7 +139,7 @@
 											<div class="col-xs-9 ">
 												<div>{{q.data.description}}	</div>
 											</div>
-										</div>
+										</div></a>
 										<span ng-if="q.joined==false">
 											<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
 												<div class="panel-footer">
@@ -162,8 +162,14 @@
 								</div>
 
 							</div>
+
 						</div>
-																 
+							<div class="row">
+								<h3>invite list</h3>
+								<div  ng-repeat="q in inviteRequest" >
+								<li><b>name:</b>{{q.data.name}}<b>Owner</b>{{q.data.leaderID}}<button ng-click="inviteHandler(0,q.key)">Accept</button><button  ng-click="inviteHandler(1,q.key)">Decline</button></li>
+								</div>
+							</div>								 
 					
 					 
                   </div>
