@@ -1609,7 +1609,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 				}		
 			}
 			$('#autoComplete').val('');
-			
+			$('#autoComplete').focus();
 		}
 		
 		$scope.initTagList=function ()
