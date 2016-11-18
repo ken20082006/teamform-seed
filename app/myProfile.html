@@ -16,12 +16,12 @@
 	        
     <script src="lib/jquery.min.js"></script>      
     <script src="lib/bootstrap.min.js"></script>      
-      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 	
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
-	 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
       
     <!-- Customized libraries shared by pages -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
@@ -87,17 +87,27 @@
 					</tr>
 					<tr>
 						<td><label>Tags</label></td>
-						<td><input type="text" id="autoComplete" ><a style="margin-left:5px;cursor:pointer" ng-click="addTag()">+</a></td>
-					</tr>
-					<tr>
-						<td><div style="height:30px;"></div></td><td colspan="1">
-							<div id="addedTags" ng-repeat="q in addedTags">
-								<center><span style="background:#eee">{{q}}<a style="margin-left:5px;cursor:pointer" ng-click="removeTag(q)">x</a></span></center>
+						<td>
+							<div class="input-group">
+							<input type="text" id="autoComplete">
+								<a style="margin-left:-20px;" ng-click="addTag()">
+									<i class="fa fa-plus" aria-hidden="true">
+									</i>
+								</a>
 							</div>
 						</td>
 					</tr>
                 </tbody>
 			</table>
+			<div id="addedTags" ng-repeat="q in addedTags">
+				<ul>
+					<li class="tag">{{q}}
+						<a style="margin-left:3px;" ng-click="removeTag(q)">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
 			<div class="section">Contact Information</div>
 			<table>
                 <tbody>
@@ -131,7 +141,7 @@
 						<td><input type="text" value="{{currUser.userGoogle}}" ng-model="currUser.userGoogle"></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" class="btn btn-info" ng-click="editProfile()"></td>
+						<td colspan="2"><input type="submit" class="btn btn-info" ng-click="editProfile()" value="Submit"></td>
 					</tr>
                 </tbody>
             </table>
@@ -154,7 +164,6 @@
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
-	
     </script>
 	
 
