@@ -916,12 +916,149 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		
 		var userAccount = firebase.database().ref("UserAccount");
 		$scope.userAccount = $firebaseArray(userAccount);
+		
+		$scope.existedTeam=[];
+		$scope.existedTeamData=[];
+		$scope.ckey="";
+		$scope.studentList=[];
+		
 
 		$scope.doRedirect=function(href)
 		{
 			$window.location.href=href;
 		}
 		
+		
+		//load the team ID
+		 $scope.loadExistedTeam=function()
+		{
+			var tmpTeam=[];
+			
+			firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
+				
+				if(typeof(data.val().team)!="undefined")
+				{
+					
+					for(i=0;i<data.val().team.length;i++)
+					{			
+						
+						firebase.database().ref("Team/"+data.val().team[i]).once('value', function(data) {
+							if(typeof(data.val().request)!="undefined")
+							{
+								if(data.val().request.indexOf($scope.email)>-1)//if current user's email is in team request array, mark it as joined
+								{		
+									tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":true});		
+								}
+								else
+								{
+									tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":false});	
+								}
+							}
+							else
+							{
+								tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":false});	
+							}							
+						});
+	
+					}
+					$scope.existedTeam=tmpTeam;
+				}
+	
+			});
+	
+		}
+		
+		$scope.pathStringCheck=function()
+		{
+			var invalidSet=['.','#','$','[',']'];
+			for(i=0;i<invalidSet.length;i++)
+			{
+				if($scope.ikey.indexOf(invalidSet[i])>-1)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		//load team data
+		$scope.accessValidCheck=function(key)
+		{
+		
+			$scope.ikey=key;
+
+			if($scope.ikey==null||$scope.ikey==""||$scope.pathStringCheck())
+			{
+				$scope.doRedirect("index.html");			
+			}
+			else
+			{
+
+				firebase.database().ref("Team/"+$scope.ikey).once('value', function(data) {
+
+					if(data.val()==null)
+					{
+						$scope.doRedirect("index.html");		
+					}
+					else
+					{
+						$scope.existedTeamData.push(data.val());
+					}
+				});
+			}
+			
+		}
+		
+		 $scope.userObjectArrayPush=function(email,array)
+		{
+			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+			{
+				array.push({"key":data.getKey(),"data":data.val()});
+			});
+				
+		}
+		
+		$scope.loadStudentList=function(key)
+		{
+			firebase.database().ref("courses/"+key).once('value', function(data) {
+				var tmp=[];
+				var courseData=data.val();
+				for(i=0;i<courseData.student.length;i++)
+				{
+					$scope.userObjectArrayPush(courseData.student[i],tmp);
+				}
+				$scope.studentList=tmp;		
+			});	
+		}
+		
+		//true = random
+		//false = recommend forming
+		$scope.autoTeamForming=function(random)
+		{
+			
+			if(random)
+			{
+				$scope.ckey=$scope.gup('c', window.location.href);
+				$scope.loadStudentList($scope.ckey);
+				console.log($scope.studentList);
+				
+				
+				
+			}else
+			{
+				$scope.ckey=$scope.gup('c', window.location.href);
+				$scope.loadExistedTeam();
+				for(var i=0;i<$scope.existedTeam.length;i++)
+				{
+					$scope.accessValidCheck($scope.existedTeam[i].key);
+				}
+				
+				console.log($scope.existedTeamData);
+			}
+			
+			
+			
+		}
 	
 		$scope.updateRole=function()
 		{
