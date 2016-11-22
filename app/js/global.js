@@ -1032,7 +1032,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		}
 		
 		//true = random
-		//false = recommend forming
+		//false = recommend forming	
 		$scope.autoTeamForming=function(random)
 		{
 			
@@ -1040,8 +1040,81 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 			{
 				$scope.ckey=$scope.gup('c', window.location.href);
 				$scope.loadStudentList($scope.ckey);
-				console.log($scope.studentList);
 				
+				var formingResult = [];
+				var tempTeamList = [];
+				var studentList = $scope.studentList;
+				
+				//the max and min number of the member
+				var avgTeamMemberNumber = Math.ceil((3+2)/2);
+				var numberOfTeam = Math.ceil(studentList.length/avgTeamMemberNumber);
+				
+				//creat team
+				for(var i=0;i<numberOfTeam;i++)
+				{
+					var tempTeam =[];
+					tempTeam.name = "random team "+(i+1);
+					tempTeam.memberNumber = 0;
+					tempTeam.teamMember = [];
+					tempTeamList.push(tempTeam);
+				}
+				
+				
+				//random assign students to team
+				for(;studentList.length>0 && tempTeamList.length>0;)
+				{
+					
+					//random between temp team
+					console.log(tempTeamList);
+					var assignTeam = Math.floor((Math.random() * numberOfTeam) + 1);
+					console.log(assignTeam);
+					tempTeamList[assignTeam-1].teamMember.push(studentList.pop().key);
+					
+					
+					//take out the team if meet the expected team member number
+					if(tempTeamList[assignTeam-1].teamMember.length>=numberOfTeam)
+					{
+						
+						formingResult.push( tempTeamList.splice(assignTeam-1, 1));
+						
+						/*
+						//swap the team to last one
+						var temp = tempTeamList[assignTeam-1];
+						tempTeamList[assignTeam-1] = tempTeamList[tempTeamList.length-1];
+						tempTeamList = temp;
+						
+						//push the finished team to the result
+						formingResult.push(tempTeamList.pop());
+						
+						*/
+						numberOfTeam--;
+						
+					}
+					
+					
+				}
+				console.log(studentList.length );
+				console.log(tempTeamList.length );
+				
+				//if no student remain
+				if(studentList.length==0)
+				{
+					//push all team to the result
+					for(;tempTeamList.length>0;)
+					{
+						formingResult.push( tempTeamList.splice(0, 1));
+					}
+				}else //if student remain assign all of them to the team
+				{
+					for(var i=0;studentList.length>0;i++)
+					{
+						tempTeamList[i].teamMember.push(studentList.pop().key);
+					}
+				}
+				
+				
+				
+					console.log(formingResult);
 				
 				
 			}else
