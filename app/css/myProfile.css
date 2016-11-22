@@ -13,11 +13,36 @@ p{
     text-decoration: underline;
 }
 
+a, a:focus, a:hover{
+    cursor:pointer;
+    text-decoration:none;
+}
 label{
     padding-right:20px;
     padding-bottom: 10px;
 }
 
+input[type="text"], input[type="password"]{
+    border-radius: 6px;
+    padding-left: 5px;
+    padding-right: 15px;
+    height: 30px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#addedTags{
+    display:inline-flex;
+    word-wrap: break-word;
+    overflow: hidden; 
+}
+
+.tag{
+    background:#eee;
+    margin-left:-2em;
+    display:inline;
+    word-break: break-all;
+}
 .heading h1{
     font-size: 1.8em;
     line-height: 1.5;
