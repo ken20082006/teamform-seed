@@ -624,6 +624,107 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 
 		}
 		
+		$scope.deleteAllInviteRequest=function(userData)
+		{
+			for(i=0;i<userData.invite[$scope.ckey].length;i++)
+			{
+				firebase.database().ref("Team/"+userData.invite[$scope.ckey][i]).once('value', function(data) {
+					
+					var teamData=data.val();
+					$scope.removeElementFromArrayByValue($scope.email,teamData.invite);
+					firebase.database().ref("Team/"+data.getKey()).set(teamData);		
+				});				
+			}
+		}
+		
+		$scope.accpetInviteValidCheck=function(teamData,key)
+		{
+			var maxSize=$scope.currCourse.max;
+			var currSize=teamData.member.length;
+			if(currSize+1>maxSize)
+			{
+				alert("The team is full");
+			}
+			else
+			{
+				
+				teamData.member.push($scope.email);
+				firebase.database().ref("Team/"+key).set(teamData).then(function(){
+					
+					userAccount.orderByChild("email").equalTo($scope.email).on("child_added", function(data){
+						
+						var userData=data.val(); 
+						$.when($scope.deleteAllInviteRequest(userData)).done(function() 
+						{
+							$.when($scope.deleteAllJoinRequestFromTeam(userData)).done(function(){
+								
+								delete userData.invite[$scope.ckey];
+								if(jQuery.isEmptyObject(userData.invite))
+								{
+									delete userData["invite"];
+								}
+								delete userData.request[$scope.ckey];
+								if(jQuery.isEmptyObject(userData.request))
+								{
+									delete userData["request"];
+								}
+								if(typeof(userData.team)=="undefined")
+								{
+									userData.team={};
+								}
+								userData.team[$scope.ckey]=key;
+								firebase.database().ref("UserAccount/"+$scope.key).set(userData).then(function(){
+										
+									$scope.doRedirect("teamPanel.html?c="+$scope.ckey);	
+									
+								});
+							});						
+							
+						});
+						
+						
+					});
+					
+					
+				});
+			}
+			
+		}
+		
+		$scope.inviteHandler=function(operation,key)
+		{
+			firebase.database().ref("Team/"+key).once('value', function(data) {
+				var teamData=data.val();
+				if(operation==0)
+				{
+					$scope.accpetInviteValidCheck(teamData,key);
+				}
+				else
+				{
+					$scope.removeElementFromArrayByValue($scope.email,teamData.invite);
+					firebase.database().ref("Team/"+key).set(teamData).then(function(){
+						
+						userAccount.orderByChild("email").equalTo($scope.email).on("child_added", function(data){
+						
+							var userData=data.val();
+							$scope.removeElementFromArrayByValue($scope.email,userData.invite[$scope.ckey]);
+							if(jQuery.isEmptyObject(userData.invite))
+							{
+								delete userData["invite"];
+							}
+							firebase.database().ref("UserAccount/"+$scope.key).set(userData).then(function(){
+								
+								$scope.loadInviteRequest();	
+							});
+						
+						});
+					})
+	
+				}
+			});
+			
+		}
+		
 		$scope.teamObjectPushToArray=function(key,arr)
 		{
 			firebase.database().ref("Team/"+key).once('value', function(data) {
@@ -1345,7 +1446,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 				$scope.loadTeamMember(teamData);
 				$scope.loadWaitingList(teamData);
 				$scope.loadInviteList(teamData);
-				$scope.loadStudentList($scope.ckey);
+				//$scope.loadStudentList($scope.ckey);
 			});
 			
 		}
@@ -1872,4 +1973,20 @@ app.controller("teamInfoCtrl", function($scope,$rootScope,user, $firebaseArray,$
 			
 		}
 			
+});
+
+app.controller("memberSearchCtrl", function($scope,$rootScope,user) {
+			
+		$scope.updateRole=function()
+		{
+			$scope.email=user.email;
+			$scope.role=user.role;
+			$scope.userName=user.userName;
+			$scope.key=user.key;
+		}
+	
+		$rootScope.$on("updateRole", function(){
+			$scope.updateRole();
+			$scope.accessValidCheck();
+		});
 });

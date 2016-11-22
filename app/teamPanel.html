@@ -134,7 +134,8 @@
 				<div ng-if="isOwner==true">
 				<div class="section">
 					<p>Member Invite list</p>
-					 <button id="btn_admin" type="button" class="btn btn-primary" ng-click="inviteForm()">Stduent List</button>
+					 <!--<button id="btn_admin" type="button" class="btn btn-primary" ng-click="inviteForm()">Stduent List</button>-->
+					 <a href="memberSearch.html?t={{tkey}}"><button id="btn_admin" type="button" class="btn btn-primary" >Member Search</button></a>
 				</div>
 				<table class="table table-bordered" >
 			  		<tr>
@@ -149,14 +150,14 @@
 		      		</tr>
 				</table>
 				
-				<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
+				<!--<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
 					Course Student List
 					<div ng-repeat="q in studentList">
 						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button></li>
 						<br>
 
 		      		</div>
-				</div>
+				</div>-->
 				
 				</div>
     
