@@ -343,7 +343,7 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 				var teamData=data.val();
 				if(typeof(teamData.invite)!="undefined")
 				{
-					if(teamData.invite.index($scope.email)>-1)
+					if(teamData.invite.indexOf($scope.email)>-1)
 					{
 						if(operation==0)
 						{

@@ -245,12 +245,68 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		$scope.ckey;
 		$scope.tkey;
 		$scope.tLeaderID;
+		$scope.tName;
+		$scope.tDesc;
+		$scope.tTag=[];
+		$scope.defaultTags=[];
+		$scope.addedTags;
+		$scope.isEdit=false;
 		
 		$rootScope.$on("updateRole", function(){
-			   $scope.updateRole();
-			   $scope.loadcoursesInfo();
-			   
+			$scope.updateRole();
+			$scope.loadcoursesInfo();
+			$scope.initTagList();			   
 		});
+		
+		$scope.editTeamInfo=function(){
+			
+			var name=$('#editTeamName').val();
+			var desc=$('#editTeamDesc').val();
+			if(name.trim()==""||desc.trim()=="")
+			{
+				alert("some data is missed");
+				return; 
+			}
+			else
+			{
+				firebase.database().ref("Team/"+$scope.tkey).once('value', function(data) {
+					var teamData=data.val();
+					teamData.name=name;	
+					teamData.description=desc;
+					if(typeof($scope.addedTags)!="undefined"&&$scope.addedTags.length>0)
+					{
+						teamData.tags=$scope.addedTags;
+					}
+					else
+					{
+						if(teamData.hasOwnProperty('tags'))
+						{
+							delete teamData["tags"];
+						}
+					}
+					firebase.database().ref("Team/"+$scope.tkey).set(teamData).then(function(){
+						$scope.renderTeamInfo(0);
+						$scope.isEdit=!$scope.isEdit;
+						$scope.$apply();
+					});
+				});
+				
+			}
+		}
+		
+		$scope.editInfoForm=function()
+		{
+			$scope.isEdit=!$scope.isEdit;
+			setTimeout(function(){
+				$scope.initAutoComplete();
+			}, 1000);
+			
+		}
+		$scope.cancelEditInfoForm=function()
+		{
+			$scope.isEdit=!$scope.isEdit;
+			$scope.addedTags=$scope.tTag;
+		}
 		
 		$scope.deleteInviteRequest=function(email,uKey)
 		{
@@ -772,6 +828,15 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 				{
 					$scope.tkey=data.getKey();
 					$scope.tLeaderID=data.val().leaderID;
+					$scope.tName=data.val().name;
+					$scope.tDesc=data.val().description;
+					if(typeof(data.val().tags)!="undefined")
+					{
+						$scope.addedTags=[];	
+						$scope.addedTags=data.val().tags;	
+						$scope.tTag=[];	
+						$scope.tTag=data.val().tags;	
+					}
 					if($scope.tLeaderID==$scope.email)
 					{
 						$scope.isOwner=true;
@@ -867,6 +932,77 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 
 			}
 
+		}
+		
+		$scope.removeTag=function(tag)
+		{
+			$scope.removeElementFromArrayByValue(tag,$scope.addedTags);
+		}
+
+		
+		$scope.addTag=function()
+		{
+			
+			var tmpTag=$('#autoComplete').val();
+			
+			if(typeof(tmpTag)=="undefined"||tmpTag.trim()=="")
+			{
+				alert("you should enter a valid tag");
+				return;
+			}
+			
+			if(typeof($scope.addedTags)=="undefined"||$scope.addedTags.length==0)
+			{
+				$scope.addedTags=[];
+				$scope.addedTags.push(tmpTag);
+			}
+			else
+			{
+				if($scope.addedTags.indexOf(tmpTag.trim())>-1)
+				{
+					alert("you have adde this tag already");
+						return;
+				}
+				else
+				{
+					$scope.addedTags.push(tmpTag);
+				}		
+			}
+			$('#autoComplete').val('');
+			//$('#autoComplete').focus();
+		}
+		
+		$scope.initTagList=function ()
+		{
+			$.getJSON('tags.json', function(data) {
+				
+				$scope.defaultTags=data.data;
+				for(var i=0;i<$scope.defaultTags.length;i++)
+				{
+					$scope.defaultTags[i]=$scope.defaultTags[i]+" ";
+				}	
+			});
+
+			
+		}
+		$scope.initAutoComplete=function ()
+		{
+			$("#autoComplete").autocomplete({
+				source: function(request, response) {
+					var results = $.ui.autocomplete.filter($scope.defaultTags, request.term);
+	
+					for(var i=0;i<results.length;i++)
+					{
+						results[i]=results[i].trim();
+					}
+					response(results.slice(0, 10));
+				}  
+				
+			}).focus(function() {
+
+				$(this).autocomplete("search"," ");
+				$(this).autocomplete( "option", "minLength", 0 );
+			});;
 		}
 		
 		/**********************************teacher update info********************************************************/
