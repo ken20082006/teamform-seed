@@ -58,6 +58,8 @@
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/dash.css">
+	<link href="css/rightNavBar.css" rel="stylesheet" type="text/css">
+
 <body>
 <div ng-controller="dashBoardCtrl">
 
@@ -69,6 +71,7 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
+		
 		<div class="row content" ng-controller="teamSearchCtrl">
 		<div class="heading"><h1>Team Searching Panel</h1></div>
 		<div id="teamForm" style="display:none; width:500px; padding: 0px;" class="fancybox">
@@ -129,7 +132,7 @@
 								<div class="col-lg-3 col-md-6">
 							
 									<div class="panel">
-										<div class="panel-heading"  style="background:#eee;color:#fff">
+										<a href="teamInfo.html?t={{q.key}}" target="_blank"><div class="panel-heading"  style="background:#eee;color:#fff">
 											<div class="row">
 													<div class="huge t_title">{{q.data.name}}	</div>
 											</div>
@@ -139,7 +142,7 @@
 											<div class="col-xs-9 ">
 												<div>{{q.data.description}}	</div>
 											</div>
-										</div>
+										</div></a>
 										<span ng-if="q.joined==false">
 											<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
 												<div class="panel-footer">
@@ -162,20 +165,40 @@
 								</div>
 
 							</div>
+
 						</div>
-																 
+														 
 					
 					 
                   </div>
                </div>
             </div>
+
+			<div id="right-sidebar"> 
+				<div class="invite">
+					<h3>Invite list</h3>
+					<div ng-repeat="q in inviteRequest" >
+						<table>
+							<tr><td style="font-weight:bold;">You are invited to join {{q.data.name}}</td></tr>
+							<tr><td>Team owner : {{q.data.leaderID}}</td></tr>
+							<tr><td><button ng-click="inviteHandler(0,q.key)">Accept</button><button  ng-click="inviteHandler(1,q.key)">Decline</button></td></tr>
+						</table>
+					</div>
+				</div>	
+				<div class="recommend">
+					<h3>Recommendation List</h3>
+				</div>
+				
+			</div>
+			
          </div>
+		 
       
 		
 		
        
         <!-- /#page-content-wrapper -->
-
+		
     </div>
     
 	<!-- /#wrapper -->

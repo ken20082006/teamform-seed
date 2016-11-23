@@ -46,8 +46,23 @@
 				newUserData.course=[];
 			}
 			newUserData.course.push(courseKey);
-			firebase.database().ref("UserAccount/"+userKey).set(newUserData);
-			location.reload();
+			firebase.database().ref("UserAccount/"+userKey).set(newUserData).then(function(){
+				
+				firebase.database().ref("courses/"+courseKey).once('value', function(data) {
+					var newCourseData=data.val();
+					
+					if(typeof(newCourseData.student)=="undefined")
+					{
+						newCourseData.student=[];
+					}
+					newCourseData.student.push(email);
+					
+					firebase.database().ref("courses/"+courseKey).set(newCourseData).then(function(){
+						location.reload();
+					});	
+				});
+			});
+			
 		});
 	}
 	
