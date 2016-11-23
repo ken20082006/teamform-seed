@@ -15,12 +15,13 @@
 	-->
 	        
     <script src="lib/jquery.min.js"></script>      
-    <script src="lib/bootstrap.min.js"></script>      
+    <script src="lib/bootstrap.min.js"></script>   
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>	
       	  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
-	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="js/fancyBox/source/jquery.fancybox.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="js/fancyBox/source/jquery.fancybox.pack.js"></script>
 
@@ -80,15 +81,59 @@
         		</div>
         
 				<div class="section">
-					<p>Team info</p>
+					<p>Team info</p><button ng-if="isOwner==true&&isEdit==false" ng-click="editInfoForm()">Edit Team Info</button>
 				</div>
         		<div id="cont1">
+				<div ng-if="isEdit==false">
 				<table class="teamInfo">
 					<tr><td>Course code:</td><td>{{currCourse.title}}</td></tr>
         			<tr><td>Role:</td><td>Student</td></tr>
-					<tr><td>Team name:</td><td>{{joinedTeam.name}}</td></tr>
+					<tr><td>Team name:</td><td>{{tName}}</td></tr>
 					<tr><td>Max size:</td><td>{{currCourse.max}}</td></tr>
 				</table>
+				<label>Added Tags:</label>
+				<div ng-repeat="q in tTag">
+					<span>{{q}}</span>
+				</div>
+				</div>
+				<div ng-if="isEdit==true">
+				
+
+						<h2>Edit Team Information</h2>
+						<div>
+							<label>Team name</label>
+							<input type="text" ng-model="tName" id="editTeamName">
+						</div>
+						<div>
+							<label>Team description</label>
+							<br>
+							<textarea ng-model="tDesc" id="editTeamDesc"></textarea>
+						</div>
+						<div>
+							<label>Tags</label>
+
+								<div class="input-group">
+								<input type="text" id="autoComplete">
+									<a style="margin-left:-20px;" ng-click="addTag()">
+										<i class="fa fa-plus" aria-hidden="true">
+										</i>
+									</a>
+								</div>
+
+						</div>
+						<div id="addedTags" ng-repeat="q in addedTags">
+							<ul>
+								<li class="tag">{{q}}
+									<a style="margin-left:3px;" ng-click="removeTag(q)">
+										<i class="fa fa-times" aria-hidden="true"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<button  ng-click="editTeamInfo()">update</button>
+						<button  ng-click="cancelEditInfoForm()">cancel</button>
+			
+				</div>
 				<br>
 				<div ng-if="isOwner==true"><p style="font-weight:bold;">Team role: Team leader</p>
 				Action: <button type="button" class="btn btn-primary btn-sm" a ng-click="deleteTeam()">Delete Team</a></button></div>
@@ -150,6 +195,8 @@
 		      		</tr>
 				</table>
 				
+
+				
 				<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
 					Course Student List
 					<div ng-repeat="q in studentList">
@@ -158,6 +205,9 @@
 
 		      		</div>
 				</div>
+				
+				
+
 				
 				</div>
     

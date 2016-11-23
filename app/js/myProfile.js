@@ -19,7 +19,6 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			$scope.updateRole();
 		    $scope.loadUserData();
 		    $scope.initTagList();
-		    $scope.initAutoComplete();
 		});
 		
 		$scope.currUser;
@@ -29,7 +28,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 		$scope.addedTags;
 
 		
-		 $scope.removeElementFromArrayByValue=function(value,array)
+		$scope.removeElementFromArrayByValue=function(value,array)
 		{
 			array.splice(array.indexOf(value), 1);
 		}
@@ -69,7 +68,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 				}		
 			}
 			$('#autoComplete').val('');
-			$('#autoComplete').focus();
+			//$('#autoComplete').focus();
 		}
 		
 		$scope.initTagList=function ()
@@ -82,6 +81,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 					
 					$scope.defaultTags[i]=$scope.defaultTags[i]+" ";
 				}	
+				$scope.initAutoComplete();
 			});
 
 			
