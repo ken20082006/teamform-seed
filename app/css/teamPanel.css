@@ -21,3 +21,82 @@
     margin: 0px 20px 20px 20px;
 }
 
+.updateTeam input, .updateTeam textarea{
+    border-radius: 6px;
+    padding-left: 5px;
+    padding-right: 15px;
+    height: 30px;
+    font-size: 12px;
+    line-height: 1.5;
+
+}
+
+a, a:focus, a:hover{
+    cursor:pointer;
+    text-decoration:none;
+}
+
+#addedTags{
+    display:inline-flex;
+    word-wrap: break-word;
+    overflow: hidden; 
+}
+
+.tag{
+    background:#eee;
+    margin-left:-2em;
+    display:inline;
+    word-break: break-all;
+}
+
+.line{
+    border-bottom: 1px solid lightgray;
+    width: 120px;
+    margin: 0 15px 0 15px;
+}
+ul.member{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+ul.member li {
+  display: inline-block;
+  margin: 0 2em 2em 0;
+  position: relative;
+  width: 150px;
+}
+
+.hover-text{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 3px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    height: 30%;
+    opacity: 0;
+}
+
+.action1{
+    position: absolute;
+    top: 80%;
+    left: 5%;
+    opacity: 0;
+}
+
+.action2{
+    position: absolute;
+    top: 80%;
+    right: 5%;
+    opacity: 0;
+}
+
+ul.member li:hover .hover-text,
+ul.member li:hover .action1,
+ul.member li:hover .action2{
+    opacity: 1;
+}
