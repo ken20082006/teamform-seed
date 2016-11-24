@@ -122,6 +122,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			if(typeof($scope.currUser.userName)=="undefined"||$scope.currUser.userName.trim()=="")
 			{
 				alert("some data missed");
+				return;
 
 			}
 			if(typeof($scope.password)!="undefined"&&$scope.password!="")
@@ -154,6 +155,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 				if(typeof($scope.addedTags)!="undefined")
 				{
 					newUserData.tags=$scope.addedTags;
+					console.log($scope.addedTags);
 				}
 				else
 				{
@@ -172,5 +174,7 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			});
 			
 		}
+		
+
 		
 	});
