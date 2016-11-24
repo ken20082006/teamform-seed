@@ -8,7 +8,8 @@ app.value('user', {
 	userName:'',
 	key:'',
 	course:[],
-	team:[]
+	team:[],
+	tags:[]
 });
 
 
@@ -56,6 +57,7 @@ app.controller("dashBoardCtrl", function($scope,$rootScope,user, $firebaseArray)
 				user.key=data.getKey();
 				user.course=data.val().course;
 				user.team=data.val().team;
+				user.tags=data.val().tags;
 				
 				$rootScope.$emit("updataEmailCall", {});	
 				
