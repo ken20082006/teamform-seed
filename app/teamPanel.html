@@ -58,7 +58,7 @@
 	<script src="js/global.js"></script>
 	<script src="js/teamPanel.js"></script>
 	<script src="js/autoTeamForming.js"></script>
-	
+	<script src="js/recommend.js"></script>
 	
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
@@ -218,11 +218,36 @@
 				
 				<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
 					Course Student List
-					<div ng-repeat="q in studentList">
+					<br>
+					Search:
+                        <input id="input_text" type="text" class="input" ng-model="searchStudent.data[searchBy]">
+						<select ng-model="searchBy">
+							<option value="$">All</option>
+							<option value="name">Name</option>
+							<option value="email">Email</option>
+						</select>   
+                        <br>
+					
+					
+					<div ng-repeat="q in studentList | filter:searchStudent">
 						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button></li>
 						<br>
 
 		      		</div>
+					
+					You may looking for:
+					<div ng-repeat="p in recommendStudentList">
+						<li>
+						{{ p.data.userName }}{{ p.data.email }}<a href="userInfo.html?u={{p.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button>
+						<br>
+						<div ng-repeat="k in p.data.sameTags">
+						Tags:{{k}}
+						</div>
+						</li>
+						<br>
+
+		      		</div>
+					
 				</div>
 				
 				</div>
@@ -273,8 +298,8 @@
 					<div ng-repeat="q in studentList">
 						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
 						<br>
-
 		      		</div>
+					
 			</div>
 		</div>
 	</div>

@@ -19,24 +19,47 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 		
 		$scope.user=user;
 		$scope.existedTeam = [];
-		
-		
+		$scope.studentList = [];
 		
 		//recommend team
 		//wait for user key
 		$(document).ready(function waitForElement(){
-			if($scope.user.key != ""){
-				$scope.loadTeamData();
-				
-				$scope.recommendList($scope.user,$scope.existedTeam);
-			}
-			else{
-				setTimeout(function(){
-					waitForElement();
-				},500);
-			}
-		})
+					if($scope.user.key != ""){
+						$scope.loadTeamData();
+						
+						$scope.recommendList($scope.user,$scope.existedTeam);
+					}
+					else{
+						setTimeout(function(){
+							waitForElement();
+						},500);
+					}
+				}
+			
+		)
 	
+	
+		$scope.userObjectArrayPush=function(email,array)
+		{
+			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+			{
+				array.push({"key":data.getKey(),"data":data.val()});
+			});
+				
+		}
+		
+		$scope.loadStudentList=function(key)
+		{
+			firebase.database().ref("courses/"+key).once('value', function(data) {
+				var tmp=[];
+				var courseData=data.val();
+				for(i=0;i<courseData.student.length;i++)
+				{
+					$scope.userObjectArrayPush(courseData.student[i],tmp);
+				}
+				$scope.studentList=tmp;		
+			});	
+		}
 		
 		$scope.loadTeamData=function()
 		{
@@ -105,7 +128,9 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 					recommendList.push(temp);
 				}
 			}
-			
+			recommendList.sort(function(a, b) {
+				return parseFloat(b.sameTags.length) - parseFloat(a.sameTags.length);
+			});  
 			console.log(recommendList);
 			
 		}
