@@ -23,210 +23,35 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		}
 		
 		
-		//load the team ID
-		 $scope.loadExistedTeam=function()
+		//load team forming detail in teacher panel
+		$scope.loadTeamFormingDetail=function()
 		{
-			var tmpTeam=[];
+			$scope.loadStudentList($scope.ckey);
 			
 			firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
-				
-				if(typeof(data.val().team)!="undefined")
-				{
-					
-					for(i=0;i<data.val().team.length;i++)
-					{			
-						
-						firebase.database().ref("Team/"+data.val().team[i]).once('value', function(data) {
-							if(typeof(data.val().request)!="undefined")
-							{
-								if(data.val().request.indexOf($scope.email)>-1)//if current user's email is in team request array, mark it as joined
-								{		
-									tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":true});		
-								}
-								else
-								{
-									tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":false});	
-								}
-							}
-							else
-							{
-								tmpTeam.push({"key":data.getKey(),"data":data.val(),"joined":false});	
-							}							
-						});
-	
-					}
-					$scope.existedTeam=tmpTeam;
-				}
-	
-			});
-	
-		}
-		
-		$scope.pathStringCheck=function()
-		{
-			var invalidSet=['.','#','$','[',']'];
-			for(i=0;i<invalidSet.length;i++)
-			{
-				if($scope.ikey.indexOf(invalidSet[i])>-1)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		//load team data
-		$scope.accessValidCheck=function(key)
-		{
-		
-			$scope.ikey=key;
-
-			if($scope.ikey==null||$scope.ikey==""||$scope.pathStringCheck())
-			{
-				$scope.doRedirect("index.html");			
-			}
-			else
-			{
-
-				firebase.database().ref("Team/"+$scope.ikey).once('value', function(data) {
-
-					if(data.val()==null)
-					{
-						$scope.doRedirect("index.html");		
-					}
-					else
-					{
-						$scope.existedTeamData.push(data.val());
-					}
-				});
-			}
-			
-		}
-		
-		 $scope.userObjectArrayPush=function(email,array)
-		{
-			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
-			{
-				array.push({"key":data.getKey(),"data":data.val()});
-			});
-				
-		}
-		
-		$scope.loadStudentList=function(key)
-		{
-			firebase.database().ref("courses/"+key).once('value', function(data) {
 				var tmp=[];
 				var courseData=data.val();
-				for(i=0;i<courseData.student.length;i++)
+				
+				var teamList = courseData.team;
+				
+				for(var i=0;i<teamList.length;i++)
 				{
-					$scope.userObjectArrayPush(courseData.student[i],tmp);
+					firebase.database().ref("Team/"+teamList[i]).once('value', function(data) {
+						var teamData=data.val();
+						var tempTeam=[];
+						tempTeam.name=teamData.name;
+						tempTeam.key=teamList[i];
+						tempTeam.member=teamData.member;
+						$scope.existedTeam.push(tempTeam);
+						
+					})
 				}
-				$scope.studentList=tmp;		
+				console.log($scope.existedTeam);
 			});	
+			
+			
 		}
 		
-		//true = random
-		//false = recommend forming	
-		$scope.autoTeamForming=function(random)
-		{
-			
-			if(random)
-			{
-				$scope.ckey=$scope.gup('c', window.location.href);
-				$scope.loadStudentList($scope.ckey);
-				
-				var formingResult = [];
-				var tempTeamList = [];
-				var studentList = $scope.studentList;
-				
-				//the max and min number of the member
-				var avgTeamMemberNumber = Math.ceil((3+2)/2);
-				var numberOfTeam = Math.ceil(studentList.length/avgTeamMemberNumber);
-				
-				//creat team
-				for(var i=0;i<numberOfTeam;i++)
-				{
-					var tempTeam =[];
-					tempTeam.name = "random team "+(i+1);
-					tempTeam.memberNumber = 0;
-					tempTeam.teamMember = [];
-					tempTeamList.push(tempTeam);
-				}
-				
-				
-				//random assign students to team
-				for(;studentList.length>0 && tempTeamList.length>0;)
-				{
-					
-					//random between temp team
-					console.log(tempTeamList);
-					var assignTeam = Math.floor((Math.random() * numberOfTeam) + 1);
-					console.log(assignTeam);
-					tempTeamList[assignTeam-1].teamMember.push(studentList.pop().key);
-					
-					
-					//take out the team if meet the expected team member number
-					if(tempTeamList[assignTeam-1].teamMember.length>=numberOfTeam)
-					{
-						
-						formingResult.push( tempTeamList.splice(assignTeam-1, 1));
-						
-						/*
-						//swap the team to last one
-						var temp = tempTeamList[assignTeam-1];
-						tempTeamList[assignTeam-1] = tempTeamList[tempTeamList.length-1];
-						tempTeamList = temp;
-						
-						//push the finished team to the result
-						formingResult.push(tempTeamList.pop());
-						
-						*/
-						numberOfTeam--;
-						
-					}
-					
-					
-				}
-				console.log(studentList.length );
-				console.log(tempTeamList.length );
-				
-				//if no student remain
-				if(studentList.length==0)
-				{
-					//push all team to the result
-					for(;tempTeamList.length>0;)
-					{
-						formingResult.push( tempTeamList.splice(0, 1));
-					}
-				}else //if student remain assign all of them to the team
-				{
-					for(var i=0;studentList.length>0;i++)
-					{
-						tempTeamList[i].teamMember.push(studentList.pop().key);
-					}
-				}
-				
-				
-				
-					console.log(formingResult);
-				
-				
-			}else
-			{
-				$scope.ckey=$scope.gup('c', window.location.href);
-				$scope.loadExistedTeam();
-				for(var i=0;i<$scope.existedTeam.length;i++)
-				{
-					$scope.accessValidCheck($scope.existedTeam[i].key);
-				}
-				
-				console.log($scope.existedTeamData);
-			}
-			
-			
-			
-		}
-	
 		$scope.updateRole=function()
 		{
 			$scope.email=user.email;
