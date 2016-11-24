@@ -57,7 +57,7 @@
 	<!-- global function -->
 	<script src="js/global.js"></script>
 	<script src="js/teamPanel.js"></script>
-	
+	<script src="js/autoTeamForming.js"></script>
 	
 	
 	<!-- Customized CSS shared by pages -->
@@ -254,8 +254,27 @@
 			
 				<input type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()">
 				<br>
-				<button type="button" class="btn btn-primary btn-sm" a id="removeURL" ng-click="autoTeamForming(false)">auto Team Forming</a></button>
-				<button type="button" class="btn btn-primary btn-sm" a id="removeURL" ng-click="autoTeamForming(true)">random Team Forming</a></button>
+				
+				<label>Team details</label>
+				<br>
+				<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()">loadTeamFormingDetail</a></button>	
+					<br>
+					Team:
+					<br>
+					<div ng-repeat="q in existedTeam">
+					
+						<li>Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
+						<br>
+
+		      		</div>
+					
+					Non team students:
+					<br>
+					<div ng-repeat="q in studentList">
+						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
+						<br>
+
+		      		</div>
 			</div>
 		</div>
 	</div>
