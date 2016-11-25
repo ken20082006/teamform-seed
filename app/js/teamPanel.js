@@ -647,7 +647,13 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		{
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 			{
-				array.push({"key":data.getKey(),"data":data.val()});
+				var tmp=data.val();
+				if(typeof(tmp.icon)=="undefined")
+				{
+					tmp.icon="image/usericon.png";
+				}
+
+				array.push({"key":data.getKey(),"data":tmp});
 			});
 				
 		}

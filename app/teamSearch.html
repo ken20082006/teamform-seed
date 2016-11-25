@@ -188,6 +188,23 @@
 				</div>	
 				<div class="recommend" ng-controller="recommendCtrl">
 					<h3>Recommendation List</h3>
+					<div ng-repeat="q in teamList">
+					<div style="background:#eee;margin-top:5px;">
+					Name:<a href="teamInfo.html?t={{q.key}}" target="_blank">{{q.name}}</a><br>
+					Match tags:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
+					<span ng-if="q.joined==false">
+						<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
+								<span class="pull-left">Join request</span>
+						</a>
+					</span>
+					<span ng-if="q.joined==true">
+						<a style="cursor: pointer;"  ng-click="removeRequest($index,q.key)">	
+								<span class="pull-left">delete request</span>
+						</a>
+					</span>
+					</div>
+						
+					</div>
 				</div>
 				
 			</div>
