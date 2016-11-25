@@ -74,7 +74,7 @@
         <div class="heading"><h1>My Profile</h1></div>
 		<div class="profile" ng-controller="myProfileCtrl">
 			<div class="section">Profile Picture</div>
-			<img src="image/usericon.png"></img>
+			<div style="width:150px;height:150px; background-image: url('{{userIcon}}');  background-repeat: no-repeat;background-position: center;"></div><input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)"><a id="removeURL"  ng-click="removeImg()">Delete</a>
 			<div class="section">General</div>
 			<table>
                 <tbody>
@@ -114,15 +114,15 @@
                 <tbody>
 					<tr>
 						<td><label>Email</label></td>
-						<td><input type="text" value="{{currUser.userEmail}}" ng-model="currUser.userEmail"></td>
+						<td><input type="text" value="{{currUser.contactEmail}}" ng-model="currUser.contactEmail"></td>
 					</tr>
 					<tr>
 						<td><label>Skype</label></td>
-						<td><input type="text" value="{{currUser.userSkype}}" ng-model="currUser.userSkype"></td>
+						<td><input type="text" value="{{currUser.contactSkype}}" ng-model="currUser.contactSkype"></td>
 					</tr>
 					<tr>
 						<td><label>Phone</label></td>
-						<td><input type="text" value="{{currUser.userPhone}}" ng-model="currUser.userPhone"></td>
+						<td><input type="text" value="{{currUser.contactPhone}}" ng-model="currUser.contactPhone"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -131,15 +131,15 @@
                 <tbody>
 					<tr>
 						<td><label>Facebook</label></td>
-						<td><input type="text" value="{{currUser.userFacebook}}" ng-model="currUser.userFacebook"></td>
+						<td><input type="text" value="{{currUser.contactFb}}" ng-model="currUser.contactFb"></td>
 					</tr>
 					<tr>
 						<td><label>Twitter</label></td>
-						<td><input type="text" value="{{currUser.userTwitter}}" ng-model="currUser.userTwitter"></td>
+						<td><input type="text" value="{{currUser.contactTwitter}}" ng-model="currUser.contactTwitter"></td>
 					</tr>
 					<tr>
 						<td><label>Google+</label></td>
-						<td><input type="text" value="{{currUser.userGoogle}}" ng-model="currUser.userGoogle"></td>
+						<td><input type="text" value="{{currUser.contactGoogle}}" ng-model="currUser.contactGoogle"></td>
 					</tr>
 					<tr>
 						<td colspan="2"><input type="submit" class="btn btn-info" ng-click="validInputForEditProfile()" value="Submit"></td>
