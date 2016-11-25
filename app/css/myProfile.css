@@ -4,7 +4,7 @@
     -webkit-border-image: url(../image/border.png) 30 stretch; /* Safari 3.1-5 */
     -o-border-image: url(../image/border.png) 30 stretch; /* Opera 11-12.1 */
     border-image: url(../image/border.png) 30 stretch;
-  
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 p{
