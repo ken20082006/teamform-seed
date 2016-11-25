@@ -16,10 +16,73 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		$scope.ckey="";
 		$scope.studentList=[];
 		
+		
+		//team filter variables
+		$scope.query = {}
+		$scope.searchBy = '$'
+		$scope.orderProp="name"; 
+		$scope.recommendStudentList =[];
 
 		$scope.doRedirect=function(href)
 		{
 			$window.location.href=href;
+		}
+		
+		
+		//recommend students
+		//user should be 1 to many in list
+		$scope.recommendList = function(user,list)
+		{
+			
+			//cant generate recommendList
+			if(typeof(user.tags)=="undefined" || list.length==0)
+			{
+				return false;
+			}
+			
+			var recommendList = [];
+			for(var i=0;i<list.length;i++)
+			{
+				list[i].data.sameTags = [];
+			}
+			console.log(list);
+			
+			//compare the tags, save the same tags to sameTags to list array 
+			for(var i=0;i<user.tags.length;i++)
+			{
+				for(var j=0;j<list.length;j++)
+				{
+					if(typeof(list[j].data.tags)!="undefined")
+					{
+						for(var k=0;k<list[j].data.tags.length;k++)
+						{
+							if(user.tags[i]==list[j].data.tags[k])
+							{
+								list[j].data.sameTags.push(list[j].data.tags[k]);
+							}
+						}
+					}
+					
+				}
+			}
+			
+			for(var i=0;i<list.length;i++)
+			{
+				if(list[i].data.sameTags.length>0)
+				{
+					var temp = [];
+					temp.keys=list[i].key;
+					temp.data=list[i].data;
+					recommendList.push(temp);
+				}
+			}
+			recommendList.sort(function(a, b) {
+				return parseFloat(b.data.sameTags.length) - parseFloat(a.data.sameTags.length);
+			});  
+			
+			$scope.recommendStudentList = recommendList;
+			console.log(recommendList);
+			
 		}
 		
 		
@@ -705,6 +768,17 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		$scope.inviteForm=function()
 		{
 			$scope.loadStudentList($scope.ckey);
+			
+			
+			if($scope.tTag.length>0 && $scope.studentList.length>0)
+			{
+				var team =[];
+				var tempStudentList=$scope.studentList;
+				team.tags=$scope.tTag;
+				console.log(team);
+				$scope.recommendList(team,tempStudentList);
+			}
+			
 			$.fancybox.open("#studentList");	
 		}
 
