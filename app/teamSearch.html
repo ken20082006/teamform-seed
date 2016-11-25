@@ -194,12 +194,12 @@
 					Match tags:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
 					<span ng-if="q.joined==false">
 						<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
-								<span class="pull-left">Join request</span>
+								<span >Join request</span>
 						</a>
 					</span>
 					<span ng-if="q.joined==true">
 						<a style="cursor: pointer;"  ng-click="removeRequest($index,q.key)">	
-								<span class="pull-left">delete request</span>
+								<span >delete request</span>
 						</a>
 					</span>
 					</div>
