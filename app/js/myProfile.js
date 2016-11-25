@@ -23,10 +23,51 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 		
 		$scope.currUser;
 		$scope.password;
-
+		$scope.userIcon;
 		$scope.defaultTags=[];
 		$scope.addedTags;
 
+		
+		
+		File.prototype.convertToBase64 = function(callback){		//function of  convert uploaded image to base64 image
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				 callback(e.target.result)
+			};
+			reader.onerror = function(e) {
+				 callback(null);
+			};        
+			reader.readAsDataURL(this);
+		};
+		
+		$scope.fileNameChanged = function (ele) // trigger when user upload a file
+		{
+		  var file = ele.files[0];
+		  if(file.type.length>0&&file.type.substr(0,5)=="image")  // check for the format type of the chose file
+		  {
+				file.convertToBase64(function(base64)
+				{
+					$scope.userIcon=base64;
+					$scope.$apply();
+				//	$('#removeURL').show();
+					$('#profilePic').val('');
+				}); 		  	  
+		  }
+		  else
+		  {
+			  alert("invliad file format");
+			  $('#profilePic').val('');
+		  }
+
+		}
+		
+		$scope.removeImg=function()
+		{
+			//$('#removeURL').hide();
+			$scope.userIcon='image/usericon.png';
+			$scope.$apply();
+		
+		}
 		
 		$scope.removeElementFromArrayByValue=function(value,array)
 		{
@@ -111,14 +152,23 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
 			{
 				$scope.currUser=data.val();	
-				$scope.addedTags=data.val().tags;	
+				$scope.addedTags=data.val().tags;
+				if(typeof(data.val().icon)!="undefined")
+				{
+					$scope.userIcon=data.val().icon;
+				}
+				else
+				{
+					$scope.userIcon='image/usericon.png';
+				}
+			
 			});
 			
 		}
 
 		$scope.validInputForEditProfile=function()
 		{
-			
+		
 			if(typeof($scope.currUser.userName)=="undefined"||$scope.currUser.userName.trim()=="")
 			{
 				alert("some data missed");
@@ -144,7 +194,23 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 			}
 			
 		}
+		
+		$scope.contactInfoHandler=function(inputData,userData,key)
+		{
 
+			if(typeof(inputData)=="undefined"||inputData.trim()=="")
+			{
+				if(typeof(userData[key])!="undefined")
+				{
+					delete userData[key];
+				}
+			}
+			else
+			{
+				userData[key]=inputData;
+			}
+			
+		}
 		
 		$scope.updateProfileData=function()
 		{
@@ -164,6 +230,16 @@ app.controller("myProfileCtrl", function($scope,$rootScope,user, $firebaseArray)
 						delete newUserData['tags'];
 					}
 				}
+
+			$scope.contactInfoHandler($scope.currUser.contactEmail,newUserData,'contactEmail');	
+			$scope.contactInfoHandler($scope.currUser.contactSkype,newUserData,'contactSkype');	
+			$scope.contactInfoHandler($scope.currUser.contactPhone,newUserData,'contactPhone');	
+			$scope.contactInfoHandler($scope.currUser.contactFb,newUserData,'contactFb');	
+			$scope.contactInfoHandler($scope.currUser.contactTwitter,newUserData,'contactTwitter');	
+			$scope.contactInfoHandler($scope.currUser.contactGoogle,newUserData,'contactGoogle');
+			newUserData.icon=$scope.userIcon;	
+			
+				
 				firebase.database().ref("UserAccount/"+$scope.key).set(newUserData).then(function(){
 					user.userName=$scope.currUser.userName;
 					
