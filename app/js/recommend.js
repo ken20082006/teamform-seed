@@ -20,6 +20,7 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 		$scope.user=user;
 		$scope.existedTeam = [];
 		$scope.studentList = [];
+		$scope.teamList={};
 		
 		//recommend team
 		//wait for user key
@@ -133,6 +134,34 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 			});  
 			console.log(recommendList);
 			
+			for(i=0;i<recommendList.length;i++)
+			{
+				var key=recommendList[i].keys;
+				var name=recommendList[i].name;
+				var sameTags=recommendList[i].sameTags;
+				firebase.database().ref("UserAccount/"+$scope.user.key).once('value', function(data) {
+					var userData=data.val();
+					if(typeof(userData.request)!="undefined"&&typeof(userData.request[$scope.ikey])!="undefined")
+					{
+						if(userData.request[$scope.ikey].indexOf($scope.user.email)>-1)
+						{
+								$scope.teamList[key]={"key":key,"name":name,"sameTags":sameTags,"joined":true};
+						}
+						else
+						{
+								$scope.teamList[key]={"key":key,"name":name,"sameTags":sameTags,"joined":false};
+						}
+					}
+					else
+					{
+						$scope.teamList[key]={"key":key,"name":name,"sameTags":sameTags,"joined":false};
+					}
+					
+				});
+				
+			}
+			
+			$scope.$apply();
 		}
 		
 });

@@ -269,14 +269,17 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 		
 		$scope.deleteAllInviteRequest=function(userData)
 		{
-			for(i=0;i<userData.invite[$scope.ckey].length;i++)
+			if(typeof(userData.invite)!="undefined"&&typeof(userData.invite[$scope.ckey])!="undefined")
 			{
-				firebase.database().ref("Team/"+userData.invite[$scope.ckey][i]).once('value', function(data) {
-					
-					var teamData=data.val();
-					$scope.removeElementFromArrayByValue($scope.email,teamData.invite);
-					firebase.database().ref("Team/"+data.getKey()).set(teamData);		
-				});				
+				for(i=0;i<userData.invite[$scope.ckey].length;i++)
+				{
+					firebase.database().ref("Team/"+userData.invite[$scope.ckey][i]).once('value', function(data) {
+						
+						var teamData=data.val();
+						$scope.removeElementFromArrayByValue($scope.email,teamData.invite);
+						firebase.database().ref("Team/"+data.getKey()).set(teamData);		
+					});				
+				}
 			}
 		}
 		
@@ -518,46 +521,57 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 					
 					userAccount.orderByChild("email").equalTo($scope.email).on("child_added", function(data)
 					{
-						var newUserData=data.val();
-						if(typeof(newUserData.team)=="undefined")
+						//var newUserData=data.val();
+						var userData=data.val();				
+						
+						//insert pt
+						
+						$.when($scope.deleteAllInviteRequest(userData)).done(function() 
 						{
-							newUserData.team={};
-						}
-						newUserData.team[$scope.ckey]=teamKey;
-						if(typeof(newUserData.request)!="undefined"&&typeof(newUserData.request[$scope.ckey])!="undefined")
-						{
-							$.when($scope.deleteAllJoinRequestFromTeam(newUserData)).done(function() 
-							{
-								delete newUserData.request[$scope.ckey]
-								if(jQuery.isEmptyObject(newUserData.request))
+							$.when($scope.deleteAllJoinRequestFromTeam(userData)).done(function(){
+								
+								if(typeof(userData.invite)!="undefined"&&typeof(userData.invite[$scope.ckey])!="undefined")
 								{
-									delete newUserData["request"];
+									delete userData.invite[$scope.ckey];
 								}
-								firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
-							});
-						}
-						else
-						{
-							firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
-						}
-	
-						
-						firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
-						
-							var newCourseData=data.val();
-							if(typeof(newCourseData.team)=="undefined")
-							{
-								newCourseData.team=[];
-							}
-							newCourseData.team.push(teamKey);
-							firebase.database().ref("courses/"+$scope.ckey).set(newCourseData).then(function(){
-								$window.location.href="teamPanel.html?c="+$scope.ckey;
-							});
+								if(jQuery.isEmptyObject(userData.invite))
+								{
+									delete userData["invite"];
+								}
+								if(typeof(userData.request)!="undefined"&&typeof(userData.request[$scope.ckey])!="undefined")
+								{
+									delete userData.request[$scope.ckey];
+								}		
+								if(jQuery.isEmptyObject(userData.request))
+								{
+									delete userData["request"];
+								}
+								if(typeof(userData.team)=="undefined")
+								{
+									userData.team={};
+								}
+								userData.team[$scope.ckey]=teamKey;
+								firebase.database().ref("UserAccount/"+$scope.key).set(userData).then(function(){
+										
+									firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
+									
+										var newCourseData=data.val();
+										if(typeof(newCourseData.team)=="undefined")
+										{
+											newCourseData.team=[];
+										}
+										newCourseData.team.push(teamKey);
+										firebase.database().ref("courses/"+$scope.ckey).set(newCourseData).then(function(){
+											$window.location.href="teamPanel.html?c="+$scope.ckey;
+										});
+									});
+									
+								});
+							});						
+							
 						});
-
+						
 					});
-
-	
 				});
 			}
 			else

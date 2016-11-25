@@ -155,13 +155,13 @@
 					<ul class="member">
 						<li ng-repeat="q in teamMember">
 							<a href="#">
-								<img src="image/usericon.png">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
 									<div class="line">
 									{{ q.data.userName }}
 									</div>
-									<span ng-if="joinedTeam.leaderID==q.data.email">Leader</span>
-									<span ng-if="joinedTeam.leaderID!=q.data.email">Member</span>
+									<span ng-if="tLeaderID==q.data.email">Leader</span>
+									<span ng-if="tLeaderID!=q.data.email">Member</span>
 								</div>
 							</a>
 							<div ng-if="isOwner==true" class="action1">
@@ -176,7 +176,7 @@
 				<ul class="member">
 						<li ng-repeat="q in waitingList">
 							<a href="#">
-								<img src="image/usericon.png">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
 									<div class="line">
 									{{ q.data.userName }}
@@ -202,7 +202,7 @@
 				<ul class="member">
 						<li ng-repeat="q in inviteList">
 							<a href="#">
-								<img src="image/usericon.png">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
 									<div class="line">
 									{{ q.data.userName }}
