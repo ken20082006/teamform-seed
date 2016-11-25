@@ -257,6 +257,11 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						{
 							$scope.currCourse=data.val();
 							$scope.currCourse.key=data.getKey();
+							if(data.val().random)
+							{
+							//	alert("This course will do random team form!");
+								$scope.doRedirect("index.html");
+							}
 							$scope.loadExistedTeam();		
 							$scope.loadInviteRequest();					
 						}

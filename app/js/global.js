@@ -13,6 +13,7 @@ app.value('user', {
 });
 
 
+
 app.controller("wrapperCtrl", function($scope,$rootScope,user) {
 			
 			$rootScope.$on("updataEmailCall", function(){
