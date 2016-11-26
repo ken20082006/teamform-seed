@@ -1,4 +1,4 @@
-app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) {
+	app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) {
 		
 		/*initialzation and checking*/
 		var team = firebase.database().ref("Team");
@@ -21,6 +21,7 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 		$scope.existedTeam = [];
 		$scope.studentList = [];
 		$scope.teamList={};
+		$scope.requestValid=true;
 		
 		//recommend team
 		//wait for user key
@@ -69,19 +70,22 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 				var courseData=data.val();
 				
 				var teamList = courseData.team;
-				for(var i=0;i<teamList.length;i++)
+				if(typeof(teamList)!="undefined")
 				{
-					firebase.database().ref("Team/"+teamList[i]).once('value', function(data) {
-						var teamData=data.val();
-						
-						if(typeof(teamData.tags)!="undefined")
-						{
-							teamData.keys=teamList[i];
-							$scope.existedTeam.push(teamData);
-						}
-					})
+					for(var i=0;i<teamList.length;i++)
+					{
+						firebase.database().ref("Team/"+teamList[i]).once('value', function(data) {
+							var teamData=data.val();
+							
+							if(typeof(teamData.tags)!="undefined")
+							{
+								teamData.keys=teamList[i];
+								$scope.existedTeam.push(teamData);
+							}
+						})
+					}
 				}
-				
+	
 			});	
 		}
 		
@@ -160,8 +164,159 @@ app.controller("recommendCtrl", function($scope,$rootScope,user,$firebaseArray) 
 				});
 				
 			}
-			
+			console.log("$scope.teamList",$scope.teamList);
 			$scope.$apply();
+		}
+		
+		
+		
+		
+			/*checking list*/
+		/*
+			join request&&delete request
+			1. if has team in that course, redirect to the team panel
+			delete request
+			2.if not in the request list in that team, update the interface by loading team data again
+		*/
+		
+		$scope.requestValidCheck = function(operation,key)//1 is delete request, 0 is join request
+		{
+			firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) 
+			{
+				if(typeof(data.val().team)!="undefined")
+				{
+					if(data.val().team.hasOwnProperty($scope.ckey))
+					{
+						alert("You have joined a group alreay");
+						$window.location.href="teamPanel.html?c="+$scope.ckey;	
+						$scope.requestValid=false;
+					}
+				}
+				if(operation==1&&$scope.requestValid)
+				{
+					firebase.database().ref("Team/"+key).once('value', function(data) {
+						if(typeof(data.val().request)!="undefined")
+						{
+							if(data.val().request.indexOf($scope.email)==-1)
+							{
+								alert("you are not in the waiting list");
+								$scope.loadExistedTeam();
+								$scope.requestValid=false;
+							}
+						}
+						else
+						{
+							alert("you are not in the waiting list");
+							$scope.loadExistedTeam();
+							$scope.requestValid=false;
+						}
+					});
+				}
+
+			});
+		}
+		
+		/*remove request flow*/
+		/*
+			1. delete the user email in the  request array in the Team table
+			2. delete the team id in specific course array of request object in UserAccount table
+			3. set the joined variable be false
+		*/
+		
+		$scope.removeRequest=function(i,key)
+		{
+			$.when($scope.requestValidCheck(1,key)).done(function() 
+			{
+				if($scope.requestValid)
+				{
+					firebase.database().ref("Team/"+key).once('value', function(data) {
+						var newTeamData=data.val();
+						$scope.removeElementFromArrayByValue($scope.email,newTeamData.request);
+						firebase.database().ref("Team/"+key).set(newTeamData);
+					});
+					firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data) {
+						var newUserData=data.val();
+						$scope.removeElementFromArrayByValue(key,newUserData.request[$scope.ckey]);
+						if(typeof(newUserData.request[$scope.ckey])=="undefined")
+						{
+							if(jQuery.isEmptyObject(newUserData.request))
+							{
+								delete newUserData["request"];
+							}
+						}
+
+						firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
+					});
+					$scope.teamList[key].joined=!$scope.teamList[key].joined;	
+				}
+				$scope.requestValid=true;
+			});
+
+		}
+		
+		/*join request flow*/
+		/*
+			1. add the user email in the  request array in the Team table
+			2. add the team id in specific course array of request object in UserAccount table
+			3. set the joined variable be true
+		*/
+		
+		$scope.joinRequest=function(index,key)
+		{
+
+			$.when($scope.requestValidCheck(0,key)).done(function() 
+			{
+				if($scope.requestValid)
+				{
+					firebase.database().ref("Team/"+key).once('value', function(data) 
+					{
+					
+						var newTeamData=data.val();
+						
+						if(typeof(data.val().request)=="undefined")
+						{
+							var request=[];
+							request.push($scope.email);
+							newTeamData.request=request;
+						}
+						else
+						{
+							newTeamData.request.push($scope.email);
+						}
+						firebase.database().ref("Team/"+key).set(newTeamData);
+					});
+
+					firebase.database().ref("UserAccount/"+$scope.key).once('value', function(data)
+					{
+						var newUserData=data.val();
+
+						if(typeof(data.val().request)=="undefined")
+						{
+							var request={};
+							var teamArray=[];
+							teamArray.push(key);
+							request[$scope.currCourse.key]=teamArray;
+							newUserData.request=request;
+						
+						}else
+						{					
+							if(typeof(newUserData.request[$scope.ckey])=="undefined")
+							{
+								newUserData.request[$scope.ckey]=[];
+							}
+							newUserData.request[$scope.ckey].push(key);
+						}
+
+						firebase.database().ref("UserAccount/"+$scope.key).set(newUserData);
+						console.log($scope.teamList);
+						$scope.teamList[key].joined=!$scope.teamList[key].joined;
+						
+					});
+			
+				}
+				$scope.requestValid=true;
+			});
+			
 		}
 		
 });
