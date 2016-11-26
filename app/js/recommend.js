@@ -28,7 +28,6 @@
 		$(document).ready(function waitForElement(){
 					if($scope.user.key != ""){
 						$scope.loadTeamData();
-						
 						$scope.recommendList($scope.user,$scope.existedTeam);
 					}
 					else{
@@ -67,6 +66,7 @@
 		{
 			firebase.database().ref("courses/"+$scope.ikey).once('value', function(data) {
 				var tmp=[];
+				$scope.existedTeam=[];
 				var courseData=data.val();
 				
 				var teamList = courseData.team;
@@ -80,7 +80,9 @@
 							if(typeof(teamData.tags)!="undefined")
 							{
 								teamData.keys=teamList[i];
+								//$scope.existedTeam.push(teamData);
 								$scope.existedTeam.push(teamData);
+								
 							}
 						})
 					}
@@ -136,7 +138,7 @@
 			recommendList.sort(function(a, b) {
 				return parseFloat(b.sameTags.length) - parseFloat(a.sameTags.length);
 			});  
-			console.log(recommendList);
+		//	console.log(recommendList);
 			
 			for(i=0;i<recommendList.length;i++)
 			{
@@ -145,27 +147,32 @@
 				var sameTags=recommendList[i].sameTags;
 				firebase.database().ref("UserAccount/"+$scope.user.key).once('value', function(data) {
 					var userData=data.val();
+					//console.log(userData);
 					if(typeof(userData.request)!="undefined"&&typeof(userData.request[$scope.ikey])!="undefined")
 					{
-						if(userData.request[$scope.ikey].indexOf($scope.user.email)>-1)
+
+						if(userData.request[$scope.ikey].indexOf(key)>-1)
 						{
 								$scope.teamList[key]={"key":key,"name":name,"sameTags":sameTags,"joined":true};
+									$scope.$apply();
 						}
 						else
 						{
 								$scope.teamList[key]={"key":key,"name":name,"sameTags":sameTags,"joined":false};
+									$scope.$apply();
 						}
 					}
 					else
 					{
 						$scope.teamList[key]={"key":key,"name":name,"sameTags":sameTags,"joined":false};
+							$scope.$apply();
 					}
-					
+				
 				});
 				
 			}
-			console.log("$scope.teamList",$scope.teamList);
-			$scope.$apply();
+			//console.log("$scope.teamList",$scope.teamList);
+			//$scope.$apply();
 		}
 		
 		
@@ -192,6 +199,23 @@
 						$scope.requestValid=false;
 					}
 				}
+				if(operation==0&&$scope.requestValid)
+				{
+					firebase.database().ref("Team/"+key).once('value', function(data) {
+						if(typeof(data.val().request)!="undefined")
+						{
+							if(data.val().request.indexOf($scope.email)>-1)
+							{
+								alert("you are  in the waiting list already");
+								//$scope.loadExistedTeam();
+								$scope.loadTeamData();
+								$scope.recommendList($scope.user,$scope.existedTeam);
+								$scope.requestValid=false;
+							}
+						}
+					});
+					
+				}
 				if(operation==1&&$scope.requestValid)
 				{
 					firebase.database().ref("Team/"+key).once('value', function(data) {
@@ -200,14 +224,18 @@
 							if(data.val().request.indexOf($scope.email)==-1)
 							{
 								alert("you are not in the waiting list");
-								$scope.loadExistedTeam();
+								//$scope.loadExistedTeam();
+								$scope.loadTeamData();
+								$scope.recommendList($scope.user,$scope.existedTeam);
 								$scope.requestValid=false;
 							}
 						}
 						else
 						{
 							alert("you are not in the waiting list");
-							$scope.loadExistedTeam();
+						//	$scope.loadExistedTeam();
+							$scope.loadTeamData();
+							$scope.recommendList($scope.user,$scope.existedTeam);
 							$scope.requestValid=false;
 						}
 					});

@@ -833,6 +833,10 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					{
 						$scope.currCourse=data.val();
 						$scope.currCourse.key=data.getKey();
+						if(typeof($scope.currCourse.isFormed)=="undefined")
+						{
+							$scope.currCourse.isFormed=false;
+						}
 						$scope.courseInfo.image=$scope.currCourse.image;
 						$scope.roleAccessCheck();						
 					}

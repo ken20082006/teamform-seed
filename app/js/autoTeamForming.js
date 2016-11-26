@@ -15,6 +15,8 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		$scope.maxTeamMember;
 		$scope.minTeamMember;
 		$scope.existedTeam =[];
+		$scope.map=[];
+
 		
 		$scope.gup=function( name, url ) {
 			if (!url) url = location.href;
@@ -231,52 +233,99 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 				
 				console.log(formingResult);
 				console.log(unteamedStudent);
+		
 				if(operation==0)
 				{
 					$scope.randomTeamResultProcess(formingResult);
+					$('#randomBtn').hide();
 				}
 				
 			
 		}
-	
-		$scope.randomTeamResultProcess=function(formingResult)
-		{
+		
+		
+		
+									
 
+		
+		$scope.convertkeyToEmail=function(formingResult)
+		{
+			for(i=0;i<formingResult.length;i++)
+			{
+				for(j=0;j<formingResult[i][0].teamMember.length;j++)
+				{
+					firebase.database().ref("UserAccount/"+formingResult[i][0].teamMember[j]).once('value', function(data) {
+						formingResult[i][0].teamMember[j]=data.val().email;
+						
+					});
+					
+				}
+			}
+
+	
+		}
+		
+		$scope.assignTeamKey=function(obj)
+		{
+			firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
+				var courseData=data.val();
+				if(typeof(courseData.team)=="undefined")
+				{
+					courseData.team=[];
+				}
+				courseData.team.push(obj.key);
+				courseData.isFormed=true;
+				firebase.database().ref("courses/"+$scope.ckey).set(courseData).then(function(){
+					
+					for(j=0;j<obj.data.member.length;j++)
+					{
+						userAccount.orderByChild("email").equalTo(obj.data.member[j]).on("child_added", function(data){
+							var userData=data.val();
+							if(typeof(userData.team)=="undefined")
+							{
+								userData.team={};
+							}
+							userData.team[$scope.ckey]=obj.key;
+							firebase.database().ref("UserAccount/"+data.getKey()).set(userData);
+							
+						});
+					}
+				});
+			});
+			
+			
+		}
+		
+		$scope.createTeams=function(formingResult)
+		{
 			for(i=0;i<formingResult.length;i++)
 			{
 				var teamData={"courseID":$scope.ckey,"description":"This is "+formingResult[i][0].name,"member":formingResult[i][0].teamMember,"name":formingResult[i][0].name,"leaderID":formingResult[i][0].teamMember[0]};
 				$scope.teamFB.$add(teamData).then(function(data){
 					var teamKey=data.getKey();
-					firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
-						var courseData=data.val();
-						if(typeof(courseData.team)=="undefined")
-						{
-							courseData.team=[];
-						}
-						courseData.team.push(teamKey);
-						courseData.formed=true;
-						firebase.database().ref("courses/"+$scope.ckey).set(courseData).then(function(){
-							
-							for(j=0;j<formingResult[i][0].teamMember.length;j++)
-							{
-								firebase.database().ref("UserAccount/"+formingResult[i][0].teamMember[j]).once('value', function(data) {
-									var userData=data.val();
-									if(typeof(userData.team)=="undefined")
-									{
-										userData.team={};
-									}
-									userData.team[$scope.ckey]=teamKey;
-									firebase.database().ref("UserAccount/"+formingResult[i][0].teamMember[j]).set(userData)
-								});
-							}
-
-							
-							
-						});
-					});
+					var pos=$scope.teamFB.$indexFor(teamKey)
+					var tmpData=$scope.teamFB[pos];
+					var obj={"data":tmpData,"key":teamKey};
+					$scope.assignTeamKey(obj);
 					
 				});
 			}
 		}
+	
+
+	
+		$scope.randomTeamResultProcess=function(formingResult)
+		{
+			$.when($scope.convertkeyToEmail(formingResult)).done(function() {
+				$scope.createTeams(formingResult);
+				
+			});
+
+		}
+		
+		
+		
+
+		
 		
 });

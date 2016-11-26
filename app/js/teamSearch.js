@@ -77,6 +77,21 @@ app.controller("teamSearchCtrl", function($scope,$rootScope,user,$firebaseArray,
 						$scope.requestValid=false;
 					}
 				}
+				if(operation==0&&$scope.requestValid)
+				{
+					firebase.database().ref("Team/"+key).once('value', function(data) {
+						if(typeof(data.val().request)!="undefined")
+						{
+							if(data.val().request.indexOf($scope.email)>-1)
+							{
+								alert("you are  in the waiting list already");
+								$scope.loadExistedTeam();
+								$scope.requestValid=false;
+							}
+						}
+					});
+					
+				}
 				if(operation==1&&$scope.requestValid)
 				{
 					firebase.database().ref("Team/"+key).once('value', function(data) {
