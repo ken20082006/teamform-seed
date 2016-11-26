@@ -15,11 +15,16 @@
 	-->
 	        
     <script src="lib/jquery.min.js"></script>      
-    <script src="lib/bootstrap.min.js"></script>      
+    <script src="lib/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
       	  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">   
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+	<link rel="stylesheet" href="js/fancyBox/source/jquery.fancybox.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="js/fancyBox/source/jquery.fancybox.pack.js"></script>
 
       
     <!-- Customized libraries shared by pages -->
@@ -51,8 +56,9 @@
 	
 	<!-- global function -->
 	<script src="js/global.js"></script>
-	
-	
+	<script src="js/teamPanel.js"></script>
+	<script src="js/autoTeamForming.js"></script>
+	<script src="js/recommend.js"></script>
 	
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
@@ -76,20 +82,69 @@
         		</div>
         
 				<div class="section">
-					<p>Team info</p>
+					<p>Team info
+						<button ng-if="isOwner==true&&isEdit==false" ng-click="editInfoForm()" class="btn btn-primary btn-sm" style="margin-left:10px;">Edit Team Info</button>
+					</p>
 				</div>
         		<div id="cont1">
-				<table class="teamInfo">
-					<tr><td>Course code:</td><td>{{currCourse.title}}</td></tr>
-        			<tr><td>Role:</td><td>Student</td></tr>
-					<tr><td>Team name:</td><td>{{joinedTeam.name}}</td></tr>
-					<tr><td>Max size:</td><td>{{currCourse.max}}</td></tr>
-				</table>
+					<div ng-if="isEdit==false">
+					<table class="teamInfo">
+						<tr><td>Course code:</td><td>{{currCourse.title}}</td></tr>
+						<tr><td>Role:</td><td>Student</td></tr>
+						<tr><td>Team name:</td><td>{{tName}}</td></tr>
+						<tr><td>Max size:</td><td>{{currCourse.max}}</td></tr>
+					</table>
+					<label>Added Tags:</label>
+				<div id="addedTags" ng-repeat="q in tTag">
+					<ul>
+						<li class="tag"><i class="fa fa-tag" aria-hidden="true"></i> {{q}}
+						</li>
+					</ul>
+				</div>
+				
+				</div>
+				<div ng-if="isEdit==true" class="updateTeam">
+						<h2>Edit Team Information</h2>
+						<div>
+							<label>Team name</label>
+							<br>
+							<input type="text" ng-model="tName" id="editTeamName">
+						</div>
+						<div>
+							<label>Team description</label>
+							<br>
+							<textarea ng-model="tDesc" id="editTeamDesc"></textarea>
+						</div>
+						<div>
+							<label>Tags</label>
+								<div class="input-group">
+								<input type="text" id="autoComplete">
+									<a style="margin-left:-20px;" ng-click="addTag()">
+										<i class="fa fa-plus" aria-hidden="true">
+										</i>
+									</a>
+								</div>
+
+						</div>
+						<div id="addedTags" ng-repeat="q in addedTags">
+							<ul>
+								<li class="tag">{{q}}
+									<a style="margin-left:3px;" ng-click="removeTag(q)">
+										<i class="fa fa-times" aria-hidden="true"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<br>
+						<button class="btn btn-success btn-sm" ng-click="editTeamInfo()">update</button>
+						<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
+				</div>
+
 				<br>
 				<div ng-if="isOwner==true"><p style="font-weight:bold;">Team role: Team leader</p>
-				Action: <button type="button" class="btn btn-primary btn-sm" a ng-click="deleteTeam()">Delete Team</a></button></div>
+				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:10px;">Delete Team</a></button></div>
 				<div ng-if="isOwner==false"><p style="font-weight:bold;">Team role: Team member</p>
-				Action: <button type="button" class="btn btn-primary btn-sm" a ng-click="quitTeam()">Quit Team</a></button></div>	
+				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:10px;">Quit Team</a></button></div>	
        	 		</div>
 				<br>
 
@@ -97,37 +152,105 @@
 				<p>Team member</p>
 				</div>
 				<div id="cont2">
-				<table class="table table-bordered" >
-			 	 	<tr>
-			  	  	<th>Name</th>
-			   	 	<th>Email</th>
-               		<th>Role</th>
-			    	<th ng-if="isOwner==true">Action</th>
-		      		</tr>
-			  		<tr ng-repeat="q in teamMember">
-			    	<td>{{ q.data.userName }}</td>
-			    	<td>{{ q.data.email }}</td>
-                	<td ng-if="joinedTeam.leaderID==q.data.email">Leader</td>
-                	<td ng-if="joinedTeam.leaderID!=q.data.email">Member</td>
-			    	<td ng-if="isOwner==true"><a ng-click="deleteMember(0,q.data.email,q.key)">delete </a></td>
-		      		</tr>
-			  	</table>
+					<ul class="member">
+						<li ng-repeat="q in teamMember">
+							<a href="#">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
+								<div class="hover-text">
+									<div class="line">
+									{{ q.data.userName }}
+									</div>
+									<span ng-if="tLeaderID==q.data.email">Leader</span>
+									<span ng-if="tLeaderID!=q.data.email">Member</span>
+								</div>
+							</a>
+							<div ng-if="isOwner==true" class="action1">
+								<button type="button" class="btn btn-danger btn-sm" a ng-click="deleteMember(0,q.data.email,q.key)">Kick out</a></button>
+							</div>
+						</li>
+					</ul>
 
 				<div class="section">
 					<p>Member waiting list</p>
 				</div>
-				<table class="table table-bordered" >
-			  		<tr>
-			    	<th>Name</th>
-			    	<th>Email</th>
-			    	<th ng-if="isOwner==true">Action</th>
-		      		</tr>
-			  		<tr ng-repeat="q in waitingList">
-			    	<td>{{ q.data.userName }}</td>
-			    	<td>{{ q.data.email }}</td>
-			   		 <td ng-if="isOwner==true"><button type="button" class="btn btn-success" a ng-click="requestHandler(0,0,q.data.email,q.key)">Accept</a></button><button type="button" class="btn btn-danger" a ng-click="requestHandler(1,0,q.data.email,q.key)" style="margin-left:10px">Decline</a></button></td>
-		      		</tr>
-				</table>
+				<ul class="member">
+						<li ng-repeat="q in waitingList">
+							<a href="#">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
+								<div class="hover-text">
+									<div class="line">
+									{{ q.data.userName }}
+									</div>
+									{{ q.data.email }}
+								</div>
+							</a>
+							<div ng-if="isOwner==true" class="action1">
+								<button type="button" class="btn btn-success btn-sm" a ng-click="requestHandler(0,0,q.data.email,q.key)">Accept</a></button>
+							</div>
+							<div ng-if="isOwner==true" class="action2">
+								<button type="button" class="btn btn-danger btn-sm" a ng-click="requestHandler(1,0,q.data.email,q.key)">Decline</a></button>
+							</div>	
+						</li>
+					</ul>
+				
+				<div ng-if="isOwner==true">
+				<div class="section">
+					<p>Member invite list
+						<button id="btn_admin" type="button" class="btn btn-primary btn-sm" ng-click="inviteForm()" style="margin-left:10px;">Add member</button>
+					</p>
+				</div>
+				<ul class="member">
+						<li ng-repeat="q in inviteList">
+							<a href="#">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
+								<div class="hover-text">
+									<div class="line">
+									{{ q.data.userName }}
+									</div>
+									{{ q.data.email }}
+								</div>
+							</a>
+							<div ng-if="isOwner==true" class="action1">
+								<button type="button" class="btn btn-danger btn-sm" a ng-click="inviteHandler(1,q.key,q.data.email)">Delete</a></button>
+							</div>
+						</li>
+					</ul>
+				
+				<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
+					Course Student List
+					<br>
+					Search:
+                        <input id="input_text" type="text" class="input" ng-model="searchStudent.data[searchBy]">
+						<select ng-model="searchBy">
+							<option value="$">All</option>
+							<option value="name">Name</option>
+							<option value="email">Email</option>
+						</select>   
+                        <br>
+					
+					
+					<div ng-repeat="q in studentList | filter:searchStudent">
+						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button></li>
+						<br>
+
+		      		</div>
+					
+					You may looking for:
+					<div ng-repeat="p in recommendStudentList">
+						<li>
+						{{ p.data.userName }}{{ p.data.email }}<a href="userInfo.html?u={{p.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button>
+						<br>
+						<div ng-repeat="k in p.data.sameTags">
+						Tags:{{k}}
+						</div>
+						</li>
+						<br>
+
+		      		</div>
+					
+				</div>
+				
+				</div>
     
 			</div>
 			</div>
@@ -138,7 +261,7 @@
           
 				<div id="con1">
 					<label>Title </label> 
-					<input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20" >
+					<input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20" style="text-align: center;">
 				</div>
 				<div id="con2">
 					<label>Description</label>
@@ -151,10 +274,32 @@
 				<input type="file" id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
 				<img src="{{currCourse.image}}" id="base64PicURL" width="500px">
 				<span id="base64Name"></span>
-				<a id="removeURL" ng-click="removeImg()">Remove</a>
+				<button type="button" class="btn btn-primary btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>	
 				</div>
 			
-				<input type="submit" value="Submit" ng-click="editCourse()">
+				<input type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()">
+				<br>
+				
+				<label>Team details</label>
+				<br>
+				<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()">loadTeamFormingDetail</a></button>	
+					<br>
+					Team:
+					<br>
+					<div ng-repeat="q in existedTeam">
+					
+						<li>Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
+						<br>
+
+		      		</div>
+					
+					Non team students:
+					<br>
+					<div ng-repeat="q in studentList">
+						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
+						<br>
+		      		</div>
+					
 			</div>
 		</div>
 	</div>

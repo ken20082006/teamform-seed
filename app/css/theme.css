@@ -6,7 +6,14 @@
 
  body {
     overflow-x: hidden;
+    background-image: url("../image/bg.jpg");
  }
+
+.section{
+    border-bottom: 1px dotted grey;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
 
 /* Toggle Styles */
 
@@ -16,7 +23,6 @@
 	color:#FFF;
 	border-radius: 0px 0px 4px 0px;
 }
-
 
 #wrapper {
     padding-left: 0;

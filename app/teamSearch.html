@@ -52,12 +52,16 @@
 	
 	<!-- global function -->
 	<script src="js/global.js"></script>
-	
+	<script src="js/teamSearch.js"></script>
+	<script src="js/recommend.js"></script>
 	
 	
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="css/dash.css">
+	<link href="css/dash.css" rel="stylesheet" type="text/css">
+	<link href="css/rightNavBar.css" rel="stylesheet" type="text/css">
+	<link href="css/inputStyle.css" rel="stylesheet" type="text/css">
+
 <body>
 <div ng-controller="dashBoardCtrl">
 
@@ -69,6 +73,7 @@
 		<div ng-include="'navbar.html'"></div>
 		</div>
         <!-- Page Content -->
+		
 		<div class="row content" ng-controller="teamSearchCtrl">
 		<div class="heading"><h1>Team Searching Panel</h1></div>
 		<div id="teamForm" style="display:none; width:500px; padding: 0px;" class="fancybox">
@@ -91,55 +96,50 @@
                   <div class="col-md-12" ng-controller="teamSearchCtrl">
                      
                      <div class="text-center">
-                        <h1>{{currCourse.title}}Team Search</h1>
-                        <p>Search the team by <span ng-if="searchBy!='$'">{{searchBy}}</span><span ng-if="searchBy=='$'">All</span></p>
+                        <h1>
+							{{currCourse.title}} 
+							<br>
+							Team Search
+						</h1>
                      </div>
-
-                     <br >
-
                      <div class="text-center">
-
-                        <input id="input_text" type="text" class="input-lg" ng-model="searchTeam.data[searchBy]">
+						<span class="input input--makiko">
+							<input class="input__field input__field--makiko" type="text" id="Search" ng-model="searchTeam.data[searchBy]">
+							<label class="input__label input__label--makiko" for="Search">
+								<span class="input__label-content input__label-content--makiko">
+									Search team by <span ng-if="searchBy!='$'">{{searchBy}}</span><span ng-if="searchBy=='$'">All</span
+								</span>
+							</label>
+						</span>
 						<select ng-model="searchBy">
 							<option value="$">All</option>
 							<option value="name">Name</option>
 							<option value="description">Description</option>
-						</select>   
+						</select>
                         <br>
                         <em>Enter a name (e.g. COMP3111-L1, COMP3111-L2 or COMP3111H) to join the team</em>
                          <br><br>
 						<div>
-                           
-                           <button id="btn_admin" type="button" class="btn btn-primary" >random team</button>
-                          
-
-
-                           <button id="btn_leader" type="button" class="btn btn-primary" >recommend team</button>
-                             <button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create team</button>
-                          
-
-
-						</div>
-                        
+                     		<button id="btn_admin" type="button" class="btn btn-primary" >random team</button>
+                        	<button id="btn_leader" type="button" class="btn btn-primary" >recommend team</button>
+                        	<button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create team</button>
+						</div>                        
                      </div>
 					
 						<div class="row" style="margin: 20px;">
 							<div ng-repeat="q in existedTeam | filter:searchTeam">
-				
 								<div class="col-lg-3 col-md-6">
-							
 									<div class="panel">
-										<div class="panel-heading"  style="background:#eee;color:#fff">
+										<a href="teamInfo.html?t={{q.key}}" target="_blank"><div class="panel-heading"  style="background:#eee;color:#fff">
 											<div class="row">
 													<div class="huge t_title">{{q.data.name}}	</div>
 											</div>
-				
 										</div>
 										<div class="row" style="min-height:100px;">
 											<div class="col-xs-9 ">
 												<div>{{q.data.description}}	</div>
 											</div>
-										</div>
+										</div></a>
 										<span ng-if="q.joined==false">
 											<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
 												<div class="panel-footer">
@@ -162,31 +162,99 @@
 								</div>
 
 							</div>
+
 						</div>
-																 
+														 
 					
 					 
                   </div>
                </div>
             </div>
+
+			<div id="right-sidebar"> 
+				<div class="invite">
+					<h3 class="section">Invite list</h3>
+					<div ng-repeat="q in inviteRequest" >
+						<table>
+							<tr><td style="font-weight:bold;">You are invited to join {{q.data.name}}</td></tr>
+							<tr><td>Team owner : {{q.data.leaderID}}</td></tr>
+							<tr><td><button ng-click="inviteHandler(0,q.key)">Accept</button><button  ng-click="inviteHandler(1,q.key)">Decline</button></td></tr>
+						</table>
+					</div>
+				</div>	
+				<div class="recommend" ng-controller="recommendCtrl">
+					<h3 class="section">Recommendation List</h3>
+					<div ng-repeat="q in teamList">
+					<div style="background:#eee;margin-top:5px;">
+					Name:<a href="teamInfo.html?t={{q.key}}" target="_blank">{{q.name}}</a><br>
+					Match tags:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
+					<span ng-if="q.joined==false">
+						<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
+								<span>Join request</span>
+						</a>
+					</span>
+					<span ng-if="q.joined==true">
+						<a style="cursor: pointer;"  ng-click="removeRequest($index,q.key)">	
+								<span>delete request</span>
+						</a>
+					</span>
+					</div>
+						
+					</div>
+				</div>
+				
+			</div>
+			
          </div>
+		 
       
 		
 		
        
         <!-- /#page-content-wrapper -->
-
+		
     </div>
     
 	<!-- /#wrapper -->
-<!-- jQuery -->
-    
-
-
-
+	<!-- jQuery -->
     <!-- Menu Toggle Script -->
-    
-	
 
+	<!-- Search Animation Script -->
+	<script src="js/searchAnimation.js"></script>
+    <script>
+			(function() {
+				// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+				if (!String.prototype.trim) {
+					(function() {
+						// Make sure we trim BOM and NBSP
+						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+						String.prototype.trim = function() {
+							return this.replace(rtrim, '');
+						};
+					})();
+				}
+
+				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+					// in case the input is already filled..
+					if( inputEl.value.trim() !== '' ) {
+						classie.add( inputEl.parentNode, 'input--filled' );
+					}
+
+					// events:
+					inputEl.addEventListener( 'focus', onInputFocus );
+					inputEl.addEventListener( 'blur', onInputBlur );
+				} );
+
+				function onInputFocus( ev ) {
+					classie.add( ev.target.parentNode, 'input--filled' );
+				}
+
+				function onInputBlur( ev ) {
+					if( ev.target.value.trim() === '' ) {
+						classie.remove( ev.target.parentNode, 'input--filled' );
+					}
+				}
+			})();
+		</script>
 </body>
 </html>

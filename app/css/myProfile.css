@@ -4,7 +4,7 @@
     -webkit-border-image: url(../image/border.png) 30 stretch; /* Safari 3.1-5 */
     -o-border-image: url(../image/border.png) 30 stretch; /* Opera 11-12.1 */
     border-image: url(../image/border.png) 30 stretch;
-  
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 p{
@@ -13,11 +13,27 @@ p{
     text-decoration: underline;
 }
 
+a, a:focus, a:hover{
+    cursor:pointer;
+    text-decoration:none;
+}
 label{
     padding-right:20px;
     padding-bottom: 10px;
 }
 
+#addedTags{
+    display:inline-flex;
+    word-wrap: break-word;
+    overflow: hidden; 
+}
+
+.tag{
+    background:#eee;
+    margin-left:-2em;
+    display:inline;
+    word-break: break-all;
+}
 .heading h1{
     font-size: 1.8em;
     line-height: 1.5;
