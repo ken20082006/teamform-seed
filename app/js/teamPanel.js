@@ -96,19 +96,22 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 				var courseData=data.val();
 				
 				var teamList = courseData.team;
-				
-				for(var i=0;i<teamList.length;i++)
+				if(typeof(teamList)!="undefined")
 				{
-					firebase.database().ref("Team/"+teamList[i]).once('value', function(data) {
-						var teamData=data.val();
-						var tempTeam=[];
-						tempTeam.name=teamData.name;
-						tempTeam.key=teamList[i];
-						tempTeam.member=teamData.member;
-						$scope.existedTeam.push(tempTeam);
-						
-					})
+					for(var i=0;i<teamList.length;i++)
+					{
+						firebase.database().ref("Team/"+teamList[i]).once('value', function(data) {
+							var teamData=data.val();
+							var tempTeam=[];
+							tempTeam.name=teamData.name;
+							tempTeam.key=teamList[i];
+							tempTeam.member=teamData.member;
+							$scope.existedTeam.push(tempTeam);
+							
+						})
+					}
 				}
+
 				console.log($scope.existedTeam);
 			});	
 			
