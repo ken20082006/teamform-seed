@@ -83,7 +83,7 @@
         
 				<div class="section">
 					<p>Team info
-						<button ng-if="isOwner==true&&isEdit==false" ng-click="editInfoForm()" class="btn btn-primary btn-sm" style="margin-left:10px;">Edit Team Info</button>
+						<button ng-if="isOwner==true&&isEdit==false&&currCourse.random==false" ng-click="editInfoForm()" class="btn btn-primary btn-sm" style="margin-left:10px;">Edit Team Info</button>
 					</p>
 				</div>
         		<div id="cont1">
@@ -94,7 +94,7 @@
 						<tr><td>Team name:</td><td>{{tName}}</td></tr>
 						<tr><td>Max size:</td><td>{{currCourse.max}}</td></tr>
 					</table>
-					<label>Added Tags:</label>
+					<label ng-if="currCourse.random==false">Added Tags:</label>
 				<div id="addedTags" ng-repeat="q in tTag">
 					<ul>
 						<li class="tag"><i class="fa fa-tag" aria-hidden="true"></i> {{q}}
@@ -141,9 +141,9 @@
 				</div>
 
 				<br>
-				<div ng-if="isOwner==true"><p style="font-weight:bold;">Team role: Team leader</p>
+				<div ng-if="isOwner==true&&currCourse.random==false"><p style="font-weight:bold;">Team role: Team leader</p>
 				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:10px;">Delete Team</a></button></div>
-				<div ng-if="isOwner==false"><p style="font-weight:bold;">Team role: Team member</p>
+				<div ng-if="isOwner==false&&currCourse.random==false"><p style="font-weight:bold;">Team role: Team member</p>
 				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:10px;">Quit Team</a></button></div>	
        	 		</div>
 				<br>
@@ -170,10 +170,10 @@
 						</li>
 					</ul>
 
-				<div class="section">
+				<div class="section" ng-if="currCourse.random==false">
 					<p>Member waiting list</p>
 				</div>
-				<ul class="member">
+				<ul class="member" ng-if="currCourse.random==false">
 						<li ng-repeat="q in waitingList">
 							<a href="#">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
@@ -194,12 +194,12 @@
 					</ul>
 				
 				<div ng-if="isOwner==true">
-				<div class="section">
+				<div class="section" ng-if="currCourse.random==false">
 					<p>Member invite list
 						<button id="btn_admin" type="button" class="btn btn-primary btn-sm" ng-click="inviteForm()" style="margin-left:10px;">Add member</button>
 					</p>
 				</div>
-				<ul class="member">
+				<ul class="member" ng-if="currCourse.random==false">
 						<li ng-repeat="q in inviteList">
 							<a href="#">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
@@ -283,8 +283,10 @@
 				<label>Team details</label>
 				<br>
 				<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()">loadTeamFormingDetail</a></button>	
+				<span ng-if="currCourse.isFormed==false&&currCourse.random==true">
 				<span ng-controller="autoTeamFormingCtrl">
-				<button type="button" class="btn btn-primary btn-sm" ng-click="runAutoTeamForming(0)">Random</a></button>	
+				<button type="button" class="btn btn-primary btn-sm" ng-click="runAutoTeamForming(0)" id="randomBtn">Random</a></button>	
+				</span>
 				</span>
 					<br>
 					Team:
