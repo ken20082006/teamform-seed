@@ -100,3 +100,9 @@ ul.member li:hover .action1,
 ul.member li:hover .action2{
     opacity: 1;
 }
+
+/* load Team Forming Details*/
+
+.teamformingDetail{
+    list-style-type: none;
+}
