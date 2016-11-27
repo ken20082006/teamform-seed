@@ -107,22 +107,21 @@
 							<input class="input__field input__field--makiko" type="text" id="Search" ng-model="searchTeam.data[searchBy]">
 							<label class="input__label input__label--makiko" for="Search">
 								<span class="input__label-content input__label-content--makiko">
-									Search team by <span ng-if="searchBy!='$'">{{searchBy}}</span><span ng-if="searchBy=='$'">All</span
+									Search team <span ng-if="searchBy!='$'">by {{searchBy}}</span>
 								</span>
 							</label>
 						</span>
-						<select ng-model="searchBy">
-							<option value="$">All</option>
-							<option value="name">Name</option>
-							<option value="description">Description</option>
-						</select>
+						<br>
+						<label><input type="radio" ng-model="searchBy" value="$">All</label>
+						<label><input type="radio" ng-model="searchBy" value="name" style="margin-left:10px;">Name</label>
+						<label><input type="radio" ng-model="searchBy" value="description" style="margin-left:10px;">Description</label>
                         <br>
-                        <em>Enter a name (e.g. COMP3111-L1, COMP3111-L2 or COMP3111H) to join the team</em>
+                        <em>Click on the team name (e.g. Team 1 / Team 9000 / Team Combined) to send your join request to the team leader</em>
                          <br><br>
+						 <em>Or</em>
+						 <br><br>
 						<div>
-                     		<button id="btn_admin" type="button" class="btn btn-primary" >random team</button>
-                        	<button id="btn_leader" type="button" class="btn btn-primary" >recommend team</button>
-                        	<button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create team</button>
+                        	<button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create your own team</button>
 						</div>                        
                      </div>
 					
@@ -187,7 +186,7 @@
 					<div ng-repeat="q in teamList">
 					<div style="background:#eee;margin-top:5px;">
 					Name:<a href="teamInfo.html?t={{q.key}}" target="_blank">{{q.name}}</a><br>
-					Match tags:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
+					Looking for:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
 					<span ng-if="q.joined==false">
 						<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
 								<span>Join request</span>
