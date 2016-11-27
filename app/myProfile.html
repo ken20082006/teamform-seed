@@ -74,7 +74,9 @@
         <div class="heading"><h1>My Profile</h1></div>
 		<div class="profile" ng-controller="myProfileCtrl">
 			<div class="section">Profile Picture</div>
-			<div style="width:150px;height:150px; background-image: url('{{userIcon}}');  background-repeat: no-repeat;background-position: center;"></div><input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)"><a id="removeURL"  ng-click="removeImg()">Delete</a>
+			<div style="width:150px;height:150px; background-image: url('{{userIcon}}');  background-repeat: no-repeat;background-position: center;"></div>
+			<input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
+			<button id="removeURL" class="btn btn-danger btn-sm" ng-click="removeImg()" style="margin:1em 0;">Remove</button>
 			<div class="section">General</div>
 			<table>
                 <tbody>
