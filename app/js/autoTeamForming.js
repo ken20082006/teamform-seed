@@ -27,53 +27,137 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		}
 
 		
-		//function to call the autoTeamForming
-		$scope.runAutoTeamForming=function(operation)//0 is random
+		$scope.autoTrigger=function()
 		{
-			$scope.ckey=$scope.gup('c', window.location.href);
+			setTimeout(function()
+			{
+				
+				var date1 = new Date();	
+				var oneWeekAgo=date1;
+				oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+				var dd = oneWeekAgo.getDate();
+				var mm = oneWeekAgo.getMonth()+1; //January is 0!
+				var yyyy = oneWeekAgo.getFullYear();
+				if(dd<10) {
+					dd='0'+dd
+				} 
+				if(mm<10) {
+					mm='0'+mm
+				} 
+				oneWeekAgo = dd+'/'+mm+'/'+yyyy;
+				console.log("oneWeekAgo",oneWeekAgo);
+				
+				var date2 = new Date();
+				var oneDayAgo=date2;
+				oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+				var dd = oneDayAgo.getDate();
+				var mm = oneDayAgo.getMonth()+1; //January is 0!
+				var yyyy = oneDayAgo.getFullYear();
+				if(dd<10) {
+					dd='0'+dd
+				} 
+				if(mm<10) {
+					mm='0'+mm
+				} 
+				oneDayAgo = dd+'/'+mm+'/'+yyyy;
+				console.log("oneDayAgo",oneDayAgo);
+
+				for(i=0;i<$scope.courseFB.length;i++)
+				{
+					if($scope.courseFB[i].date==oneDayAgo||$scope.courseFB[i].date==oneWeekAgo)
+					{
+						$scope.runAutoTeamForming(1,$scope.courseFB[i].$id)
+					}
+					
+					//console.log($scope.courseFB[i].date);
+					//console.log($scope.courseFB[i].$id);
+				}
+					//var key='-KXWK7keT4Z6lvChxGko';
+					//$scope.runAutoTeamForming(1,key)
+			},5000);		
+
+
+
+		}
+		
+		//function to call the autoTeamForming
+		$scope.runAutoTeamForming=function(operation,key)//0 is random
+		{
+			if(typeof(key)=="undefined")
+			{
+				$scope.ckey=$scope.gup('c', window.location.href);
+			}
+			else
+			{
+				$scope.ckey=key;
+			}
 			//load studentList to $scope
-			$scope.loadCourseData($scope.ckey);
-			
-			//start teamforming
-			$scope.autoTeamForming($scope.studentList,$scope.existedTeam,$scope.maxTeamMember,$scope.minTeamMember,operation);
+			$scope.loadCourseData($scope.ckey,operation);
+
 		}
 		
 		//load studentList
-		$scope.userObjectArrayPush=function(email,array)
+		$scope.userObjectArrayPush=function(email,array,operation)
 		{
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 			{
-				console.log(data.val());
-				if(typeof(data.val().team)=="undefined")
+				//console.log(data.val());
+				if(operation==0)
 				{
 					array.push({"key":data.getKey(),"data":data.val()});
+				}
+				else
+				{
+					if(typeof(data.val().team)=="undefined")
+					{
+						array.push({"key":data.getKey(),"data":data.val()});
+					}
+					if(typeof(data.val().team)!="undefined"&&data.val().team.hasOwnProperty($scope.ckey))
+					{
+						var pos=$scope.teamFB.$indexFor(data.val().team[$scope.ckey]);
+
+						var tmpData=$scope.teamFB[pos];
+						var userKey=data.getKey();
+						var userData=data.val();
+
+						firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
+							var courseData=data.val();
+							if(tmpData.member.length<courseData.min)
+							{
+								array.push({"key":userKey,"data":userData});
+							}
+							
+						});
+				
+					}
 				}
 			});
 				
 		}
 		
-		$scope.loadCourseData=function(key)
+		$scope.loadCourseData=function(key,operation)
 		{
 			firebase.database().ref("courses/"+key).once('value', function(data) {
 				var tmp=[];
 				var courseData=data.val();
-				console.log("courseData",courseData);
+				//console.log("courseData",courseData);
 				
 				for(i=0;i<courseData.student.length;i++)
 				{
 					//get the std without team
-					$scope.userObjectArrayPush(courseData.student[i],tmp);
+					$scope.userObjectArrayPush(courseData.student[i],tmp,operation);
 					
 				}
+
 				$scope.studentList=tmp;	
 				
-				console.log($scope.studentList);
+				//console.log($scope.studentList);
 				
 				$scope.maxTeamMember=courseData.max;
 				$scope.minTeamMember=courseData.min;
 
 				var teamList = courseData.team;
-				console.log("teamList",teamList);
+				//console.log("teamList",teamList);
 				if(typeof(teamList)!="undefined")
 				{
 					for(var i=0;i<teamList.length;i++)
@@ -84,16 +168,21 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 							{
 								var tempTeam=[];
 								tempTeam.name=teamData.name;
-								tempTeam.key=teamList[i];
+							//	tempTeam.key=teamList[i];
+								tempTeam.key=data.getKey();
 								tempTeam.member=teamData.member;
 								$scope.existedTeam.push(tempTeam);
-								console.log("$scope.existedTeam",$scope.existedTeam);
+							//	console.log("$scope.existedTeam",$scope.existedTeam);
 							}
 						})
 					}
 				}
 
 				
+			}).then(function(){
+											
+				//start teamforming
+				$scope.autoTeamForming($scope.studentList,$scope.existedTeam,$scope.maxTeamMember,$scope.minTeamMember,operation);
 			});	
 		}
 		
@@ -117,10 +206,11 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 			var tempTeamList = [];
 			//avg number of the member
 			var avgTeamMemberNumber = Math.ceil((maxTeamMember+minTeamMember)/2);
-			
-			
+
+		
 			//existedTeam case
-			console.log("existedTeam.length",existedTeam.length);
+			//console.log("existedTeam.length",existedTeam.length);
+			//console.log(existedTeam);
 			if(existedTeam.length>0)
 			{
 				
@@ -134,8 +224,20 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 					tempTeam.memberNumber = existedTeam[i].member.length;
 					tempTeam.teamMember = [];
 					tempTeamList.push(tempTeam);
+					for(j=0;j<existedTeam[i].member.length;j++)
+					{
+						for(k=0;k<studentList.length;k++)
+						{
+							if(studentList[k].data.email==existedTeam[i].member[j])
+							{
+								studentList.splice(k, 1);
+							}
+						}
+						
+					}
 				}
-				console.log(tempTeamList);
+				
+
 				
 				var existedTeamNumber=existedTeam.length;
 				
@@ -163,7 +265,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 				
 			}
 			
-			console.log(studentList.length);
+			//console.log(studentList.length);
 			//if reminding student can form one more team
 			if(studentList.length>=minTeamMember)
 			{
@@ -257,7 +359,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		$scope.autoTeamResultProcess=function(formingResult)
 		{
 			$scope.convertkeyToEmail(formingResult);
-			console.log(formingResult);
+			console.log("formingResult",formingResult);
 		}
 									
 
