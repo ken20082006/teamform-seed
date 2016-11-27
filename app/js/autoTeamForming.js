@@ -43,7 +43,11 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		{
 			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
 			{
-				array.push({"key":data.getKey(),"data":data.val()});
+				console.log(data.val());
+				if(typeof(data.val().team)=="undefined")
+				{
+					array.push({"key":data.getKey(),"data":data.val()});
+				}
 			});
 				
 		}
@@ -57,10 +61,14 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 				
 				for(i=0;i<courseData.student.length;i++)
 				{
+					//get the std without team
 					$scope.userObjectArrayPush(courseData.student[i],tmp);
+					
 				}
 				$scope.studentList=tmp;	
-
+				
+				console.log($scope.studentList);
+				
 				$scope.maxTeamMember=courseData.max;
 				$scope.minTeamMember=courseData.min;
 
@@ -232,10 +240,6 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 					
 			}
 			
-				
-				console.log(formingResult);
-				console.log(unteamedStudent);
-		
 				if(operation==0)
 				{
 					$scope.randomTeamResultProcess(formingResult);
