@@ -54,7 +54,6 @@
 	<script src="js/userInfo.js"></script>
 	
 	
-	
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/dash.css">
@@ -70,17 +69,29 @@
 		</div>
         <!-- Page Content -->
 		<div class="row content">
-		<div class="heading"><h1>Team Searching Panel</h1></div>
-
+		<div class="heading"><h1>About Me</h1></div>
+        <div  ng-controller="userInfoCtrl">
+            <div style="padding:0 20px;">
+                <div style="font-size:30px;font-weight:300;padding-bottom:10px;">[NAME]</div>
+                <div style="width:150px;height:150px; background-image: url('image/usericon.png');  background-repeat: no-repeat;background-position: center;border-radius:10px;"></div>
+                </br></br>
+                <div class="section" style="margin-left:0">Info</div>
+            <style>tr>td{line-height: 2em}tr>td:nth-child(1){padding-right: 5px;}tr>td:nth-child(2){padding-right: 15px;}</style>
+                <table style="">
+                        <tr><td>Email</td><td>:</td><td>[Email]]</td></tr>
+						<tr><td>Tags</td><td>:</td><td>[Tags]</td></tr>
+                        <tr><td>Studying</td><td>:</td><td>[COURSES]</td></tr>
+                </table>
+                </br></br>
+                <div class="section" style="margin-left:0">Description</div>
+                <p>[Description]</p>
+	       {{userData}}
+            </div>
+		</div>
 		
        </div>
         <!-- /#page-content-wrapper -->
-		<div  ng-controller="userInfoCtrl">
-	{{userData}}
 
-		
-		
-		</div>
     </div>
     
 	<!-- /#wrapper -->
