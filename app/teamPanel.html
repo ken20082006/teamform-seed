@@ -308,7 +308,7 @@
 					<br>
 					<div ng-repeat="q in existedTeam">
 					
-						<li>Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
+						<li class="teamformingDetail">Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
 						<br>
 
 		      		</div>
@@ -316,7 +316,7 @@
 					Non team students:
 					<br>
 					<div ng-repeat="q in studentList">
-						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
+						<li class="teamformingDetail">{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
 						<br>
 		      		</div>
 					
