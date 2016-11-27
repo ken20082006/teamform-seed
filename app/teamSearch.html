@@ -120,8 +120,6 @@
                         <em>Enter a name (e.g. COMP3111-L1, COMP3111-L2 or COMP3111H) to join the team</em>
                          <br><br>
 						<div>
-                     		<button id="btn_admin" type="button" class="btn btn-primary" >random team</button>
-                        	<button id="btn_leader" type="button" class="btn btn-primary" >recommend team</button>
                         	<button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create team</button>
 						</div>                        
                      </div>
@@ -187,7 +185,7 @@
 					<div ng-repeat="q in teamList">
 					<div style="background:#eee;margin-top:5px;">
 					Name:<a href="teamInfo.html?t={{q.key}}" target="_blank">{{q.name}}</a><br>
-					Match tags:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
+					Looking for:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
 					<span ng-if="q.joined==false">
 						<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
 								<span>Join request</span>

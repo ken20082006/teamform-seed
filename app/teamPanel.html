@@ -154,7 +154,7 @@
 				<div id="cont2">
 					<ul class="member">
 						<li ng-repeat="q in teamMember">
-							<a href="#">
+							<a href="userInfo.html?u={{q.key}}" target="_blank">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
 									<div class="line">
@@ -175,7 +175,7 @@
 				</div>
 				<ul class="member" ng-if="currCourse.random==false">
 						<li ng-repeat="q in waitingList">
-							<a href="#">
+							<a href="userInfo.html?u={{q.key}}" target="_blank">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
 									<div class="line">
@@ -201,7 +201,7 @@
 				</div>
 				<ul class="member" ng-if="currCourse.random==false">
 						<li ng-repeat="q in inviteList">
-							<a href="#">
+							<a href="userInfo.html?u={{q.key}}" target="_blank">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
 									<div class="line">
