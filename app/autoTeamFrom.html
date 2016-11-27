@@ -27,9 +27,28 @@
 	  };
 	  firebase.initializeApp(config);
 	  
-	  $(document).ready(function(){
-		$('#autoTrigger').click();
-	  });
+	function gup( name, url ) {
+		if (!url) url = location.href;
+		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+		var regexS = "[\\?&]"+name+"=([^&#]*)";
+		var regex = new RegExp( regexS );
+		var results = regex.exec( url );
+		return results == null ? null : results[1];
+	}
+	  
+	$(document).ready(function(){
+		var ckey=gup('c', window.location.href);
+	
+		if(ckey==null||ckey=="")
+		{
+			$('#autoTrigger').click();		
+		}
+		else
+		{
+			$('#courseKey').val(ckey);
+			$('#setCourseToAuto').click();
+		}
+	});
 
 	  
 	</script>
@@ -53,6 +72,8 @@
 
 <div ng-controller="autoTeamFormingCtrl">
 <a ng-click="autoTrigger()" style="display:none;" id="autoTrigger"></a>
+<a ng-click="setCourseToAuto()" style="display:none;" id="setCourseToAuto"></a>
+<input type="hidden" id="courseKey">
 
 </div>
 	

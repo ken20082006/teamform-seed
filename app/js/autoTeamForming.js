@@ -15,7 +15,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		$scope.maxTeamMember;
 		$scope.minTeamMember;
 		$scope.existedTeam =[];
-
+		$scope.pageList=[];
 		
 		$scope.gup=function( name, url ) {
 			if (!url) url = location.href;
@@ -64,33 +64,61 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 
 				for(i=0;i<$scope.courseFB.length;i++)
 				{
-					if($scope.courseFB[i].date==oneDayAgo||$scope.courseFB[i].date==oneWeekAgo)
-					{
-						$scope.runAutoTeamForming(1,$scope.courseFB[i].$id)
-					}
-					
+
+						console.log("data",$scope.courseFB[i].date);
+						if($scope.courseFB[i].date==oneDayAgo||$scope.courseFB[i].date==oneWeekAgo)
+						{
+							//$scope.runAutoTeamForming(1,$scope.courseFB[i].$id)
+							//window.open("autoTeamFrom.html?c="+$scope.courseFB[i].$id);
+								$scope.pageList.push("autoTeamFrom.html?c="+$scope.courseFB[i].$id);
+						}
+
 					//console.log($scope.courseFB[i].date);
 					//console.log($scope.courseFB[i].$id);
 				}
-					//var key='-KXWK7keT4Z6lvChxGko';
-					//$scope.runAutoTeamForming(1,key)
+				$scope.loadPageHandler(0);
+
+
 			},5000);		
 
 
 
 		}
 		
-		//function to call the autoTeamForming
-		$scope.runAutoTeamForming=function(operation,key)//0 is random
+		$scope.loadPageHandler=function(i)
 		{
-			if(typeof(key)=="undefined")
+			setTimeout(function()
 			{
+				if(i<$scope.pageList.length)
+				{
+					window.open($scope.pageList[i]);
+					$scope.loadPageHandler(i+1);
+				}
+			},5000*i);
+	
+		}
+		
+		$scope.setCourseToAuto=function()
+		{
+			var tmpKey=$('#courseKey').val();
+			setTimeout(function()
+			{
+				$scope.runAutoTeamForming(1);
+			},5000);
+			
+		}
+		
+		//function to call the autoTeamForming
+		$scope.runAutoTeamForming=function(operation)//0 is random
+		{
+			//if(typeof(key)=="undefined")
+			//{
 				$scope.ckey=$scope.gup('c', window.location.href);
-			}
-			else
-			{
-				$scope.ckey=key;
-			}
+			//}
+			//else
+			//{
+				//$scope.ckey=key;
+		//	}
 			//load studentList to $scope
 			$scope.loadCourseData($scope.ckey,operation);
 
@@ -108,18 +136,16 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 				}
 				else
 				{
-					if(typeof(data.val().team)=="undefined")
+					if(typeof(data.val().team)=="undefined"||typeof(data.val().team)!="undefined"&&!data.val().team.hasOwnProperty($scope.ckey))
 					{
 						array.push({"key":data.getKey(),"data":data.val()});
 					}
 					if(typeof(data.val().team)!="undefined"&&data.val().team.hasOwnProperty($scope.ckey))
 					{
 						var pos=$scope.teamFB.$indexFor(data.val().team[$scope.ckey]);
-
 						var tmpData=$scope.teamFB[pos];
 						var userKey=data.getKey();
 						var userData=data.val();
-
 						firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
 							var courseData=data.val();
 							if(tmpData.member.length<courseData.min)
@@ -127,8 +153,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 								array.push({"key":userKey,"data":userData});
 							}
 							
-						});
-				
+						});		
 					}
 				}
 			});
@@ -151,13 +176,11 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 
 				$scope.studentList=tmp;	
 				
-				//console.log($scope.studentList);
 				
 				$scope.maxTeamMember=courseData.max;
 				$scope.minTeamMember=courseData.min;
 
 				var teamList = courseData.team;
-				//console.log("teamList",teamList);
 				if(typeof(teamList)!="undefined")
 				{
 					for(var i=0;i<teamList.length;i++)
@@ -168,11 +191,9 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 							{
 								var tempTeam=[];
 								tempTeam.name=teamData.name;
-							//	tempTeam.key=teamList[i];
 								tempTeam.key=data.getKey();
 								tempTeam.member=teamData.member;
 								$scope.existedTeam.push(tempTeam);
-							//	console.log("$scope.existedTeam",$scope.existedTeam);
 							}
 						})
 					}
@@ -200,7 +221,10 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		//maxTeamMember,minTeamMember: max min team member of the course
 		$scope.autoTeamForming=function(studentList,existedTeam,maxTeamMember,minTeamMember,operation)
 		{
-			
+			for(i=0;i<studentList.length;i++)
+			{
+				console.log(studentList[i].data.email);
+			}
 			var formingResult = [];
 			var unteamedStudent	= [];
 			var tempTeamList = [];
@@ -359,10 +383,135 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		$scope.autoTeamResultProcess=function(formingResult)
 		{
 			$scope.convertkeyToEmail(formingResult);
-			console.log("formingResult",formingResult);
+		//	console.log("formingResult",formingResult);
+			var randomTeams=[];
+			var existTeams=[];
+			//console.log(formingResult[1][0].name);
+
+			for(i=0;i<formingResult.length;i++)
+			{
+				if(typeof(formingResult[i][0].key)=="undefined")
+				{
+					randomTeams.push(formingResult[i]);
+				}
+				else
+				{
+					existTeams.push(formingResult[i])
+				}
+			}
+		//	console.log("randomTeams",randomTeams);
+			//console.log("existTeams",existTeams);
+			if(randomTeams.length>0)
+			{
+				$scope.createTeams(randomTeams);	
+			}
+			if(existTeams.length>0)
+			{
+				$scope.updateExistedTeam(existTeams);
+			}
+			setTimeout(function()
+			{
+				firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
+					
+					var courseData=data.val();
+					for(i=0;i<courseData.team.length;i++)
+					{
+						$scope.deleteInviteRequestInTeam(courseData.team[i]);
+					}
+					for(i=0;i<courseData.student.length;i++)
+					{
+						$scope.deleteInviteRequestInUser(courseData.student[i]);
+					}
+				});
+							setTimeout(function(){close();},10000);
+			},8000);
+
+		}
+		
+		$scope.deleteInviteRequestInTeam=function(key)
+		{
+			
+			firebase.database().ref("Team/"+key).once('value', function(data) {
+				var teamData=data.val();
+				if(typeof(teamData.request)!="undefined")
+				{
+					delete teamData['request'];
+				}
+				if(typeof(teamData.invite)!="undefined")
+				{
+					delete teamData['invite'];
+				}
+				firebase.database().ref("Team/"+data.getKey()).set(teamData);
+			});
+			
+		}
+		$scope.deleteInviteRequestInUser=function(key)
+		{
+			userAccount.orderByChild("email").equalTo(key).on("child_added", function(data){
+				var userData=data.val();
+				if(typeof(userData.request)!="undefined"&&userData.request.hasOwnProperty($scope.ckey))
+				{
+					delete userData.request[$scope.ckey];
+					if(jQuery.isEmptyObject(userData.request))
+					{
+						delete userData["request"];
+					}
+				}
+				if(typeof(userData.invite)!="undefined"&&userData.invite.hasOwnProperty($scope.ckey))
+				{
+					delete userData.invite[$scope.ckey];
+					if(jQuery.isEmptyObject(userData.invite))
+					{
+						delete userData["invite"];
+					}
+				}
+				firebase.database().ref("UserAccount/"+data.getKey()).set(userData);
+			});
+			
+			
 		}
 									
+		$scope.updateExistedTeam=function(formingResult)
+		{
+			for(i=0;i<formingResult.length;i++)
+			{
+				var teamKey=formingResult[i][0].key;
+				firebase.database().ref("Team/"+teamKey).once('value', function(data) {
+					var teamData=data.val();
+					var key=data.getKey();
+					for(j=0;j<formingResult[i][0].teamMember.length;j++)
+					{
+						teamData.member.push(formingResult[i][0].teamMember[j]);
 
+					}
+					firebase.database().ref("Team/"+data.getKey()).set(teamData).then(function()
+					{	
+						firebase.database().ref("Team/"+data.getKey()).once('value', function(data) {
+							var teamData=data.val();
+							//console.log("teamData.member",teamData.member);
+							for(j=0;j<teamData.member.length;j++)
+							{
+								if(teamData.member[j]!=teamData.leaderID)
+								{
+									userAccount.orderByChild("email").equalTo(teamData.member[j]).on("child_added", function(data){
+										var userData=data.val();
+										if(typeof(userData.team)=="undefined")
+										{
+											userData.team={};
+										}
+										userData.team[$scope.ckey]=key;
+										firebase.database().ref("UserAccount/"+data.getKey()).set(userData);	
+									});
+								}							
+							}
+						});
+
+				
+
+					});	
+				});
+			}
+		}
 		
 		$scope.convertkeyToEmail=function(formingResult)
 		{
