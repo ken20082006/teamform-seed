@@ -58,6 +58,7 @@
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/dash.css">
+    <link href="css/teamPanel.css" rel="stylesheet" type="text/css">
 <body>
 <div ng-controller="dashBoardCtrl">
 
@@ -70,17 +71,59 @@
 		</div>
         <!-- Page Content -->
 		<div class="row content">
-		<div class="heading"><h1>Team Searching Panel</h1></div>
-
-		
-       </div>
+		<div class="heading"><h1>Team Info</h1></div>
+            <div  ng-controller="teamInfoCtrl">  
+                <div class="section">Team info</div>
+                <div class="cont">
+					<table class="teamInfo">
+                        <tr><td>Team Name</td><td>:</td><td>[team name]</td></tr>
+						<tr><td>Course Code</td><td>:</td><td>[course name]</td></tr>
+						<tr><td>Maximum Size</td><td>:</td><td>[max size]</td></tr>
+						<tr><td>Minimum Size</td><td>:</td><td>[min size]</td></tr>
+                        <tr><td><label style="font-weight:inherit">Added Tags</label></td>
+                            <td>:</td>
+                        <td>
+                            [tags]
+                            <div id="addedTags" ng-repeat="q in tTag">
+                                <ul>
+                                    <li class="tag"><i class="fa fa-tag" aria-hidden="true"></i> {{q}}
+                                    </li>
+                                </ul>
+                            </div>
+        				</td></tr>
+				    </table>
+                </div> 
+                <div class="section">About Us</div>
+                <div class="cont"><p>[CURCOURSE DESCRIPTION]</p></div>
+                <div class="cont"><div><button type="button" class="btn btn-success btn-sm" style="margin-top:5px;">Join Request</button></div>
+                    <div><button type="button" class="btn btn-danger btn-sm" style="margin-top:5px;">Cancel Request</button></div>
+                </div>
+                <div class="section">Team member</div>
+				<div class="cont">
+                    [MEMBER INFO + IMG]
+					<ul class="member">
+						<li ng-repeat="q in teamMember">
+							<a href="userInfo.html?u={{q.key}}" target="_blank">
+								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
+								<div class="hover-text">
+									<div class="line">
+									{{ q.data.userName }}
+									</div>
+									<span ng-if="tLeaderID==q.data.email" style="padding-left:15px;">Leader</span>
+									<span ng-if="tLeaderID!=q.data.email" style="padding-left:15px;">Member</span>
+								</div>
+							</a>
+							<div ng-if="isOwner==true" class="action1">
+								<button type="button" class="btn btn-danger btn-sm" a ng-click="deleteMember(0,q.data.email,q.key)">Kick out</a></button>
+							</div>
+						</li>
+					</ul>
+                </div>
+            {{teamData}}    
+            
+            </div>           
+		      </div>
         <!-- /#page-content-wrapper -->
-		<div  ng-controller="teamInfoCtrl">
-	{{teamData}}
-
-		
-		
-		</div>
     </div>
     
 	<!-- /#wrapper -->
