@@ -90,9 +90,9 @@
 					<div ng-if="isEdit==false">
 					<table class="teamInfo">
 						<tr><td>Course code:</td><td>{{currCourse.title}}</td></tr>
-						<tr><td>Role:</td><td>Student</td></tr>
 						<tr><td>Team name:</td><td>{{tName}}</td></tr>
 						<tr><td>Max size:</td><td>{{currCourse.max}}</td></tr>
+						<tr><td>Min size:</td><td>{{currCourse.min}}</td></tr>
 					</table>
 					<label ng-if="currCourse.random==false">Added Tags:</label>
 				<div id="addedTags" ng-repeat="q in tTag">
