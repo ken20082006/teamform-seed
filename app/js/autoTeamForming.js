@@ -15,7 +15,6 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 		$scope.maxTeamMember;
 		$scope.minTeamMember;
 		$scope.existedTeam =[];
-		$scope.map=[];
 
 		
 		$scope.gup=function( name, url ) {
@@ -66,6 +65,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 				$scope.minTeamMember=courseData.min;
 
 				var teamList = courseData.team;
+				console.log("teamList",teamList);
 				if(typeof(teamList)!="undefined")
 				{
 					for(var i=0;i<teamList.length;i++)
@@ -79,6 +79,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 								tempTeam.key=teamList[i];
 								tempTeam.member=teamData.member;
 								$scope.existedTeam.push(tempTeam);
+								console.log("$scope.existedTeam",$scope.existedTeam);
 							}
 						})
 					}
@@ -111,6 +112,7 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 			
 			
 			//existedTeam case
+			console.log("existedTeam.length",existedTeam.length);
 			if(existedTeam.length>0)
 			{
 				
@@ -239,12 +241,20 @@ app.controller("autoTeamFormingCtrl", function($scope,$rootScope,user,$firebaseA
 					$scope.randomTeamResultProcess(formingResult);
 					$('#randomBtn').hide();
 				}
+				else
+				{
+					$scope.autoTeamResultProcess(formingResult);
+				}
 				
 			
 		}
 		
 		
-		
+		$scope.autoTeamResultProcess=function(formingResult)
+		{
+			$scope.convertkeyToEmail(formingResult);
+			console.log(formingResult);
+		}
 									
 
 		
