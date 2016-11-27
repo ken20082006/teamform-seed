@@ -5,12 +5,6 @@
  */
 
 /* Global Styles */
-
-body {
-    background-image: url("../image/bg.jpg");
-}
-
-
 #wrapper {
 	padding-left: 0px;
 	margin-left: 0px;
@@ -20,11 +14,6 @@ body {
     width: 100%;
     padding: 0;
     background-color: #fff;
-}
-
-.huge {
-    font-size: 50px;
-    line-height: normal;
 }
 
 @media(min-width:768px) {
@@ -224,49 +213,13 @@ ul.alert-dropdown {
 
 /*-fai change*/
 
-.content{
-    margin: 0 50px 20px 50px;
+.bullet{
+    font-weight: 400;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-.heading h1{
-    font-size: 1.8em;
-    line-height: 1.5;
-    font-weight: 200;
-    padding: 5px;
-    padding-left: 20px;
-    width: 100%;
-    margin-top: -30px;
-    border-bottom: solid 1px #C7CDD1;
-    margin-bottom: 20px;
-}
-
-.panel{
-    border-width: 1px;
-    border-color: #666;
-    box-shadow: 5px 5px 5px #DDD;
-    margin-bottom: 25px;
-    min-width: 212;
-}
-
-.panel a:hover, .panel a:focus, .panel a:active{
-    text-decoration: none;
-}
-
-.panel-heading{
-    padding: 0 15px;
-}
-
-.panel-heading>div{
-    height: 88px;
-}
-
-.t_title{
-    width: 100%;
-    height:88px;
-    line-height: 88px;
-    text-align: center;
-    background-color: rgba(0,0,0,0.4);
-    margin-top: 0px;
-    font-weight: 200;
-    font-size: 30px!important;
+.bullet input{
+   position: relative;
+    left:-5px;
 }
