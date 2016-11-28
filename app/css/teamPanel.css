@@ -1,9 +1,3 @@
-.section{
-    border-bottom: 1px dotted grey;
-    margin-bottom: 10px;
-    font-size: 1.5em;
-}
-
 #cont1,#cont2{
     overflow-x: auto;
 }
@@ -13,12 +7,21 @@
 }
 
 .teamInfo td{
-    padding-right: 10px;
+    line-height: 1.9em;
+    font-weight: 200;
+}
+
+.teamInfo tr>td:nth-child(1){
+    padding-right: 5px;
+}
+
+.teamInfo tr>td:nth-child(2){
+    padding-right: 15px;
 }
 
 /* t */
-#con1, #con2, #con3, input[type=submit]{
-    margin: 0px 20px 20px 20px;
+#cont1, #cont2, #cont3, input[type=submit],.cont{
+    margin: 0px 0px 20px 20px;
 }
 
 .updateTeam input, .updateTeam textarea{
@@ -43,7 +46,7 @@ a, a:focus, a:hover{
 }
 
 .tag{
-    background:#eee;
+    background:transparent;
     margin-left:-2em;
     display:inline;
     word-break: break-all;
@@ -58,12 +61,12 @@ ul.member{
     list-style-type: none;
     margin: 0;
     padding: 0;
-    text-align: center;
+    text-align: left;
 }
 
 ul.member li {
   display: inline-block;
-  margin: 0 2em 2em 0;
+  margin: 0 20px 0 0;
   position: relative;
   width: 150px;
 }
@@ -103,6 +106,6 @@ ul.member li:hover .action2{
 
 /* load Team Forming Details*/
 
-.teamformingDetail{
+teamformingDetail{
     list-style-type: none;
 }

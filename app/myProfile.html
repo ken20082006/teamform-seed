@@ -73,11 +73,12 @@
         <div class="row content">
         <div class="heading"><h1>My Profile</h1></div>
 		<div class="profile" ng-controller="myProfileCtrl">
-			<div class="section">Profile Picture</div>
 			<div style="width:150px;height:150px; background-image: url('{{userIcon}}');  background-repeat: no-repeat;background-position: center;"></div>
-			<input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
-			<button id="removeURL" class="btn btn-danger btn-sm" ng-click="removeImg()" style="margin:1em 0;">Remove</button>
-			<div class="section">General</div>
+            <input type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
+            <button id="removeURL" class="btn btn-danger btn-sm" ng-click="removeImg()" style="margin:1em 0;">Remove</button>
+            <div class="section" style="margin-top:30px;margin-left:0;">Description</div>
+            <textarea style="min-width:400px;min-height:90px;"></textarea>
+			<div class="section" style="margin-top:30px;margin-left:0;">General</div>
 			<table>
                 <tbody>
 					<tr>
@@ -133,7 +134,7 @@
 					</li>
 				</ul>
 			</div>
-			<div class="section">Contact Information</div>
+			<div class="section" style="margin-top:30px;margin-left:0;">Contact</div>
 			<table>
                 <tbody>
 					<tr>
@@ -174,7 +175,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<div class="section">Social</div>
+			<div class="section" style="margin-top:30px;margin-left:0;">Social</div>
 			<table>
                 <tbody>
 					<tr>

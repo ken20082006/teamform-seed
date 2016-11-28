@@ -63,7 +63,7 @@
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link href="css/teamPanel.css" rel="stylesheet" type="text/css">
-	<link href="css/inputStyle.css" rel="stylesheet" type="text/css">
+    <link href="css/inputStyle.css" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -82,30 +82,40 @@
            	 		<h1>Team Panel</h1>
         		</div>
         
-				<div class="section">
-					<p>Team info
-						<button ng-if="isOwner==true&&isEdit==false&&currCourse.random==false" ng-click="editInfoForm()" class="btn btn-primary btn-sm" style="margin-left:10px;">Edit Team Info</button>
-					</p>
-				</div>
-        		<div id="cont1">
-					<div ng-if="isEdit==false">
+                <div class="section">Team info<button ng-if="isOwner==true&&isEdit==false&&currCourse.random==false" ng-click="editInfoForm()" class="btn btn-primary btn-sm" style="margin-left:20px;">Edit Team Info</button></div>
+        		<div id="cont1" ng-if="isEdit==false">
 					<table class="teamInfo">
-						<tr><td>Course code:</td><td>{{currCourse.title}}</td></tr>
-						<tr><td>Team name:</td><td>{{tName}}</td></tr>
-						<tr><td>Max size:</td><td>{{currCourse.max}}</td></tr>
-						<tr><td>Min size:</td><td>{{currCourse.min}}</td></tr>
-					</table>
-					<label ng-if="currCourse.random==false">Added Tags:</label>
-				<div id="addedTags" ng-repeat="q in tTag">
-					<ul>
-						<li class="tag"><i class="fa fa-tag" aria-hidden="true"></i> {{q}}
-						</li>
-					</ul>
-				</div>
-				
-				</div>
-				<div ng-if="isEdit==true" class="updateTeam">
-						<h2>Edit Team Information</h2>
+                        <tr><td>Team Name</td><td>:</td><td>{{tName}}</td></tr>
+						<tr><td>Course Code</td><td>:</td><td>{{currCourse.title}}</td></tr>
+						<tr><td>Maximum Size</td><td>:</td><td>{{currCourse.max}}</td></tr>
+						<tr><td>Minimum Size</td><td>:</td><td>{{currCourse.min}}</td></tr>
+                        <tr><td><label ng-if="currCourse.random==false" style="font-weight:inherit">Added Tags</label></td>
+                            <td>:</td>
+                        <td>
+                            <div id="addedTags" ng-repeat="q in tTag">
+                                <ul>
+                                    <li class="tag"><i class="fa fa-tag" aria-hidden="true"></i> {{q}}
+                                    </li>
+                                </ul>
+                            </div>
+        				</td></tr>
+                        <tr><td>Your Role</td><td>:</td>
+                        <td><div ng-if="isOwner==true&&currCourse.random==false">Team Leader<button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:20px;">Quit Team</button></div>
+                            <div ng-if="isOwner==false&&currCourse.random==false">Team Member<button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:20px;">Delete Team</button></div>
+                        </td></td>
+                        <!--<tr><td>Action</td><td>:</td><td><button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:10px;">Delete Team</button></td>
+                        <tr><td>-->
+                        <!--<div ng-if="isOwner==false&&currCourse.random==false"><p style="font-weight:bold;">Team role: Team member</p>
+				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:10px;">Quit Team</a></button></div>	
+       	 		</div>
+				<br>-->
+
+				    </table>
+                    
+                </div>
+            
+				<div ng-if="isEdit==true" class="updateTeam" style="margin-left:20px;margin-bottom:20px;">
+						<!--<h2>Edit Team Information</h2>-->
 						<div>
 							<label>Team name</label>
 							<br>
@@ -114,7 +124,7 @@
 						<div>
 							<label>Team description</label>
 							<br>
-							<textarea ng-model="tDesc" id="editTeamDesc"></textarea>
+							<textarea ng-model="tDesc" id="editTeamDesc" style="min-width:400px;min-height:90px;"></textarea>
 						</div>
 						<div>
 							<label>Tags</label>
@@ -127,7 +137,7 @@
 								</div>
 
 						</div>
-						<div id="addedTags" ng-repeat="q in addedTags">
+						<div id="addedTags" ng-repeat="q in addedTags" style="margin-top:5px;">
 							<ul>
 								<li class="tag">{{q}}
 									<a style="margin-left:3px;" ng-click="removeTag(q)">
@@ -139,19 +149,10 @@
 						<br>
 						<button class="btn btn-success btn-sm" ng-click="editTeamInfo()">update</button>
 						<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
-				</div>
-
-				<br>
-				<div ng-if="isOwner==true&&currCourse.random==false"><p style="font-weight:bold;">Team role: Team leader</p>
-				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:10px;">Delete Team</a></button></div>
-				<div ng-if="isOwner==false&&currCourse.random==false"><p style="font-weight:bold;">Team role: Team member</p>
-				Action: <button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:10px;">Quit Team</a></button></div>	
-       	 		</div>
-				<br>
-
-				<div class="section">
-				<p>Team member</p>
-				</div>
+				</div>	
+                <div class="section">About Us</div>
+                <div class="cont"><p>[CURCOURSE DESCRIPTION]</p></div>
+				<div class="section">Team member</div>
 				<div id="cont2">
 					<ul class="member">
 						<li ng-repeat="q in teamMember">
@@ -161,8 +162,8 @@
 									<div class="line">
 									{{ q.data.userName }}
 									</div>
-									<span ng-if="tLeaderID==q.data.email">Leader</span>
-									<span ng-if="tLeaderID!=q.data.email">Member</span>
+									<span ng-if="tLeaderID==q.data.email" style="padding-left:15px;">Leader</span>
+									<span ng-if="tLeaderID!=q.data.email" style="padding-left:15px;">Member</span>
 								</div>
 							</a>
 							<div ng-if="isOwner==true" class="action1">
@@ -170,9 +171,9 @@
 							</div>
 						</li>
 					</ul>
-
-				<div class="section" ng-if="currCourse.random==false">
-					<p>Member waiting list</p>
+                </div>
+				<div class="section" ng-if="currCourse.random==false&&isOwner==true">
+					Member Request List
 				</div>
 				<ul class="member" ng-if="currCourse.random==false">
 						<li ng-repeat="q in waitingList">
@@ -193,12 +194,10 @@
 							</div>	
 						</li>
 					</ul>
-				
 				<div ng-if="isOwner==true">
 				<div class="section" ng-if="currCourse.random==false">
-					<p>Member invite list
-						<button id="btn_admin" type="button" class="btn btn-primary btn-sm" ng-click="inviteForm()" style="margin-left:10px;">Add member</button>
-					</p>
+					Member invite list
+						<button id="btn_admin" type="button" class="btn btn-primary btn-sm" ng-click="inviteForm()" style="margin-left:20px;">Invite Member</button>
 				</div>
 				<ul class="member" ng-if="currCourse.random==false">
 						<li ng-repeat="q in inviteList">
@@ -254,39 +253,37 @@
 				</div>
     
 			</div>
-			</div>
 			<div ng-if="role=='1'"> 
 				<div class="heading">
 					<h1>Edit Course</h1>
 				</div>
-          
-				<div id="con1">
-					<span class="input input--minoru">
-						<input class="input__field input__field--minoru" type="text" id="Course.title" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20">
-						<label class="input__label input__label--minoru" for="Course.title">
-							<span class="input__label-content input__label-content--minoru">Course title</span>
-						</label>
-					</span>
+				<div id="cont1" class="cont">
+										<span class="input input--minoru">
+ 						<input class="input__field input__field--minoru" type="text" id="Course.title" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20">
+ 						<label class="input__label input__label--minoru" for="Course.title">
+ 							<span class="input__label-content input__label-content--minoru">Course title</span>
+ 					</label>
+ 					</span>
 				</div>
-				<div id="con2">
+                <div id="cont2" class="cont">
 					<span class="input input--minoru">
-						<textarea class="input__field input__field--minoru" ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
-						<label class="input__label input__label--minoru" for="currCourse.message">
-							<span class="input__label-content input__label-content--minoru">Description</span>
-						</label>
-					</span>
+ 						<textarea class="input__field input__field--minoru" ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
+ 						<label class="input__label input__label--minoru" for="currCourse.message">
+ 							<span class="input__label-content input__label-content--minoru">Description</span>
+ 						</label>
+ 					</span>
 				</div>
 				
-				<div id="con3">
-				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
-					<label class="input__label input__label--minoru" for="profilePic">
-						<span class="input__label-content input__label-content--minoru">Course image</span>
-					</label>
-				</span>
-				<img src="{{currCourse.image}}" id="base64PicURL" width="500px">
-				<span id="base64Name"></span>
-				<button type="button" class="btn btn-danger btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>	
+				<div id="cont3" class="cont">
+                   <span class="input input--minoru">
+                            <input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
+                        <label class="input__label input__label--minoru" for="profilePic">
+                            <span class="input__label-content input__label-content--minoru">Course image</span>
+                        </label>
+                    </span>
+                    <img src="{{currCourse.image}}" id="base64PicURL" width="500px">
+                    <span id="base64Name"></span>
+                    <button type="button" class="btn btn-danger btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>
 				</div>
 			
 				<input type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()">
