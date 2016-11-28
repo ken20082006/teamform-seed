@@ -94,62 +94,70 @@
 		<form name="form" >
 			<div>
 				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" type="text" id="courseInfo.title" name="title" ng-model="courseInfo.title" required placeholder="e.g. comp3111">
-					<label class="input__label input__label--minoru" for="courseInfo.title">
+                    					<label class="input__label input__label--minoru" for="courseInfo.title">
 						<span class="input__label-content input__label-content--minoru">Course Code</span>
 					</label>
+					<input class="input__field input__field--minoru" type="text" id="courseInfo.title" name="title" ng-model="courseInfo.title" required placeholder="e.g. comp3111">
 				</span>
 			</div>
 
 			<div id="pic">
 				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
-					<label class="input__label input__label--minoru" for="profilePic">
+                    					<label class="input__label input__label--minoru" for="profilePic">
 						<span class="input__label-content input__label-content--minoru">Course Image</span>
 					</label>
+					<input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
 				</span>				
 				<img src id="base64PicURL" style="max-width:500px;height:auto;">
 				<span id="base64Name"></span>
 				<a id="removeURL" style="display:none;cursor:pointer;" ng-click="removeImg()">Remove</a>
 			</div>
 			<span class="input input--minoru">
-				<textarea class="input__field input__field--minoru" id="courseInfo.message" ng-model="courseInfo.message" required rows="5" cols="50" ></textarea>
-				<label class="input__label input__label--minoru" for="courseInfo.message">
+                				<label class="input__label input__label--minoru" for="courseInfo.message">
 					<span class="input__label-content input__label-content--minoru">Description</span>
 				</label>
+				<textarea class="input__field input__field--minoru" id="courseInfo.message" ng-model="courseInfo.message" required rows="5" cols="50" ></textarea>
 			</span>
             <div style="padding:7.5px 0">
-                <label>Member range(2-20)</label>
 				<br>
+                <div>
+                <span class="input input--minoru">
+                    <label class="input__label input__label--minoru" for="min">
+						<span class="input__label-content input__label-content--minoru" style="margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;">Member range (2-20)</span>
+					</label>
+                </span>
+                    </div>
 				<div style="display:inline-flex">
 				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" type="number" id="min" ng-model="courseInfo.min" min="2" max="20">
-					<label class="input__label input__label--minoru" for="min">
+                    <label class="input__label input__label--minoru" for="min">
 						<span class="input__label-content input__label-content--minoru">Min</span>
 					</label>
+					<input class="input__field input__field--minoru" type="number" id="min" ng-model="courseInfo.min" min="2" max="20">
 				</span>
 				<span class="input input--minoru">
-					<input class="input__field input__field--minoru" type="number" id="max" ng-model="courseInfo.max" min="2" max="20">
-					<label class="input__label input__label--minoru" for="max">
+                    <label class="input__label input__label--minoru" for="max">
 						<span class="input__label-content input__label-content--minoru">Max</span>
 					</label>
+					<input class="input__field input__field--minoru" type="number" id="max" ng-model="courseInfo.max" min="2" max="20">
 				</span>
 				</div>
             </div>
             <div style="padding:7.5px 0">
                 <span class="input input--minoru">
-					<input class="input__field input__field--minoru" type="text" ng-model="courseInfo.date" id="datepicker" required>
-					<label class="input__label input__label--minoru" for="datepicker">
+                    <label class="input__label input__label--minoru" for="datepicker">
 						<span class="input__label-content input__label-content--minoru">Date</span>
 					</label>
+					<input class="input__field input__field--minoru" type="text" ng-model="courseInfo.date" id="datepicker" required>
+					
 				</span>
             </div>
-			<div style="padding:7.5px 0">
+			<div style="padding:7.5px 0;margin-left:15px;">
 				<input type="checkbox" ng-model="courseInfo.random" id="random">
 				<label for="random">Full Random Team Algorithm</label>
             </div>
-			<div id="sub">
-				<input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Submit" ng-click="createCourse()">
+			<div id="sub" style="margin-left:15px;">
+				<!--<input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Submit" ng-click="createCourse()">-->
+                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Submit" ng-click="createCourse()">Submit</button>
 			</div>
 		</form>
 </body>
