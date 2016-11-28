@@ -76,15 +76,15 @@
                 <div class="section">Team info</div>
                 <div class="cont">
 					<table class="teamInfo">
-                        <tr><td>Team Name</td><td>:</td><td>[team name]</td></tr>
-						<tr><td>Course Code</td><td>:</td><td>[course name]</td></tr>
-						<tr><td>Maximum Size</td><td>:</td><td>[max size]</td></tr>
-						<tr><td>Minimum Size</td><td>:</td><td>[min size]</td></tr>
+                        <tr><td>Team Name</td><td>:</td><td>{{teamData.name}}</td></tr>
+						<tr><td>Course Code</td><td>:</td><td>{{courseData.title}}</td></tr>
+						<tr><td>Maximum Size</td><td>:</td><td>{{courseData.max}}</td></tr>
+						<tr><td>Minimum Size</td><td>:</td><td>{{courseData.min}}</td></tr>
                         <tr><td><label style="font-weight:inherit">Added Tags</label></td>
                             <td>:</td>
                         <td>
-                            [tags]
-                            <div id="addedTags" ng-repeat="q in tTag">
+                            
+                            <div id="addedTags" ng-repeat="q in teamData.tags">
                                 <ul>
                                     <li class="tag"><i class="fa fa-tag" aria-hidden="true"></i> {{q}}
                                     </li>
@@ -94,15 +94,12 @@
 				    </table>
                 </div> 
                 <div class="section">About Us</div>
-                <div class="cont"><p>[CURCOURSE DESCRIPTION]</p></div>
-                <div class="cont"><div><button type="button" class="btn btn-success btn-sm" style="margin-top:5px;">Join Request</button></div>
-                    <div><button type="button" class="btn btn-danger btn-sm" style="margin-top:5px;">Cancel Request</button></div>
-                </div>
+                <div class="cont"><p>{{teamData.description}}</p></div>
+                
                 <div class="section">Team member</div>
 				<div class="cont">
-                    [MEMBER INFO + IMG]
 					<ul class="member">
-						<li ng-repeat="q in teamMember">
+						<li ng-repeat="q in userData">
 							<a href="userInfo.html?u={{q.key}}" target="_blank">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
 								<div class="hover-text">
@@ -119,8 +116,7 @@
 						</li>
 					</ul>
                 </div>
-            {{teamData}}    
-            
+
             </div>           
 		      </div>
         <!-- /#page-content-wrapper -->

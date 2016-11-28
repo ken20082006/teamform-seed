@@ -72,10 +72,58 @@ app.controller("userInfoCtrl", function($scope,$rootScope,user, $firebaseArray,$
 					else
 					{
 						$scope.userData=data.val();
+						$scope.dataHandler();
 					}
 				});
 			}
 			
+		}
+		
+		$scope.dataHandler=function()
+		{
+			if(typeof($scope.userData.image)=="undefined")
+			{
+				$scope.userData.image='image/usericon.png';
+			}
+			$scope.userData.contact=[];
+			$scope.userData.courseName=[];
+			if(typeof($scope.userData.contactEmail)!="undefined")
+			{
+				$scope.userData.contact.push({"key":"Email","data":$scope.userData.contactEmail});
+			}
+			if(typeof($scope.userData.contactSkype)!="undefined")
+			{
+				$scope.userData.contact.push({"key":"Skype","data":$scope.userData.contactSkype});
+			}
+			if(typeof($scope.userData.contactPhone)!="undefined")
+			{
+				$scope.userData.contact.push({"key":"Phone","data":$scope.userData.contactPhone});
+			}
+			if(typeof($scope.userData.contactFb)!="undefined")
+			{
+				$scope.userData.contact.push({"key":"Facebook","data":$scope.userData.contactFb});
+			}
+			if(typeof($scope.userData.contactTwitter)!="undefined")
+			{
+				$scope.userData.contact.push({"key":"Twitter","data":$scope.userData.contactTwitter});
+			}
+			if(typeof($scope.userData.contactGoogle)!="undefined")
+			{
+				$scope.userData.contact.push({"key":"Google","data":$scope.userData.contactGoogle});
+			}
+			if(typeof($scope.userData.course)!="undefined")
+			{
+				for(i=0;i<$scope.userData.course.length;i++)
+				{
+					firebase.database().ref("courses/"+$scope.userData.course[i]).once('value', function(data) {
+						$scope.userData.courseName.push(data.val().title);
+						$scope.$apply();
+					});
+				}
+			
+			}
+		//	console.log("$scope.userData",$scope.userData);
+			$scope.$apply();
 		}
 			
 });
