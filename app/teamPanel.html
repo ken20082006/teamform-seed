@@ -63,6 +63,7 @@
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link href="css/teamPanel.css" rel="stylesheet" type="text/css">
+	<link href="css/inputStyle.css" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -260,21 +261,32 @@
 				</div>
           
 				<div id="con1">
-					<label>Title </label> 
-					<input type="text" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20" style="text-align: center;">
+					<span class="input input--minoru">
+						<input class="input__field input__field--minoru" type="text" id="Course.title" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20">
+						<label class="input__label input__label--minoru" for="Course.title">
+							<span class="input__label-content input__label-content--minoru">Course title</span>
+						</label>
+					</span>
 				</div>
 				<div id="con2">
-					<label>Description</label>
-                    <br>
-                    <textarea ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
+					<span class="input input--minoru">
+						<textarea class="input__field input__field--minoru" ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
+						<label class="input__label input__label--minoru" for="currCourse.message">
+							<span class="input__label-content input__label-content--minoru">Description</span>
+						</label>
+					</span>
 				</div>
 				
 				<div id="con3">
-				<label>Team image</label>
-				<input type="file" id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)">
+				<span class="input input--minoru">
+					<input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
+					<label class="input__label input__label--minoru" for="profilePic">
+						<span class="input__label-content input__label-content--minoru">Course image</span>
+					</label>
+				</span>
 				<img src="{{currCourse.image}}" id="base64PicURL" width="500px">
 				<span id="base64Name"></span>
-				<button type="button" class="btn btn-primary btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>	
+				<button type="button" class="btn btn-danger btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>	
 				</div>
 			
 				<input type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()">
@@ -296,7 +308,7 @@
 					<br>
 					<div ng-repeat="q in existedTeam">
 					
-						<li>Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
+						<li class="teamformingDetail">Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
 						<br>
 
 		      		</div>
@@ -304,7 +316,7 @@
 					Non team students:
 					<br>
 					<div ng-repeat="q in studentList">
-						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
+						<li class="teamformingDetail">{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
 						<br>
 		      		</div>
 					
