@@ -68,24 +68,28 @@
 				var tmp=[];
 				$scope.existedTeam=[];
 				var courseData=data.val();
-				
 				var teamList = courseData.team;
 				if(typeof(teamList)!="undefined")
 				{
 					for(var i=0;i<teamList.length;i++)
 					{
-						firebase.database().ref("Team/"+teamList[i]).once('value', function(data) {
+						
+						var tempTeamList=teamList[i];
+						firebase.database().ref("Team/"+tempTeamList).once('value', function(data) {
 							var teamData=data.val();
 							
 							if(typeof(teamData.tags)!="undefined")
 							{
-								teamData.keys=teamList[i];
+								teamData.keys=tempTeamList;
+								//console.log(tempTeamList);
 								//$scope.existedTeam.push(teamData);
 								$scope.existedTeam.push(teamData);
 								
 							}
 						})
 					}
+					
+					console.log($scope.existedTeam);
 				}
 	
 			});	
@@ -95,7 +99,6 @@
 		//user should be 1 to many in list
 		$scope.recommendList = function(user,list)
 		{
-			
 			//cant generate recommendList
 			if(typeof(user.tags)=="undefined" || list.length==0)
 			{
