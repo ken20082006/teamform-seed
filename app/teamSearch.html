@@ -59,7 +59,7 @@
 	<!-- Customized CSS shared by pages -->
 	<link href="css/theme.css" rel="stylesheet" type="text/css">
 	<link href="css/dash.css" rel="stylesheet" type="text/css">
-	<link href="css/rightNavBar.css" rel="stylesheet" type="text/css">
+	<!--<link href="css/rightNavBar.css" rel="stylesheet" type="text/css">-->
 	<link href="css/inputStyle.css" rel="stylesheet" type="text/css">
 
 <body>
@@ -74,8 +74,7 @@
 		</div>
         <!-- Page Content -->
 		
-		<div class="row content" ng-controller="teamSearchCtrl">
-		<div class="heading"><h1>Team Searching Panel</h1></div>
+		<div class="row content" ng-controller="teamSearchCtrl" style="margin-left:35px;">
 		<div id="teamForm" style="display:none; width:500px; padding: 0px;" class="fancybox">
 			<h2>Create Team</h2>
 			<div>
@@ -87,11 +86,11 @@
 				<br>
 				<textarea ng-model="newTeam.description"></textarea>
 			</div>
-
-			<input type="submit" ng-click="createTeam()">
+            <button type="submit" class="btn btn-primary" value="Submit" ng-click="createTeam()">Submit</button>
 		</div>
 		
-            <div class="col-md-12">
+            <div class="col-md-8">
+                <div class="heading"><h1>Team Searching Panel</h1></div>
                <div class="row">
                   <div class="col-md-12" ng-controller="teamSearchCtrl">
                      
@@ -99,7 +98,7 @@
                         <h1>
 							{{currCourse.title}} 
 							<br>
-							Team Search
+							<!--Team Search-->
 						</h1>
                      </div>
                      <div class="text-center">
@@ -107,42 +106,42 @@
 							<input class="input__field input__field--makiko" type="text" id="Search" ng-model="searchTeam.data[searchBy]">
 							<label class="input__label input__label--makiko" for="Search">
 								<span class="input__label-content input__label-content--makiko">
-									Search team <span ng-if="searchBy!='$'">by {{searchBy}}</span>
+									Search Team <span ng-if="searchBy!='$'">by {{searchBy}}</span>
 								</span>
 							</label>
 						</span>
 						<br>
-						<label><input type="radio" ng-model="searchBy" value="$">All</label>
-						<label><input type="radio" ng-model="searchBy" value="name" style="margin-left:10px;">Name</label>
-						<label><input type="radio" ng-model="searchBy" value="description" style="margin-left:10px;">Description</label>
+						Search By:<label class="bullet"><input type="radio" ng-model="searchBy" value="$">All</label>
+						<label class="bullet"><input type="radio" ng-model="searchBy" value="name">Name</label>
+						<label class="bullet"><input type="radio" ng-model="searchBy" value="description">Description</label>
                         <br>
-                        <em>Click on the team name (e.g. Team 1 / Team 9000 / Team Combined) to send your join request to the team leader</em>
+                        <em style="color:#777;">Click on the <b>team name</b> to send your join request to their team leader</em>
                          <br><br>
 						 <em>Or</em>
 						 <br><br>
 						<div>
-                        	<button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create your own team</button>
+                        	<button id="btn_admin" type="button" class="btn btn-primary" ng-click="createTeamForm()">Create Your own Team</button>
 						</div>                        
                      </div>
 					
-						<div class="row" style="margin: 20px;">
+						<div class="row" style="padding-top:30px;">
 							<div ng-repeat="q in existedTeam | filter:searchTeam">
-								<div class="col-lg-3 col-md-6">
+								<div class="col-md-6">
 									<div class="panel">
 										<a href="teamInfo.html?t={{q.key}}" target="_blank"><div class="panel-heading"  style="background:#eee;color:#fff">
 											<div class="row">
 													<div class="huge t_title">{{q.data.name}}	</div>
 											</div>
-										</div>
-										<div class="row" style="min-height:100px;">
-											<div class="col-xs-9 ">
+										</div></a>
+										<div class="row" style="min-height:100px;padding:15px;">
+											<div class="col-xs-9">
 												<div>{{q.data.description}}	</div>
 											</div>
-										</div></a>
+										</div>
 										<span ng-if="q.joined==false">
 											<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
 												<div class="panel-footer">
-													<span class="pull-left">Join request</span>
+													<span class="pull-left">Join Request</span>
 													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 													<div class="clearfix"></div>
 												</div>
@@ -151,7 +150,7 @@
 										<span ng-if="q.joined==true">
 											<a style="cursor: pointer;"  ng-click="removeRequest($index,q.key)">
 												<div class="panel-footer">
-													<span class="pull-left">delete request</span>
+													<span class="pull-left" style="color:#D00">Delete Request</span>
 													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 													<div class="clearfix"></div>
 												</div>
@@ -163,53 +162,46 @@
 							</div>
 
 						</div>
-														 
-					
-					 
+
                   </div>
                </div>
             </div>
-
-			<div id="right-sidebar"> 
+            <div class="col-md-4"> 
+                <div class="heading"><h1 style="height:48px;"><span style="font-size:21px;">Options</span></h1></div>
 				<div class="invite">
 					<h3 class="section">Invite list</h3>
-					<div ng-repeat="q in inviteRequest" >
+					<div ng-repeat="q in inviteRequest" style="margin-left:20px;">
 						<table>
-							<tr><td style="font-weight:bold;">You are invited to join {{q.data.name}}</td></tr>
-							<tr><td>Team owner : {{q.data.leaderID}}</td></tr>
-							<tr><td><button ng-click="inviteHandler(0,q.key)">Accept</button><button  ng-click="inviteHandler(1,q.key)">Decline</button></td></tr>
+							<tr><td style="font-weight:bold;padding-bottom:5px;">You are invited to join {{q.data.name}}</td></tr>
+							<tr><td style="padding-bottom:5px;">Team owner : {{q.data.leaderID}}</td></tr>
+							<tr><td style="padding-bottom:15px;"><button class="btn btn-success" ng-click="inviteHandler(0,q.key)">Accept</button>&nbsp;
+                                <button class="btn btn-danger" ng-click="inviteHandler(1,q.key)">Decline</button></td></tr>
 						</table>
 					</div>
 				</div>	
 				<div class="recommend" ng-controller="recommendCtrl">
-					<h3 class="section">Recommendation List</h3>
-					<div ng-repeat="q in teamList">
-					<div style="background:#eee;margin-top:5px;">
-					Name:<a href="teamInfo.html?t={{q.key}}" target="_blank">{{q.name}}</a><br>
-					Looking for:|<span ng-repeat="p in q.sameTags">{{p}}|</span><br>
-					<span ng-if="q.joined==false">
-						<a style="cursor: pointer;"  ng-click="joinRequest($index,q.key)">
-								<span>Join request</span>
-						</a>
-					</span>
-					<span ng-if="q.joined==true">
-						<a style="cursor: pointer;"  ng-click="removeRequest($index,q.key)">	
-								<span>delete request</span>
-						</a>
-					</span>
-					</div>
-						
+					<h3 class="section">Recommendation</h3>
+					<div ng-repeat="q in teamList" style="margin-left:20px;">
+                        <div style="margin-top:5px;">
+                        <div style="margin-bottom:5px;">Team Name: <a href="teamInfo.html?t={{q.key}}" target="_blank">{{q.name}}</a></div>
+                            <div style="margin-bottom:7px;">Looking for: |<span ng-repeat="p in q.sameTags">{{p}}|</span></div>
+                        <div style="margin-bottom:20px;"><span ng-if="q.joined==false">
+                            <button class="btn btn-success"  ng-click="joinRequest($index,q.key)">
+                                    <span>Join Request</span>
+                            </button>
+                        </span>
+                        <span ng-if="q.joined==true">
+                            <button class="btn btn-danger"  ng-click="removeRequest($index,q.key)">	
+                                    <span>Cancel Request</span>
+                            </button>
+                        </span></div>
+                        </div>	
 					</div>
 				</div>
 				
 			</div>
-			
-         </div>
-		 
-      
-		
-		
-       
+        </div>
+
         <!-- /#page-content-wrapper -->
 		
     </div>
@@ -254,6 +246,7 @@
 					}
 				}
 			})();
+      
 		</script>
 </body>
 </html>
