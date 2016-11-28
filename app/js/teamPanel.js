@@ -1098,7 +1098,15 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					{
 						$scope.courseInfo.team=data.val().team;
 					}
-					
+					if(typeof(data.val().student)!="undefined")
+					{
+						$scope.courseInfo.student=data.val().student;
+					}
+					if(typeof(data.val().isForemed)!="undefined")
+					{
+						$scope.courseInfo.isForemed=data.val().isForemed;
+					}
+					console.log("$scope.courseInfo",$scope.courseInfo);
 					firebase.database().ref("courses/"+$scope.ckey).set($scope.courseInfo).then(function(){
 						
 						$window.location.href="index.html";		

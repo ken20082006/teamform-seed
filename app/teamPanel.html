@@ -90,7 +90,7 @@
 						<tr><td>Maximum Size</td><td>:</td><td>{{currCourse.max}}</td></tr>
 						<tr><td>Minimum Size</td><td>:</td><td>{{currCourse.min}}</td></tr>
                         <tr><td><label ng-if="currCourse.random==false" style="font-weight:inherit">Added Tags</label></td>
-                            <td>:</td>
+                            <td ng-if="currCourse.random==false">:</td>
                         <td>
                             <div id="addedTags" ng-repeat="q in tTag">
                                 <ul>
@@ -99,9 +99,9 @@
                                 </ul>
                             </div>
         				</td></tr>
-                        <tr><td>Your Role</td><td>:</td>
-                        <td><div ng-if="isOwner==true&&currCourse.random==false">Team Leader<button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:20px;">Quit Team</button></div>
-                            <div ng-if="isOwner==false&&currCourse.random==false">Team Member<button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:20px;">Delete Team</button></div>
+                        <tr ng-if="currCourse.random==false"><td>Your Role</td><td>:</td>
+                        <td><div ng-if="isOwner==true&&currCourse.random==false">Team Leader<button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:20px;">Delete Team</button></div>
+                            <div ng-if="isOwner==false&&currCourse.random==false">Team Member<button type="button" class="btn btn-danger btn-sm" a ng-click="quitTeam()" style="margin-left:20px;">Quit Team</button></div>
                         </td></td>
                         <!--<tr><td>Action</td><td>:</td><td><button type="button" class="btn btn-danger btn-sm" a ng-click="deleteTeam()" style="margin-left:10px;">Delete Team</button></td>
                         <tr><td>-->
@@ -151,7 +151,7 @@
 						<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
 				</div>	
                 <div class="section">About Us</div>
-                <div class="cont"><p>[CURCOURSE DESCRIPTION]</p></div>
+                <div class="cont"><p>{{tDesc}}</p></div>
 				<div class="section">Team member</div>
 				<div id="cont2">
 					<ul class="member">

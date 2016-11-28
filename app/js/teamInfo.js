@@ -3,11 +3,15 @@ app.controller("teamInfoCtrl", function($scope,$rootScope,user, $firebaseArray,$
 			
 		var team = firebase.database().ref("Team");
 		$scope.teamFB=$firebaseArray(team);
+		var userAccount = firebase.database().ref("UserAccount");
+		$scope.userAccount = $firebaseArray(userAccount);
+		
 		
 		$scope.type;
 		$scope.ikey;
 		$scope.teamData;
-		
+		$scope.courseData;
+		$scope.userData=[];
 		$scope.updateRole=function()
 		{
 			$scope.email=user.email;
@@ -48,6 +52,37 @@ app.controller("teamInfoCtrl", function($scope,$rootScope,user, $firebaseArray,$
 			return false;
 		}
 		
+		$scope.loadRequiredData=function()
+		{
+			firebase.database().ref("courses/"+$scope.teamData.courseID).once('value', function(data) {
+				$scope.courseData=data.val();
+				$scope.$apply();
+			});
+			for(i=0;i<$scope.teamData.member.length;i++)
+			{
+				$scope.userObjectArrayPush($scope.teamData.member[i],$scope.userData)
+				
+			}
+		
+		}
+		
+		$scope.userObjectArrayPush=function(email,array)
+		{
+			userAccount.orderByChild("email").equalTo(email).on("child_added", function(data)
+			{
+				var tmp=data.val();
+				if(typeof(tmp.icon)=="undefined")
+				{
+					tmp.icon="image/usericon.png";
+				}
+
+				array.push({"key":data.getKey(),"data":tmp});
+			});
+				
+		}
+		
+		
+		
 		$scope.accessValidCheck=function()
 		{
 		
@@ -69,6 +104,7 @@ app.controller("teamInfoCtrl", function($scope,$rootScope,user, $firebaseArray,$
 					else
 					{
 						$scope.teamData=data.val();
+						$scope.loadRequiredData();
 					}
 				});
 			}
