@@ -106,6 +106,7 @@ ul.member li:hover .action2{
 
 /* load Team Forming Details*/
 
-teamformingDetail{
+.teamformingDetail,
+#studentList{
     list-style-type: none;
 }
