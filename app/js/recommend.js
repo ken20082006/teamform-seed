@@ -28,7 +28,6 @@
 		$(document).ready(function waitForElement(){
 					if($scope.user.key != ""){
 						$scope.loadTeamData();
-						$scope.recommendList($scope.user,$scope.existedTeam);
 					}
 					else{
 						setTimeout(function(){
@@ -88,13 +87,24 @@
 							}
 						})
 					}
-					
-					console.log($scope.existedTeam);
+						console.log($scope.existedTeam);
+						waitForExistedTeam();
 				}
 	
 			});	
 		}
 		
+		function waitForExistedTeam(){
+			if($scope.existedTeam != 0){
+				
+				$scope.recommendList($scope.user,$scope.existedTeam);
+			}
+			else{
+				setTimeout(function(){
+					waitForExistedTeam();
+				},500);
+			}
+		}
 		
 		//user should be 1 to many in list
 		$scope.recommendList = function(user,list)
