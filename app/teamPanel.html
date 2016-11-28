@@ -115,41 +115,48 @@
                 </div>
             
 				<div ng-if="isEdit==true" class="updateTeam" style="margin-left:20px;margin-bottom:20px;">
-						<!--<h2>Edit Team Information</h2>-->
-						<div>
-							<label>Team name</label>
-							<br>
-							<input type="text" ng-model="tName" id="editTeamName">
-						</div>
-						<div>
-							<label>Team description</label>
-							<br>
-							<textarea ng-model="tDesc" id="editTeamDesc" style="min-width:400px;min-height:90px;"></textarea>
-						</div>
-						<div>
-							<label>Tags</label>
-								<div class="input-group">
-								<input type="text" id="autoComplete">
-									<a style="margin-left:-20px;" ng-click="addTag()">
-										<i class="fa fa-plus" aria-hidden="true">
-										</i>
-									</a>
-								</div>
+					<!--<h2>Edit Team Information</h2>-->
+					<div>
+						<span class="input input--minoru">
+							<input class="input__field input__field--minoru" type="text" id="editTeamName" ng-model="tName">
+							<label class="input__label input__label--minoru" for="editTeamName">
+							<span class="input__label-content input__label-content--minoru">Team name</span>
+						</label>
+						</span>
+					</div>
+					<div>
+						<span class="input input--minoru">
+							<textarea class="input__field input__field--minoru" style="min-height:90px;" id="editTeamDesc" ng-model="tDesc"></textarea>
+							<label class="input__label input__label--minoru" for="editTeamDesc">
+							<span class="input__label-content input__label-content--minoru">Team description</span>
+						</label>
+						</span>
+					</div>
+					<div>
+						<span class="input input--minoru">
+							<input class="input__field input__field--minoru" type="text" id="autoComplete">
+							<label class="input__label input__label--minoru" for="autoComplete">
+							<span class="input__label-content input__label-content--minoru">Tags</span>
+						</label>
+						</span>
+						<a ng-click="addTag()">
+							<i class="fa fa-plus" aria-hidden="true" style="margin-top:20px;font-size:1.3em"></i>
+						</a>
+					</div>
+					<div id="addedTags" ng-repeat="q in addedTags" style="margin-top:5px;">
+						<ul>
+							<li class="tag">{{q}}
+								<a style="margin-left:3px;" ng-click="removeTag(q)">
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<br>
+					<button class="btn btn-success btn-sm" ng-click="editTeamInfo()">update</button>
+					<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
+				</div>
 
-						</div>
-						<div id="addedTags" ng-repeat="q in addedTags" style="margin-top:5px;">
-							<ul>
-								<li class="tag">{{q}}
-									<a style="margin-left:3px;" ng-click="removeTag(q)">
-										<i class="fa fa-times" aria-hidden="true"></i>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<br>
-						<button class="btn btn-success btn-sm" ng-click="editTeamInfo()">update</button>
-						<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
-				</div>	
                 <div class="section">About Us</div>
                 <div class="cont"><p>{{tDesc}}</p></div>
 				<div class="section">Team member</div>
@@ -258,10 +265,10 @@
 					<h1>Edit Course</h1>
 				</div>
 				<div id="cont1" class="cont">
-										<span class="input input--minoru">
+					<span class="input input--minoru">
  						<input class="input__field input__field--minoru" type="text" id="Course.title" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20">
  						<label class="input__label input__label--minoru" for="Course.title">
- 							<span class="input__label-content input__label-content--minoru">Course title</span>
+						<span class="input__label-content input__label-content--minoru">Course title</span>
  					</label>
  					</span>
 				</div>
