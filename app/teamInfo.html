@@ -95,7 +95,6 @@
                 </div> 
                 <div class="section">About Us</div>
                 <div class="cont"><p>{{teamData.description}}</p></div>
-                
                 <div class="section">Team member</div>
 				<div class="cont">
 					<ul class="member">
@@ -106,8 +105,8 @@
 									<div class="line">
 									{{ q.data.userName }}
 									</div>
-									<span ng-if="tLeaderID==q.data.email" style="padding-left:15px;">Leader</span>
-									<span ng-if="tLeaderID!=q.data.email" style="padding-left:15px;">Member</span>
+									<span ng-if="teamData.leaderID==q.data.email" style="padding-left:15px;">Leader</span>
+									<span ng-if="teamData.leaderID!=q.data.email" style="padding-left:15px;">Member</span>
 								</div>
 							</a>
 							<div ng-if="isOwner==true" class="action1">
