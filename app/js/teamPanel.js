@@ -89,7 +89,7 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 		//load team forming detail in teacher panel
 		$scope.loadTeamFormingDetail=function()
 		{
-			$scope.loadStudentList($scope.ckey);
+			$scope.loadStudentListForInvite($scope.ckey);
 			
 			firebase.database().ref("courses/"+$scope.ckey).once('value', function(data) {
 				var tmp=[];
@@ -815,9 +815,9 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					{
 						for(var j=0;j<teamArrayOfStudent.length;j++)
 						{
-							console.log(courseData.team[i]);
-							console.log(teamArrayOfStudent[j]);
-							console.log(courseData.team[i]==teamArrayOfStudent[j]);
+							//console.log(courseData.team[i]);
+							//console.log(teamArrayOfStudent[j]);
+							//console.log(courseData.team[i]==teamArrayOfStudent[j]);
 							if(courseData.team[i]==teamArrayOfStudent[j])
 							{
 								return false;
