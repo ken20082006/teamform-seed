@@ -115,50 +115,43 @@
                 </div>
             
 				<div ng-if="isEdit==true" class="updateTeam" style="margin-left:20px;margin-bottom:20px;">
-					<!--<h2>Edit Team Information</h2>-->
-					<div>
-						<span class="input input--minoru">
-							<input class="input__field input__field--minoru" type="text" id="editTeamName" ng-model="tName">
-							<label class="input__label input__label--minoru" for="editTeamName">
-							<span class="input__label-content input__label-content--minoru">Team name</span>
-						</label>
-						</span>
-					</div>
-					<div>
-						<span class="input input--minoru">
-							<textarea class="input__field input__field--minoru" style="min-height:90px;" id="editTeamDesc" ng-model="tDesc"></textarea>
-							<label class="input__label input__label--minoru" for="editTeamDesc">
-							<span class="input__label-content input__label-content--minoru">Team description</span>
-						</label>
-						</span>
-					</div>
-					<div>
-						<span class="input input--minoru">
-							<input class="input__field input__field--minoru" type="text" id="autoComplete">
-							<label class="input__label input__label--minoru" for="autoComplete">
-							<span class="input__label-content input__label-content--minoru">Tags</span>
-						</label>
-						</span>
-						<a ng-click="addTag()">
-							<i class="fa fa-plus" aria-hidden="true" style="margin-top:20px;font-size:1.3em"></i>
-						</a>
-					</div>
-					<div id="addedTags" ng-repeat="q in addedTags" style="margin-top:5px;">
-						<ul>
-							<li class="tag">{{q}}
-								<a style="margin-left:3px;" ng-click="removeTag(q)">
-									<i class="fa fa-times" aria-hidden="true"></i>
-								</a>
-							</li>
-						</ul>
-					</div>
-					<br>
-					<button class="btn btn-success btn-sm" ng-click="editTeamInfo()">update</button>
-					<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
-				</div>
+						<!--<h2>Edit Team Information</h2>-->
+						<div>
+							<label>Team name</label>
+							<br>
+							<input type="text" ng-model="tName" id="editTeamName">
+						</div>
+						<div>
+							<label>Team description</label>
+							<br>
+							<textarea ng-model="tDesc" id="editTeamDesc" style="min-width:400px;min-height:90px;"></textarea>
+						</div>
+						<div>
+							<label>Tags</label>
+								<div class="input-group">
+								<input type="text" id="autoComplete">
+									<a style="margin-left:-20px;" ng-click="addTag()">
+										<i class="fa fa-plus" aria-hidden="true">
+										</i>
+									</a>
+								</div>
 
+						</div>
+						<div id="addedTags" ng-repeat="q in addedTags" style="margin-top:5px;">
+							<ul>
+								<li class="tag">{{q}}
+									<a style="margin-left:3px;" ng-click="removeTag(q)">
+										<i class="fa fa-times" aria-hidden="true"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<br>
+						<button class="btn btn-success btn-sm" ng-click="editTeamInfo()">update</button>
+						<button class="btn btn-danger  btn-sm" ng-click="cancelEditInfoForm()" style="margin-left:10px;">cancel</button>
+				</div>	
                 <div class="section">About Us</div>
-                <div class="cont"><p>{{tDesc}}</p></div>
+                <div class="cont"><p style="font-size:1.2em;font-weight:200;">{{tDesc}}</p></div>
 				<div class="section">Team member</div>
 				<div id="cont2">
 					<ul class="member">
@@ -206,7 +199,7 @@
 					Member invite list
 						<button id="btn_admin" type="button" class="btn btn-primary btn-sm" ng-click="inviteForm()" style="margin-left:20px;">Invite Member</button>
 				</div>
-				<ul class="member" ng-if="currCourse.random==false">
+				<ul class="member" ng-if="currCourse.random==false" style="margin-left:20px;">
 						<li ng-repeat="q in inviteList">
 							<a href="userInfo.html?u={{q.key}}" target="_blank">
 								<div style="width:150px;height:150px; background-image: url('{{q.data.icon}}');  background-repeat: no-repeat;background-position: center;"></div>
@@ -224,31 +217,30 @@
 					</ul>
 				
 				<div id="studentList" style="display:none; width:500px; padding: 0px;" class="fancybox">
-					Course Student List
-					<br>
-					Search:
-                        <input id="input_text" type="text" class="input" ng-model="searchStudent.data[searchBy]">
+					<div style="margin-top:20px;">Search:
+                        <input id="input_text" type="text" class="input" ng-model="searchStudent.data[searchBy]" style="position:relative;top:-15px;">
 						<select ng-model="searchBy">
 							<option value="$">All</option>
 							<option value="name">Name</option>
 							<option value="email">Email</option>
 						</select>   
-                        <br>
-					
-					
+                    </div>
 					<div ng-repeat="q in studentList | filter:searchStudent">
-						<li>{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button></li>
+						<li>{{ q.data.userName }}&nbsp;({{ q.data.email }})&nbsp;&nbsp;&nbsp;
+        <a href="userInfo.html?u={{q.key}}" target="_blank">Profile</a>&nbsp;&nbsp;&nbsp;
+        <button ng-click="inviteHandler(0,q.key,q.data.email)" class="btn btn-default btn-sm" style="pull-right">Invite</button>
+                        </li>
 						<br>
 
 		      		</div>
-					
-					You may looking for:
+                    <div style="margin-top:20px;margin-bottom:10px;">You may be looking for:</div>
 					<div ng-repeat="p in recommendStudentList">
 						<li>
-						{{ p.data.userName }}{{ p.data.email }}<a href="userInfo.html?u={{p.key}}" target="_blank">Details</a><button ng-click="inviteHandler(0,q.key,q.data.email)">Invite</button>
+						{{ p.data.userName }}&nbsp;({{ p.data.email }})&nbsp;&nbsp;&nbsp;<a href="userInfo.html?u={{p.key}}" target="_blank">Profile</a>&nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-default btn-sm" ng-click="inviteHandler(0,p.key,p.data.email)">Invite</button>
 						<br>
-						<div ng-repeat="k in p.data.sameTags">
-						Tags:{{k}}
+						<div ng-repeat="k in p.data.sameTags" style="margin-left:28px;">
+				            <span>Tags: <b>{{k}}</b></span>
 						</div>
 						</li>
 						<br>
@@ -262,43 +254,11 @@
 			</div>
 			<div ng-if="role=='1'"> 
 				<div class="heading">
-					<h1>Edit Course</h1>
+					<h1>Course Panel</h1>
 				</div>
-				<div id="cont1" class="cont">
-					<span class="input input--minoru">
- 						<input class="input__field input__field--minoru" type="text" id="Course.title" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20">
- 						<label class="input__label input__label--minoru" for="Course.title">
-						<span class="input__label-content input__label-content--minoru">Course title</span>
- 					</label>
- 					</span>
-				</div>
-                <div id="cont2" class="cont">
-					<span class="input input--minoru">
- 						<textarea class="input__field input__field--minoru" ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
- 						<label class="input__label input__label--minoru" for="currCourse.message">
- 							<span class="input__label-content input__label-content--minoru">Description</span>
- 						</label>
- 					</span>
-				</div>
-				
-				<div id="cont3" class="cont">
-                   <span class="input input--minoru">
-                            <input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
-                        <label class="input__label input__label--minoru" for="profilePic">
-                            <span class="input__label-content input__label-content--minoru">Course image</span>
-                        </label>
-                    </span>
-                    <img src="{{currCourse.image}}" id="base64PicURL" width="500px">
-                    <span id="base64Name"></span>
-                    <button type="button" class="btn btn-danger btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>
-				</div>
-			
-				<input type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()">
-				<br>
-				
-				<label>Team details</label>
-				<br>
-				<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()">loadTeamFormingDetail</a></button>	
+            <div class="cont">
+                <div class="section" style="margin-left:0px;">Team details<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()" style="margin-left:20px;">loadTeamFormingDetail</button>	</div>
+            <div style="margin-left:14px;">
 				<span ng-if="currCourse.isFormed==false&&currCourse.random==true">
 				<span ng-controller="autoTeamFormingCtrl">
 				<button type="button" class="btn btn-primary btn-sm" ng-click="runAutoTeamForming(0)" id="randomBtn">Random</a></button>	
@@ -307,23 +267,55 @@
 				</span>
 				<!--<span ng-controller="autoTeamFormingCtrl">
 				<button type="button" class="btn btn-primary btn-sm" ng-click="runAutoTeamForming(1)" id="autoBtn">Auto</a></button></span>-->
-					<br>
-					Team:
-					<br>
+					<span>- <b>Teamed up students</b>:</span>
+					<br><br>
 					<div ng-repeat="q in existedTeam">
 					
-						<li class="teamformingDetail">Name:{{q.name}} Member in Team:{{ q.member.length }} <a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
+						<li class="teamformingDetail">Tame Name:&nbsp;{{q.name}}&nbsp;(No. of Members:&nbsp;{{ q.member.length }})&nbsp;&nbsp;<a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
 						<br>
 
 		      		</div>
-					
-					Non team students:
-					<br>
+					<span>- <b>Unteamed students</b>:</span>
+					<br><br>
 					<div ng-repeat="q in studentList">
-						<li class="teamformingDetail">{{ q.data.userName }}{{ q.data.email }}<a href="userInfo.html?u={{q.key}}" target="_blank">Details</a></li>
+						<li class="teamformingDetail">{{ q.data.userName }}&nbsp;&nbsp;({{ q.data.email }})&nbsp;&nbsp;<a href="userInfo.html?u={{q.key}}" target="_blank">Profile</a></li>
 						<br>
 		      		</div>
-					
+                </div>
+                </div>
+<div class="section" style="margin-left:20px;margin-top:20px;">Edit Course Details</div>
+				<div id="cont1" class="cont">
+                    <span class="input input--minoru">
+                        <label class="input__label input__label--minoru" for="Course.title">
+ 							<span class="input__label-content input__label-content--minoru">Course title</span>
+ 					</label>
+ 						<input class="input__field input__field--minoru" type="text" id="Course.title" value="{{currCourse.title}}" ng-model="currCourse.title" required size="20">
+ 					</span>
+				</div>
+                <div id="cont2" class="cont">
+					<span class="input input--minoru">
+                         						<label class="input__label input__label--minoru" for="currCourse.message">
+ 							<span class="input__label-content input__label-content--minoru">Description</span>
+ 						</label>
+ 						<textarea class="input__field input__field--minoru" ng-model="currCourse.message" required rows="5" cols="50" >{{currCourse.title}}</textarea>
+ 					</span>
+				</div>
+				
+				<div id="cont3" class="cont">
+                   <span class="input input--minoru">
+                    <label class="input__label input__label--minoru" for="profilePic">
+                            <span class="input__label-content input__label-content--minoru">Course image</span>
+                        </label>
+                            <input class="input__field input__field--minoru" type='file' id="profilePic" onchange="angular.element(this).scope().fileNameChanged(this)" style="background:transparent;color:black;">
+                    </span>
+                    <div style="margin-left:17px;">
+                        <img src="{{currCourse.image}}" id="base64PicURL" width="500px">
+                        <button type="button" class="btn btn-danger btn-sm" a id="removeURL" ng-click="removeImg()">Remove</a></button>
+                    </div>
+                    <span id="base64Name"></span>
+                    <br>
+                    <button type="submit" value="Submit" class="btn btn-primary btn-sm" ng-click="editCourse()" style="position:relative;right:-17px;">Save</button>
+				</div>
 			</div>
 		</div>
 	</div>
