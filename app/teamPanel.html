@@ -199,6 +199,8 @@
 					Member invite list
 						<button id="btn_admin" type="button" class="btn btn-primary btn-sm" ng-click="inviteForm()" style="margin-left:20px;">Invite Member</button>
 				</div>
+				
+
 				<ul class="member" ng-if="currCourse.random==false" style="margin-left:20px;">
 						<li ng-repeat="q in inviteList">
 							<a href="userInfo.html?u={{q.key}}" target="_blank">
@@ -225,6 +227,27 @@
 							<option value="email">Email</option>
 						</select>   
                     </div>
+					
+					<table class="table table-sm" >
+					  <thead>
+						<tr>
+						  <th>Name</th>
+						  <th>Email</th>
+						  <th>Detail</th>
+						  <th>Option</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr ng-repeat="q in studentList | filter:searchStudent">
+						  <th scope="row">{{ q.data.userName }}</th>
+						  <td>{{ q.data.email }}</td>
+						  <td><a href="userInfo.html?u={{q.key}}" target="_blank">Profile</a></td>
+						  <td><button ng-click="inviteHandler(0,q.key,q.data.email)" class="btn btn-default btn-sm" style="pull-right">Invite</button></td>
+						 </tr>
+					  </tbody>
+					</table>
+					
+					<!--
 					<div ng-repeat="q in studentList | filter:searchStudent">
 						<li>{{ q.data.userName }}&nbsp;({{ q.data.email }})&nbsp;&nbsp;&nbsp;
         <a href="userInfo.html?u={{q.key}}" target="_blank">Profile</a>&nbsp;&nbsp;&nbsp;
@@ -233,7 +256,7 @@
 						<br>
 
 		      		</div>
-                    <div style="margin-top:20px;margin-bottom:10px;">You may be looking for:</div>
+                    <div style="margin-top:20px;margin-bottom:10px;">You may looking for:</div>
 					<div ng-repeat="p in recommendStudentList">
 						<li>
 						{{ p.data.userName }}&nbsp;({{ p.data.email }})&nbsp;&nbsp;&nbsp;<a href="userInfo.html?u={{p.key}}" target="_blank">Profile</a>&nbsp;&nbsp;&nbsp;
@@ -246,18 +269,86 @@
 						<br>
 
 		      		</div>
+					-->
+					You may looking for:
+					<table class="table table-sm" >
+					  <thead>
+						<tr>
+						  <th>Name</th>
+						  <th>Email</th>
+						  <th>Detail</th>
+						  <th>Option</th>
+						</tr>
+					  </thead>
+					  <tbody ng-repeat="p in recommendStudentList">
+						<tr class="table-success">
+						  <th scope="row">{{ p.data.userName }}</th>
+						  <td>{{ p.data.email }}</td>
+						  <td><a href="userInfo.html?u={{p.key}}" target="_blank">Profile</a></td>
+						  <td><button ng-click="inviteHandler(0,p.key,p.data.email)" class="btn btn-default btn-sm" style="pull-right">Invite</button></td>
+						</tr>
+						<tr class="table-success" ng-repeat="k in p.data.sameTags">
+						  <td  colspan="4"><span>Tags: <b>{{k}}</b></span></td>
+						</tr>
+					  </tbody>
+					</table>
+					
+					
 					
 				</div>
 				
 				</div>
     
 			</div>
+			
+			<div id="teamFormingDetail" style="display:none; width:500px; padding: 0px;" class="fancybox">
+					Teamed up students:
+					<table class="table table-sm" >
+					  <thead>
+						<tr>
+						  <th>Tame Name</th>
+						  <th>No. of Members</th>
+						  <th>Detail</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr ng-repeat="q in existedTeam">
+						  <th scope="row">{{q.name}}</th>
+						  <td>{{ q.member.length }}</td>
+						  <td><a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></td>
+						 </tr>
+					  </tbody>
+					</table>
+					Unteamed students:
+					<table class="table table-sm" >
+					  <thead>
+						<tr>
+						  <th>Name</th>
+						  <th>Email</th>
+						  <th>Detail</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr ng-repeat="q in studentList">
+						  <th scope="row">{{ q.data.userName }}</th>
+						  <td>{{ q.data.email }}</td>
+						  <td><a href="userInfo.html?u={{q.key}}" target="_blank">Profile</a></td>
+						 </tr>
+					  </tbody>
+					</table>
+					
+					
+				</div>
+			
+			
+			
+			
 			<div ng-if="role=='1'"> 
 				<div class="heading">
 					<h1>Course Panel</h1>
 				</div>
             <div class="cont">
-                <div class="section" style="margin-left:0px;">Team details<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()" style="margin-left:20px;">loadTeamFormingDetail</button>	</div>
+                <div class="section" style="margin-left:0px;">Team details<button type="button" class="btn btn-primary btn-sm" ng-click="loadTeamFormingDetail()" style="margin-left:20px;">load TeamForming Detail</button>	</div>
             <div style="margin-left:14px;">
 				<span ng-if="currCourse.isFormed==false&&currCourse.random==true">
 				<span ng-controller="autoTeamFormingCtrl">
@@ -267,20 +358,7 @@
 				</span>
 				<!--<span ng-controller="autoTeamFormingCtrl">
 				<button type="button" class="btn btn-primary btn-sm" ng-click="runAutoTeamForming(1)" id="autoBtn">Auto</a></button></span>-->
-					<span>- <b>Teamed up students</b>:</span>
-					<br><br>
-					<div ng-repeat="q in existedTeam">
 					
-						<li class="teamformingDetail">Tame Name:&nbsp;{{q.name}}&nbsp;(No. of Members:&nbsp;{{ q.member.length }})&nbsp;&nbsp;<a href="teamInfo.html?t={{q.key}}" target="_blank">Details</a></li>
-						<br>
-
-		      		</div>
-					<span>- <b>Unteamed students</b>:</span>
-					<br><br>
-					<div ng-repeat="q in studentList">
-						<li class="teamformingDetail">{{ q.data.userName }}&nbsp;&nbsp;({{ q.data.email }})&nbsp;&nbsp;<a href="userInfo.html?u={{q.key}}" target="_blank">Profile</a></li>
-						<br>
-		      		</div>
                 </div>
                 </div>
 <div class="section" style="margin-left:20px;margin-top:20px;">Edit Course Details</div>

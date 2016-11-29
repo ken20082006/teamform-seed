@@ -112,9 +112,9 @@ app.controller("teamPanelCtrl", function($scope,$rootScope,user,$firebaseArray,$
 					}
 				}
 
-				console.log($scope.existedTeam);
+				//console.log($scope.existedTeam);
 			});	
-			
+			$.fancybox.open("#teamFormingDetail");
 			
 		}
 		
